@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <meta charset="utf-8" />
+    <title>Features</title>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-resource.js"></script>
+    <script src="app.js"></script>
+</head>
+<body ng-cloak>
+    <div ng-controller="featuresController">
+        <table>
+            <thead>
+                <tr>Titel</tr>
+                <tr>Beschrijving</tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="feature in features">
+                    <td>{{feature.Title}}</td>
+                    <td>{{feature.Description}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
