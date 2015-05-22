@@ -37,30 +37,36 @@ namespace DMi.Vision.Api.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]FeatureAddOrEdit model)
         {
-            //TODO; validate viewmodel
-            var feature = new Feature(model.Title, model.Description);
-            feature.DateCreated = DateTime.Now;
-            feature.DateModified = feature.DateCreated;
+            if (ModelState.IsValid)
+            {
+                var feature = new Feature(model.Title, model.Description);
+                feature.DateCreated = DateTime.Now;
+                feature.DateModified = feature.DateCreated;
 
-            _dbContext.Add(feature);
-            _dbContext.SaveChanges();
-            return new HttpStatusCodeResult(201);
+                _dbContext.Add(feature);
+                _dbContext.SaveChanges();
+                return new HttpStatusCodeResult(201);
+            }
+            return new BadRequestObjectResult(ModelState);
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody]FeatureAddOrEdit model)
         {
-            //TODO; validate viewmodel
-            Feature feature = _dbContext.Features.SingleOrDefault(x => x.Id == id);
-            if (feature != null)
+            if (ModelState.IsValid)
             {
-                feature.Title = model.Title;
-                feature.Description = model.Description;
-                feature.DateModified = DateTime.Now;
+                Feature feature = _dbContext.Features.SingleOrDefault(x => x.Id == id);
+                if (feature != null)
+                {
+                    feature.Title = model.Title;
+                    feature.Description = model.Description;
+                    feature.DateModified = DateTime.Now;
+                }
+                _dbContext.SaveChanges();
+                return new ObjectResult(feature);
             }
-            _dbContext.SaveChanges();
-            return new ObjectResult(feature);
+            return new BadRequestObjectResult(ModelState);
         }
 
         // DELETE api/values/5
