@@ -33,8 +33,16 @@ namespace DMi.Vision.Models
         /// </summary>
         public DateTime DateModified { get; set; }
 
-        public string Title { get; set; }
-        public string Description { get; set; }
+        public string Title
+        {
+            get { return _title; }
+            set { _title = value; }
+        }
+        public string Description
+        {
+            get { return _description; }
+            set { _description = value; }
+        }
         public int Points { get; set; }
     }
 

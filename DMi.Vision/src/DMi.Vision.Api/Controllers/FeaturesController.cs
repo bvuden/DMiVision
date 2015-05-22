@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DMi.Vision.Api.Models;
 using DMi.Vision.Models;
 using Microsoft.AspNet.Mvc;
 
@@ -34,15 +35,32 @@ namespace DMi.Vision.Api.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]Feature model)
-        {           
-            _dbContext.Add(model).Context.SaveChanges();
+        public IActionResult Post([FromBody]FeatureAddOrEdit model)
+        {
+            //TODO; validate viewmodel
+            var feature = new Feature(model.Title, model.Description);
+            feature.DateCreated = DateTime.Now;
+            feature.DateModified = feature.DateCreated;
+
+            _dbContext.Add(feature);
+            _dbContext.SaveChanges();
+            return new HttpStatusCodeResult(201);
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public IActionResult Put(int id, [FromBody]FeatureAddOrEdit model)
         {
+            //TODO; validate viewmodel
+            Feature feature = _dbContext.Features.SingleOrDefault(x => x.Id == id);
+            if (feature != null)
+            {
+                feature.Title = model.Title;
+                feature.Description = model.Description;
+                feature.DateModified = DateTime.Now;
+            }
+            _dbContext.SaveChanges();
+            return new ObjectResult(feature);
         }
 
         // DELETE api/values/5
