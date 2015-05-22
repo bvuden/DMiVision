@@ -29,6 +29,16 @@ namespace DMi.Vision.Api
         // Use this method to add services to the container
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+            services.ConfigureCors(
+                options =>
+                    options.AddPolicy("allowAll", builder => builder
+                        .AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        )
+                    );
+
             services.AddMvc();
             // Uncomment the following line to add Web API services which makes it easier to port Web API 2 controllers.
             // You will also need to add the Microsoft.AspNet.Mvc.WebApiCompatShim package to the 'dependencies' section of project.json.
@@ -44,6 +54,8 @@ namespace DMi.Vision.Api
         // Configure is called after ConfigureServices is called.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            //add cors to the request pipeline
+            app.UseCors("allowAll");
 
             // Add MVC to the request pipeline.
             app.UseMvc();
