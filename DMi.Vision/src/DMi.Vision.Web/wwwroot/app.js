@@ -1,22 +1,33 @@
 !function() {
     "use strict";
-    angular.module("app", [ "featuresService" ]);
+    function a(a, b) {
+        a.when("/", {
+            templateUrl: "/Views/list.html",
+            controller: "FeaturesListController"
+        }).when("/features/add", {
+            templateUrl: "/Views/add.html",
+            controller: "FeaturesAddController"
+        }), b.html5Mode(!0);
+    }
+    a.$inject = [ "$routeProvider", "$locationProvider" ], angular.module("app", [ "ngRoute", "featuresService" ]).config(a);
 }(), function() {
     "use strict";
     function a(a, b) {
         a.features = b.query();
     }
-    angular.module("app").controller("featuresController", a), a.$inject = [ "$scope", "Features" ];
+    function b(a, b, c) {
+        a.feature = new c(), a.add = function() {
+            a.feature.$save(function() {
+                b.path("/");
+            });
+        };
+    }
+    angular.module("app").controller("FeaturesListController", a).controller("FeaturesAddController", b), 
+    a.$inject = [ "$scope", "Feature" ], b.$inject = [ "$scope", "$location", "Feature" ];
 }(), function() {
     "use strict";
-    var a = angular.module("featuresService", [ "ngResource" ]);
-    a.factory("Features", [ "$resource", function(a) {
-        return a("http://localhost:1482/api/features", {}, {
-            query: {
-                method: "GET",
-                params: {},
-                isArray: !0
-            }
-        });
-    } ]);
+    function a(a) {
+        return a("http://localhost:1482/api/features/:id");
+    }
+    angular.module("featuresService", [ "ngResource" ]).factory("Feature", a), a.$inject = [ "$resource" ];
 }();

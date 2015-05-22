@@ -1,0 +1,27 @@
+﻿<div>
+
+    <h1>Ovezicht Features</h1>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Titel</th>
+                <th>Beschrijving</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="feature in features">
+                <td>
+                    <a href="/features/edit/{{feature.Id}}" class="btn btn-default btn-xs">edit</a>
+                    <a href="/features/delete/{{feature.Id}}" class="btn btn-danger btn-xs">delete</a>
+                </td>
+                <td>{{feature.Title}}</td>
+                <td>{{feature.Description}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>
+        <a href="/features/add" class="btn btn-primary">Nieuw</a>
+    </p>
+</div>

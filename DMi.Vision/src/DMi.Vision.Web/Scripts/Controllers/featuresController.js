@@ -3,19 +3,26 @@
 
     angular
         .module('app')
-        .controller('featuresController', featuresController);
+        .controller('FeaturesListController', FeaturesListController)
+        .controller('FeaturesAddController', FeaturesAddController);
 
-    featuresController.$inject = ['$scope', 'Features']; 
 
-    function featuresController($scope, Features) {
-        $scope.features = Features.query();
+    /* List Controller*/
+    FeaturesListController.$inject = ['$scope', 'Feature'];
 
-        /* jshint validthis:true */
-        //var vm = this;
-        //vm.title = 'featuresController';
+    function FeaturesListController($scope, Feature) {
+        $scope.features = Feature.query();
+    }
 
-        //activate();
+    /* Create Controller */
+    FeaturesAddController.$inject = ['$scope', '$location', 'Feature'];
 
-        //function activate() { }
+    function FeaturesAddController($scope, $location, Feature) {
+        $scope.feature = new Feature();
+        $scope.add = function () {
+            $scope.feature.$save(function () {
+                $location.path('/');
+            });
+        };
     }
 })();
