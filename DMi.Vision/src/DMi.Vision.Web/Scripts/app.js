@@ -20,6 +20,10 @@
         .when('/features/add', {
             templateUrl: '/Views/add.html',
             controller: 'FeaturesAddController'
+        })
+        .when('/features/detail/:id', {
+            templateUrl: '/Views/detail.html',
+            controller: 'FeaturesDetailController'
         });
 
         $locationProvider.html5Mode(true);

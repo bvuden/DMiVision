@@ -28,9 +28,13 @@ namespace DMi.Vision.Api.Controllers
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(int id)
         {
-            return "value";
+            var feature = _dbContext.Features.SingleOrDefault(x => x.Id == id);
+            if (feature != null) {
+                return new ObjectResult(feature);
+            }
+            return new BadRequestResult();
         }
 
         // POST api/values

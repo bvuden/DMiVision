@@ -4,6 +4,7 @@
     angular
         .module('app')
         .controller('FeaturesListController', FeaturesListController)
+        .controller('FeaturesDetailController', FeaturesDetailController)
         .controller('FeaturesAddController', FeaturesAddController);
 
 
@@ -13,6 +14,14 @@
     function FeaturesListController($scope, Feature) {
         $scope.features = Feature.query();
     }
+
+    /* Details Controller */
+    FeaturesDetailController.$inject = ['$scope', '$routeParams', '$location', 'Feature'];
+
+    function FeaturesDetailController($scope, $routeParams, $location, Feature) {
+        $scope.feature = Feature.get({ id: $routeParams.id });        
+    }
+
 
     /* Create Controller */
     FeaturesAddController.$inject = ['$scope', '$location', 'Feature'];
