@@ -2,9 +2,7 @@
   "locked": false,
   "version": -9998,
   "projectFileDependencyGroups": {
-    "": [
-      "DMi.Infrastructure >= 1.0.0-*"
-    ],
+    "": [],
     "DNX,Version=v4.5.1": [],
     "DNXCore,Version=v5.0": [
       "System.Collections >= 4.0.10-beta-22816",

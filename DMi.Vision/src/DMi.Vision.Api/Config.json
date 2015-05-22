@@ -1,0 +1,12 @@
+﻿{
+    "Data": {
+        "DefaultConnection": {
+            "ConnectionString": "Server=(localdb)\\MSSQLLocalDB;Database=DMiVision;Trusted_Connection=True;"
+        }
+    },
+    "EntityFramework": {
+        "VisionContext": {
+            "ConnectionStringKey": "Data:DefaultConnection:ConnectionString"
+        }
+    }
+}

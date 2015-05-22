@@ -2,21 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DMi.Infrastructure;
 
 namespace DMi.Vision.Models
 {
     
-    public class Feature : DomainEntity<int>, IDateTracking
+    public class Feature : IDateTracking
     {
         private string _title;
-        private string _description; 
+        private string _description;
+
+        public Feature()
+        {
+
+        }
 
         public Feature(string title, string description)
         {
             _title = title;
             _description = description;
         }
+
+        public int Id { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time the feature was created.
