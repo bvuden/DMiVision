@@ -18,26 +18,24 @@ namespace DMi.Vision.Api.Controllers
             var created = dbContext.Database.EnsureCreated();
             _dbContext = dbContext;
         }
-
-        // GET: api/values
+        
         [HttpGet]
         public IEnumerable<Feature> Get()
         {
             return _dbContext.Features;
         }
 
-        // GET api/values/5
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
             var feature = _dbContext.Features.SingleOrDefault(x => x.Id == id);
-            if (feature != null) {
+            if (feature != null)
+            {
                 return new ObjectResult(feature);
             }
             return new BadRequestResult();
         }
 
-        // POST api/values
         [HttpPost]
         public IActionResult Post([FromBody]FeatureAddOrEdit model)
         {
@@ -54,7 +52,6 @@ namespace DMi.Vision.Api.Controllers
             return new BadRequestObjectResult(ModelState);
         }
 
-        // PUT api/values/5
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody]FeatureAddOrEdit model)
         {

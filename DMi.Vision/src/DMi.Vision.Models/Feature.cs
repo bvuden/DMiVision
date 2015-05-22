@@ -25,6 +25,11 @@ namespace DMi.Vision.Models
         public int Id { get; set; }
 
         /// <summary>
+        /// unique identifier of user in the system
+        /// </summary>
+        public string AuthorId { get; set; }
+
+        /// <summary>
         /// Gets or sets the date and time the feature was created.
         /// </summary>
         public DateTime DateCreated { get; set; }
@@ -43,7 +48,8 @@ namespace DMi.Vision.Models
             get { return _description; }
             set { _description = value; }
         }
-        public int Points { get; set; }
+
+        public IEnumerable<Vote> Votes { get; set; }
     }
 
     
