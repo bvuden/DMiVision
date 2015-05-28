@@ -9,18 +9,18 @@
 
 
     /* List Controller*/
-    FeaturesListController.$inject = ['$scope', 'Feature'];
+    FeaturesListController.$inject = ['$scope', '$sessionStorage', 'Feature'];
 
-    function FeaturesListController($scope, Feature) {
+    function FeaturesListController($scope, $sessionStorage, Feature) {
         $scope.features = Feature.query();
-      
+        $scope.authorId = jwt_decode($sessionStorage.token.access_token).sub;
     }
 
     /* Details Controller */
     FeaturesDetailController.$inject = ['$scope', '$routeParams', '$location', 'Feature'];
 
     function FeaturesDetailController($scope, $routeParams, $location, Feature) {
-        $scope.feature = Feature.get({ id: $routeParams.id });        
+        $scope.feature = Feature.get({ id: $routeParams.id });
     }
 
 
@@ -33,11 +33,11 @@
             $scope.feature.$save(
                 //succes
                 function () {
-                $location.path('/');
+                    $location.path('/');
                 },
                 //error
                 function (error) {
-                    _showValidationErrors($scope,error)
+                    _showValidationErrors($scope, error)
                 }
             );
         };

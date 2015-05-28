@@ -10,14 +10,15 @@
             requireToken: !0
         }).when("/features/detail/:id", {
             templateUrl: "/Views/detail.html",
-            controller: "FeaturesDetailController"
+            controller: "FeaturesDetailController",
+            requireToken: !0
         }), b.html5Mode(!0).hashPrefix("!");
     }
     a.$inject = [ "$routeProvider", "$locationProvider" ], angular.module("appVision", [ "afOAuth2", "ngRoute", "ngStorage", "featuresService" ]).config(a);
 }(), function() {
     "use strict";
-    function a(a, b) {
-        a.features = b.query();
+    function a(a, b, c) {
+        a.features = c.query(), a.authorId = jwt_decode(b.token.access_token).sub;
     }
     function b(a, b, c, d) {
         a.feature = d.get({
@@ -37,7 +38,7 @@
         if (a.validationErrors = [], b.data && angular.isObject(b.data)) for (var c in b.data) a.validationErrors.push(b.data[c][0]); else a.validationErrors.push("Could not add feature.");
     }
     angular.module("appVision").controller("FeaturesListController", a).controller("FeaturesDetailController", b).controller("FeaturesAddController", c), 
-    a.$inject = [ "$scope", "Feature" ], b.$inject = [ "$scope", "$routeParams", "$location", "Feature" ], 
+    a.$inject = [ "$scope", "$sessionStorage", "Feature" ], b.$inject = [ "$scope", "$routeParams", "$location", "Feature" ], 
     c.$inject = [ "$scope", "$location", "Feature" ];
 }(), function() {
     "use strict";

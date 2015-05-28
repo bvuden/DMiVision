@@ -21,7 +21,8 @@
         $routeProvider
         .when('/', {
             templateUrl: '/Views/list.html',
-            controller: 'FeaturesListController'
+            controller: 'FeaturesListController',
+            //requireToken: true
 
         })
         .when('/features/add', {
@@ -31,7 +32,8 @@
         })
         .when('/features/detail/:id', {
             templateUrl: '/Views/detail.html',
-            controller: 'FeaturesDetailController'
+            controller: 'FeaturesDetailController',
+            requireToken: true
         });
         //.otherwise({
         //    redirectTo: '/'

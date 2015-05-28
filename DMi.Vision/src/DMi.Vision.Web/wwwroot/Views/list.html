@@ -11,8 +11,10 @@
         <tbody>
             <tr ng-repeat="feature in features">
                 <td>
-                    <a href="/features/edit/{{feature.Id}}" class="btn btn-default btn-xs">edit</a>
-                    <a href="/features/delete/{{feature.Id}}" class="btn btn-danger btn-xs">delete</a>
+                    <div ng-if="feature.AuthorId == authorId">
+                        <a href="/features/edit/{{feature.Id}}" class="btn btn-default btn-xs">edit</a>
+                        <a href="/features/delete/{{feature.Id}}" class="btn btn-danger btn-xs">delete</a>
+                    </div>
                 </td>
                 <td><a href="/features/detail/{{feature.Id}}">{{feature.Title}}</a></td>
                 <td>{{feature.Description}}</td>

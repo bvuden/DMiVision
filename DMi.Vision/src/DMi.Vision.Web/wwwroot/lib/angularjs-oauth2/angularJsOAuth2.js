@@ -23,11 +23,9 @@ angular.module('oauth2.accessToken', ['ngStorage']).factory('AccessToken', ['$ro
 	}
 
 	function setTokenFromHashParams(hash) {
-        console.log(hash);
 		var token = getTokenFromHashParams(hash);
 		if (token !== null) {
-		    setExpiresAt(token);
-		    console.log(token);
+			setExpiresAt(token);
 			$sessionStorage.token = token;
 		}
 		return token;
@@ -47,7 +45,7 @@ angular.module('oauth2.accessToken', ['ngStorage']).factory('AccessToken', ['$ro
             }
         }
 
-        if((token.access_token && token.expires_in) || token.error){
+        if ((token.access_token && token.expires_in) || token.error) {
             return token;
         }
         return null;
@@ -59,11 +57,11 @@ angular.module('oauth2.accessToken', ['ngStorage']).factory('AccessToken', ['$ro
 	service.set = function() {
 		// Try and get the token from the hash params on the URL
 		var hashValues = window.location.hash;
-		if (hashValues.length > 0) {		    
-		    //quick fix, html5 mode
-		    //if (hashValues.indexOf('#/') == 0) {
-		        if (hashValues.indexOf('#') == 0) {
-				hashValues = hashValues.substring(1);
+		if (hashValues.length > 0) {
+			//if (hashValues.indexOf('#/') == 0) {
+			//    hashValues = hashValues.substring(2);
+			    if (hashValues.indexOf('#') == 0) {
+			        hashValues = hashValues.substring(1);
 			}
 			service.token = setTokenFromHashParams(hashValues);
 		}
@@ -212,7 +210,7 @@ angular.module('oauth2.directive', []).directive('oauth2', ['$rootScope', '$http
 
 	definition.link = function(scope, element, attrs) {
 		function compile() {
-		    var tpl = '<p class="navbar-btn"><a class="{{buttonClass}}"><span href="#" ng-hide="signedIn" ng-click="signIn()" >{{signInText}}</span><span href="#" ng-show="signedIn" ng-click="signOut()">{{signOutText}}</span></a></p>';		    
+			var tpl = '<p class="navbar-btn"><a class="{{buttonClass}}"><span href="#" ng-hide="signedIn" ng-click="signIn()" >{{signInText}}</span><span href="#" ng-show="signedIn" ng-click="signOut()">{{signOutText}}</span></a></p>';
 			if (scope.template) {
 				$http.get(scope.template, { cache: $templateCache }).success(function(html) {
 		        element.html(html);

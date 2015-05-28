@@ -19,7 +19,9 @@
     <script src="lib/angular-resource/angular-resource.js"></script>
     <script src="lib/ngstorage/ngstorage.js"></script>
     <!--<script src="lib/oauth-ng/js/oauth-ng.js"></script>-->
+    <script src="lib/jwt-decode/jwt-decode.js"></script>
     <script src="lib/angularjs-oauth2/angularjsoauth2.js"></script>
+    
 
     <!-- App -->
     <link rel="stylesheet" href="styles.css" />
@@ -57,8 +59,7 @@
                                     redirect-url="http://localhost:1881/"
                                     scope="dmivisionapi"
                                     sign-out-url="https://dmiteststs.azurewebsites.net/logout"                                    
-                                    response-type="token",                                    
-                                    html5=true
+                                    response-type="token"
                                     >
                             </oauth2>
                         </li>
