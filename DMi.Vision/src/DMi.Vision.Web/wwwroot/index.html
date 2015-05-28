@@ -17,9 +17,9 @@
     <script src="lib/angular/angular.js"></script>
     <script src="lib/angular-route/angular-route.js"></script>
     <script src="lib/angular-resource/angular-resource.js"></script>
-    <script src="lib/ngstorage/ngstorage.js"></script>    
-    <script src="lib/oauth-ng/js/oauth-ng.js"></script>
-      
+    <script src="lib/ngstorage/ngstorage.js"></script>
+    <!--<script src="lib/oauth-ng/js/oauth-ng.js"></script>-->
+    <script src="lib/angularjs-oauth2/angularjsoauth2.js"></script>
 
     <!-- App -->
     <link rel="stylesheet" href="styles.css" />
@@ -28,6 +28,45 @@
 </head>
 <body ng-cloak>
     <!--site="https://localhost:44300"-->
+    <div class="header">
+        <div class="navbar navbar-default" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+                    <a class="navbar-brand" href="#/">angularJs</a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="js-navbar-collapse">
+
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="#/">Home</a></li>
+                        <li><a ng-href="#/about">About</a></li>
+                        <li><a ng-href="#/">Contact</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <oauth2 authorization-url="https://dmiteststs.azurewebsites.net/connect/authorize"
+                                    client-id="implicitclient"
+                                    redirect-url="http://localhost:1881/"
+                                    scope="dmivisionapi"
+                                    sign-out-url="https://dmiteststs.azurewebsites.net/logout"                                    
+                                    response-type="token",                                    
+                                    html5=true
+                                    >
+                            </oauth2>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="container-fluid">
         <ng-view></ng-view>

@@ -13,21 +13,7 @@
 
     function FeaturesListController($scope, Feature) {
         $scope.features = Feature.query();
-        console.log("wzz");
-        $scope.$on('oauth:login', function (event, token) {
-            console.log('yo');
-            console.log(token);
-            sessionStorage.setItem("accessToken", token.access_token);
-            //$scope.accessToken = token.access_token;
-            //console.log($scope.accessToken);
-            console.log(sessionStorage.getItem("accessToken"));
-        });
-
-
-        $scope.$on('oauth:logout', function (event) {
-            console.log("logging out");
-            $scope.accessToken = null;
-        });
+      
     }
 
     /* Details Controller */
