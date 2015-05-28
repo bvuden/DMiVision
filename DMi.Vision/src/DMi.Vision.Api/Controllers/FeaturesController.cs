@@ -2,23 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DMi.BridgeToVnext.Attributes;
 using DMi.Vision.Api.Models;
 using DMi.Vision.Models;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 
 namespace DMi.Vision.Api.Controllers
 {
+    
     [Route("api/[controller]")]
     public class FeaturesController : Controller
     {
         private VisionContext _dbContext;
-
+        
         public FeaturesController(VisionContext dbContext)
         {
             var created = dbContext.Database.EnsureCreated();
             _dbContext = dbContext;
         }
-        
+
+        [ResourceAuthorize("Read", "Features")]
         [HttpGet]
         public IEnumerable<Feature> Get()
         {

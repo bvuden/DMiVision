@@ -9,6 +9,8 @@ using Microsoft.AspNet.Routing;
 using Microsoft.Data.Entity;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
+using Owin;
+using Thinktecture.IdentityServer.AccessTokenValidation;
 
 namespace DMi.Vision.Api
 {
@@ -39,6 +41,12 @@ namespace DMi.Vision.Api
                         )
                     );
 
+            // add config settings
+            Configuration = new Configuration()
+                .AddJsonFile("Config.json")
+                //.AddJsonFile("ConfigSettings.json")
+                .AddEnvironmentVariables();
+
             services.AddMvc();
             // Uncomment the following line to add Web API services which makes it easier to port Web API 2 controllers.
             // You will also need to add the Microsoft.AspNet.Mvc.WebApiCompatShim package to the 'dependencies' section of project.json.
@@ -54,6 +62,16 @@ namespace DMi.Vision.Api
         // Configure is called after ConfigureServices is called.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseAppBuilder(o => o.UseResourceAuthorization(new Helpers.AuthorizationManager()));
+
+            app.UseAppBuilder(
+                o => o.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
+                {
+                    Authority = Configuration.Get("SecurityTokenService:Authority"),
+                    RequiredScopes = new[] { "dmivisionapi" }
+                })
+            );
+
             //add cors to the request pipeline
             app.UseCors("allowAll");
 

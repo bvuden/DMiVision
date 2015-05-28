@@ -1,0 +1,19 @@
+﻿{
+    "version": "1.0.0-*",
+    "description": "",
+    "authors": [ "" ],
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUrl": "",
+
+    "dependencies": {
+        "Microsoft.AspNet.Mvc": "6.0.0-beta4",
+        "Microsoft.AspNet.Owin": "1.0.0-beta4",        
+        "Thinktecture.IdentityModel.Core": "1.4.0",        
+        "Microsoft.Owin.Security.OpenIdConnect": "3.0.1"
+    },
+
+  "frameworks" : {
+    "dnx451": { }
+  }
+}

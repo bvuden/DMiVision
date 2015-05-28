@@ -3,12 +3,15 @@
 
     config.$inject = ['$routeProvider', '$locationProvider'];
 
-    angular.module('app', [
+
+    angular.module('appVision', [
+        'oauth',
         // Angular modules 
         'ngRoute',
         // Custom modules 
-        'featuresService'
+        'featuresService',
         // 3rd Party Modules        
+
     ]).config(config);
 
     function config($routeProvider, $locationProvider) {
@@ -26,6 +29,6 @@
             controller: 'FeaturesDetailController'
         });
 
-        $locationProvider.html5Mode(true);
+        $locationProvider.html5Mode(true).hashPrefix('!');;
     }
 })();

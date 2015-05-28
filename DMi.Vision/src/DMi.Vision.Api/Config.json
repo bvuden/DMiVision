@@ -8,5 +8,9 @@
         "VisionContext": {
             "ConnectionStringKey": "Data:DefaultConnection:ConnectionString"
         }
+    },
+    "SecurityTokenService": {
+        //"Authority": "https://localhost:44300/",
+        "Authority": "https://dmiteststs.azurewebsites.net/"
     }
 }
