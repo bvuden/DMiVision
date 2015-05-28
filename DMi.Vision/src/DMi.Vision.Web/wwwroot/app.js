@@ -50,36 +50,39 @@
             port: ":1482",
             id: "@id"
         }, {
+            get: {
+                headers: {
+                    Authorization: "Bearer " + sessionStorage.getItem("accessToken")
+                }
+            },
+            save: {
+                headers: {
+                    Authorization: "Bearer " + sessionStorage.getItem("accessToken")
+                }
+            },
             query: {
-                method: "GET",
-                params: {},
                 isArray: !0,
                 headers: {
                     Authorization: "Bearer " + sessionStorage.getItem("accessToken")
                 }
             },
             update: {
-                method: "PUT"
+                method: "PUT",
+                headers: {
+                    Authorization: "Bearer " + sessionStorage.getItem("accessToken")
+                }
+            },
+            remove: {
+                headers: {
+                    Authorization: "Bearer " + sessionStorage.getItem("accessToken")
+                }
+            },
+            "delete": {
+                headers: {
+                    Authorization: "Bearer " + sessionStorage.getItem("accessToken")
+                }
             }
         });
         return b;
-    } ]).factory("TokenHandler", function() {
-        var a = {}, b = "none";
-        a.set = function(a) {
-            b = a;
-        }, a.get = function() {
-            return sessionStorage.getItem("accessToken");
-        }, a.wrapActions = function(a, b) {
-            for (var d = a, e = 0; e < b.length; e++) c(d, b[e]);
-            return d;
-        };
-        var c = function(b, c) {
-            b["_" + c] = b[c], b[c] = function(d, e, f) {
-                return b["_" + c](angular.extend({}, d || {}, {
-                    access_token: a.get()
-                }), e, f);
-            };
-        };
-        return a;
-    });
+    } ]);
 }();
