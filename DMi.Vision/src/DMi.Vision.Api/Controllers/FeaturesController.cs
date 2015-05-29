@@ -50,6 +50,7 @@ namespace DMi.Vision.Api.Controllers
                 var feature = new Feature(model.Title, model.Description);
                 feature.DateCreated = DateTime.Now;
                 feature.DateModified = feature.DateCreated;
+                feature.Status = FeatureStatus.UnderReview;
                 feature.AuthorId = GetAuthenticatedUserId();
 
                 _dbContext.Add(feature);

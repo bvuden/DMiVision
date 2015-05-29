@@ -49,6 +49,8 @@ namespace DMi.Vision.Models
             set { _description = value; }
         }
 
+        public FeatureStatus Status { get; set; }
+
         public IEnumerable<Vote> Votes { get; set; }
     }
 
