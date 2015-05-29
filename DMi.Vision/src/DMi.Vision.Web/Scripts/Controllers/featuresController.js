@@ -6,8 +6,8 @@
         .controller('FeaturesListController', FeaturesListController)
         .controller('FeaturesDetailController', FeaturesDetailController)
         .controller('FeaturesAddController', FeaturesAddController)
-        .controller('FeaturesEditController', FeaturesEditController);
-
+        .controller('FeaturesEditController', FeaturesEditController)
+        .controller('FeaturesDeleteController', FeaturesDeleteController);
 
 
     /* List Controller*/
@@ -50,8 +50,8 @@
 
     function FeaturesEditController($scope, $routeParams, $location, Feature) {
         $scope.feature = Feature.get({ id: $routeParams.id });
-        $scope.edit = function () {            
-            $scope.feature.$update({ id: $routeParams.id },
+        $scope.edit = function () {
+            $scope.feature.$update({ id: $scope.feature.Id },
                 //succes
                 function () {
                     $location.path('/');
@@ -63,6 +63,20 @@
             );
         }
     }
+
+
+    /* Delete controller*/
+   FeaturesDeleteController.$inject = ['$scope', '$routeParams', '$location', 'Feature'];
+
+    function FeaturesDeleteController($scope, $routeParams, $location, Feature) {
+        $scope.feature = Feature.get({ id: $routeParams.id });
+        $scope.remove = function () {            
+            $scope.feature.$remove({ id: $scope.feature.Id }, function () {
+                $location.path('/');
+            });
+        };
+    }
+
 
     /* Utility Functions */
     function _showValidationErrors($scope, error) {

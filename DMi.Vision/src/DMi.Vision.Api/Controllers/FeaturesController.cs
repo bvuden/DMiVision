@@ -66,24 +66,37 @@ namespace DMi.Vision.Api.Controllers
         {
             Feature feature = _dbContext.Features.SingleOrDefault(x => x.Id == id);
 
-            if (ModelState.IsValid && feature.AuthorId == GetAuthenticatedUserId())
+            if (ModelState.IsValid && feature != null)
             {
-                if (feature != null)
+                if (feature.AuthorId == GetAuthenticatedUserId())
                 {
                     feature.Title = model.Title;
                     feature.Description = model.Description;
                     feature.DateModified = DateTime.Now;
+                    _dbContext.SaveChanges();
+                    return new ObjectResult(feature);
                 }
-                _dbContext.SaveChanges();
-                return new ObjectResult(feature);
+                return new BadRequestObjectResult(ModelState);
             }
             return new BadRequestObjectResult(ModelState);
         }
 
         // DELETE api/values/5
+        [ResourceAuthorize("Write", "Features")]
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            Feature feature = _dbContext.Features.SingleOrDefault(x => x.Id == id);
+            if (feature != null)
+            {
+                if (feature.AuthorId == GetAuthenticatedUserId())
+                {
+                    _dbContext.Features.Remove(feature);
+                    _dbContext.SaveChanges();
+                    return new HttpStatusCodeResult(200);
+                }
+            }
+            return new BadRequestResult();
         }
 
 

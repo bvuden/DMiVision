@@ -39,6 +39,11 @@
             templateUrl: '/Views/edit.html',
             controller: 'FeaturesEditController',
             requireToken: true
+        })
+        .when('/features/delete/:id', {
+            templateUrl: '/Views/delete.html',
+            controller: 'FeaturesDeleteController',
+            requireToken: true
         });
         //.otherwise({
         //    redirectTo: '/'
