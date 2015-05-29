@@ -50,8 +50,8 @@
 
     function FeaturesEditController($scope, $routeParams, $location, Feature) {
         $scope.feature = Feature.get({ id: $routeParams.id });
-        $scope.edit = function () {
-            $scope.feature.$save(
+        $scope.edit = function () {            
+            $scope.feature.$update({ id: $routeParams.id },
                 //succes
                 function () {
                     $location.path('/');

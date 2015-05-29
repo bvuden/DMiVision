@@ -42,7 +42,9 @@
         a.feature = d.get({
             id: b.id
         }), a.edit = function() {
-            a.feature.$save(function() {
+            a.feature.$update({
+                id: b.id
+            }, function() {
                 c.path("/");
             }, function(b) {
                 e(a, b);
@@ -57,8 +59,15 @@
     c.$inject = [ "$scope", "$location", "Feature" ], d.$inject = [ "$scope", "$routeParams", "$location", "Feature" ];
 }(), function() {
     "use strict";
-    function a(a) {
-        return a("http://localhost:1482/api/features/:id");
-    }
-    angular.module("featuresService", [ "ngResource" ]).factory("Feature", a), a.$inject = [ "$resource" ];
+    angular.module("featuresService", [ "ngResource" ]).factory("Feature", [ "$resource", function(a) {
+        var b = a("http://localhost:port/api/features/:id", {
+            port: ":1482",
+            id: "@id"
+        }, {
+            update: {
+                method: "PUT"
+            }
+        });
+        return b;
+    } ]);
 }();
