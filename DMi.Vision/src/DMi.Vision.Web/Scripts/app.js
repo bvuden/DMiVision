@@ -34,6 +34,11 @@
             templateUrl: '/Views/detail.html',
             controller: 'FeaturesDetailController',
             requireToken: true
+        })
+        .when('/features/edit/:id', {
+            templateUrl: '/Views/edit.html',
+            controller: 'FeaturesEditController',
+            requireToken: true
         });
         //.otherwise({
         //    redirectTo: '/'

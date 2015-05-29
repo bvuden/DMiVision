@@ -5,7 +5,9 @@
         .module('appVision')
         .controller('FeaturesListController', FeaturesListController)
         .controller('FeaturesDetailController', FeaturesDetailController)
-        .controller('FeaturesAddController', FeaturesAddController);
+        .controller('FeaturesAddController', FeaturesAddController)
+        .controller('FeaturesEditController', FeaturesEditController);
+
 
 
     /* List Controller*/
@@ -22,7 +24,6 @@
     function FeaturesDetailController($scope, $routeParams, $location, Feature) {
         $scope.feature = Feature.get({ id: $routeParams.id });
     }
-
 
     /* Create Controller */
     FeaturesAddController.$inject = ['$scope', '$location', 'Feature'];
@@ -41,6 +42,26 @@
                 }
             );
         };
+    }
+
+
+    /* Edit controller */
+    FeaturesEditController.$inject = ['$scope', '$routeParams', '$location', 'Feature'];
+
+    function FeaturesEditController($scope, $routeParams, $location, Feature) {
+        $scope.feature = Feature.get({ id: $routeParams.id });
+        $scope.edit = function () {
+            $scope.feature.$save(
+                //succes
+                function () {
+                    $location.path('/');
+                },
+                //error
+                function (error) {
+                    _showValidationErrors($scope, error)
+                }
+            );
+        }
     }
 
     /* Utility Functions */
