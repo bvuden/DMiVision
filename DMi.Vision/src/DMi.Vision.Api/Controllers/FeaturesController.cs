@@ -25,9 +25,25 @@ namespace DMi.Vision.Api.Controllers
 
         [ResourceAuthorize("Read", "Features")]
         [HttpGet]
-        public IEnumerable<Feature> Get()
+        public IEnumerable<FeatureList> Get()
         {
-            return _dbContext.Features;
+            var features = _dbContext.Features.Include(f=>f.Votes);
+            var models = new List<FeatureList>();
+            foreach (var feature in features)
+            {
+                var model = new FeatureList
+                {
+                    Id = feature.Id,
+                    Title = feature.Title,
+                    Description = feature.Description,
+                    AuthorId = feature.AuthorId,
+                    TotalGivenVotePoints = feature.Votes.Sum(x => x.Points), //TODO check for null exception                    
+                };
+                var userVote = feature.Votes.FirstOrDefault(x => x.VoterId == GetAuthenticatedUserId());
+                model.UserGivenVotePoints = userVote != null ? userVote.Points : 0;
+                models.Add(model);
+            }
+            return models.AsEnumerable();
         }
 
         [HttpGet("{id}")]

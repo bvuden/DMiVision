@@ -4,6 +4,7 @@
         <thead>
             <tr>
                 <th></th>
+                <th>Points</th>
                 <th>Title</th>
                 <th>Description</th>
             </tr>
@@ -16,6 +17,7 @@
                         <a href="/features/delete/{{feature.Id}}" class="btn btn-danger btn-xs">delete</a>
                     </div>
                 </td>
+                <td>{{feature.TotalGivenVotePoints}}</td>
                 <td><a href="/features/detail/{{feature.Id}}">{{feature.Title}}</a></td>
                 <td>{{feature.Description}}</td>
             </tr>

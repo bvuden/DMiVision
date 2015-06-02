@@ -37,10 +37,6 @@ namespace DMi.Vision.Api.Models
         /// Amount of vote points the author has added to this feature request
         /// </summary>
         public int AuthorGivenVotePoints { get; set; }
-        /// <summary>
-        /// Total amount of vote points added to the feature request
-        /// </summary>
-        //public int TotalGivenVotePoints { get; set; }
 
         ///// <summary>
         ///// Amount of vote points available to the author of this feature request
