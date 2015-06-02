@@ -27,7 +27,7 @@ namespace DMi.Vision.Api.Controllers
         [HttpGet]
         public IEnumerable<Feature> Get()
         {
-            return  _dbContext.Features;
+            return _dbContext.Features;
         }
 
         [HttpGet("{id}")]
@@ -35,10 +35,11 @@ namespace DMi.Vision.Api.Controllers
         {
             var feature = _dbContext.Features.Include(x => x.Votes).ToList().FirstOrDefault(x => x.Id == id);
 
-            if (feature != null)
+            if (feature != null && feature.AuthorId == GetAuthenticatedUserId())
             {
                 var model = new FeatureAddOrEdit(feature.Title, feature.Description);
-                model.AuthorGivenVotePoints = feature.Votes.FirstOrDefault(v => v.VoterId == GetAuthenticatedUserId()).Points;
+                var authorVote = feature.Votes.FirstOrDefault(v => v.VoterId == GetAuthenticatedUserId());
+                model.AuthorGivenVotePoints = authorVote != null ? authorVote.Points : 0;
                 return new ObjectResult(model);
             }
             return new BadRequestResult();
@@ -71,26 +72,21 @@ namespace DMi.Vision.Api.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody]FeatureAddOrEdit model)
         {
-            var feature = _dbContext.Features.Include(f=>f.Votes).FirstOrDefault(x=>x.Id==id);
+            var feature = _dbContext.Features.Include(f => f.Votes).FirstOrDefault(x => x.Id == id);
 
-            if (ModelState.IsValid && feature != null)
+            if (ModelState.IsValid && feature != null && feature.AuthorId == GetAuthenticatedUserId())
             {
-                if (feature.AuthorId == GetAuthenticatedUserId())
-                {
-                    feature.Title = model.Title;
-                    feature.Description = model.Description;
-                    feature.DateModified = DateTime.Now;
+                feature.Title = model.Title;
+                feature.Description = model.Description;
+                feature.DateModified = DateTime.Now;
 
-                    //get creator own vote
-                    var authorVote = feature.Votes.FirstOrDefault(x => x.VoterId == feature.AuthorId);
-                    authorVote.Points = model.AuthorGivenVotePoints;
+                //get creator own vote
+                var authorVote = feature.Votes.FirstOrDefault(x => x.VoterId == feature.AuthorId);
+                authorVote.Points = model.AuthorGivenVotePoints;
 
-                    _dbContext.SaveChanges();
-                    return new HttpStatusCodeResult(200);
-                }
-                return new BadRequestObjectResult(ModelState);
+                _dbContext.SaveChanges();
+                return new HttpStatusCodeResult(200);
             }
-
             return new BadRequestObjectResult(ModelState);
         }
 
