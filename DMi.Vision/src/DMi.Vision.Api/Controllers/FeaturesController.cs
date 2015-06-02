@@ -27,16 +27,19 @@ namespace DMi.Vision.Api.Controllers
         [HttpGet]
         public IEnumerable<Feature> Get()
         {
-            return _dbContext.Features;
+            return  _dbContext.Features;
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var feature = _dbContext.Features.SingleOrDefault(x => x.Id == id);
+            var feature = _dbContext.Features.Include(x => x.Votes).ToList().FirstOrDefault(x => x.Id == id);
+
             if (feature != null)
             {
-                return new ObjectResult(feature);
+                var model = new FeatureAddOrEdit(feature.Title, feature.Description);
+                model.AuthorGivenVotePoints = feature.Votes.FirstOrDefault(v => v.VoterId == GetAuthenticatedUserId()).Points;
+                return new ObjectResult(model);
             }
             return new BadRequestResult();
         }
@@ -46,14 +49,18 @@ namespace DMi.Vision.Api.Controllers
         public IActionResult Post([FromBody]FeatureAddOrEdit model)
         {
             if (ModelState.IsValid)
-            {              
+            {
                 var feature = new Feature(model.Title, model.Description);
                 feature.DateCreated = DateTime.Now;
                 feature.DateModified = feature.DateCreated;
                 feature.Status = FeatureStatus.UnderReview;
                 feature.AuthorId = GetAuthenticatedUserId();
-
-                _dbContext.Add(feature);
+                _dbContext.Features.Add(feature);
+                if (model.AuthorGivenVotePoints > 0)
+                {
+                    var vote = new Vote(feature.AuthorId, model.AuthorGivenVotePoints);
+                    feature.Votes.Add(vote);
+                }
                 _dbContext.SaveChanges();
                 return new HttpStatusCodeResult(201);
             }
@@ -64,7 +71,7 @@ namespace DMi.Vision.Api.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody]FeatureAddOrEdit model)
         {
-            Feature feature = _dbContext.Features.SingleOrDefault(x => x.Id == id);
+            var feature = _dbContext.Features.Include(f=>f.Votes).FirstOrDefault(x=>x.Id==id);
 
             if (ModelState.IsValid && feature != null)
             {
@@ -73,11 +80,17 @@ namespace DMi.Vision.Api.Controllers
                     feature.Title = model.Title;
                     feature.Description = model.Description;
                     feature.DateModified = DateTime.Now;
+
+                    //get creator own vote
+                    var authorVote = feature.Votes.FirstOrDefault(x => x.VoterId == feature.AuthorId);
+                    authorVote.Points = model.AuthorGivenVotePoints;
+
                     _dbContext.SaveChanges();
-                    return new ObjectResult(feature);
+                    return new HttpStatusCodeResult(200);
                 }
                 return new BadRequestObjectResult(ModelState);
             }
+
             return new BadRequestObjectResult(ModelState);
         }
 
@@ -104,6 +117,15 @@ namespace DMi.Vision.Api.Controllers
         {
             Claim subject = Request.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "sub");
             return subject.Value;
+        }
+
+        private int GetAvailableVotePointsForUser(string userId)
+        {
+            //todo make max amount configurable
+            const int maxPoints = 100;
+            // get spend vote points
+            var spentPoints = _dbContext.Votes.Where(v => v.VoterId == userId).Sum(x => x.Points);
+            return maxPoints - spentPoints;
         }
     }
 }

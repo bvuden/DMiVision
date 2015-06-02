@@ -133,18 +133,25 @@ angular.module('oauth2.interceptor', []).factory('OAuth2Interceptor', ['$rootSco
   			return response;
   		},
   		responseError: function(response) {
-  			var token = $sessionStorage.token;
-  			if (response.status === 401) {
-  				if (expired(token)) {
-  					$rootScope.$broadcast('oauth2:authExpired', token);
-  				} else {
-  					$rootScope.$broadcast('oauth2:unauthorized', token);
-  				}
-  			}
-  			else if (response.status === 500) {
-  				$rootScope.$broadcast('oauth2:internalservererror');
-  			}
-  			return response;
+  		    var token = $sessionStorage.token;
+
+  		    switch (response.status) {
+  		        case 401:
+  		            if (expired(token)) {
+  		                $rootScope.$broadcast('oauth2:authExpired', token);
+  		            } else {
+  		                $rootScope.$broadcast('oauth2:unauthorized', token);
+  		            }
+  		            break;
+  		        case 500:
+  		            $rootScope.$broadcast('oauth2:internalservererror');
+  		            break;
+  		        case 400:
+  		            return $q.reject(response);
+  		        default:
+  		            break;
+  		    }
+  		    return response;
   		}
 	};
   	return service;

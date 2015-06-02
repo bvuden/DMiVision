@@ -3,7 +3,8 @@
     function a(a, b) {
         a.when("/", {
             templateUrl: "/Views/list.html",
-            controller: "FeaturesListController"
+            controller: "FeaturesListController",
+            requireToken: !0
         }).when("/features/add", {
             templateUrl: "/Views/add.html",
             controller: "FeaturesAddController",
@@ -36,9 +37,9 @@
     function c(a, b, c) {
         a.feature = new c(), a.add = function() {
             a.feature.$save(function() {
-                b.path("/");
+                console.log("succes"), b.path("/");
             }, function(b) {
-                f(a, b);
+                console.log("error"), f(a, b);
             });
         };
     }
@@ -47,11 +48,11 @@
             id: b.id
         }), a.edit = function() {
             a.feature.$update({
-                id: a.feature.Id
+                id: b.id
             }, function() {
-                c.path("/");
+                console.log("succes"), c.path("/");
             }, function(b) {
-                f(a, b);
+                console.log("error"), f(a, b);
             });
         };
     }

@@ -34,10 +34,12 @@
             $scope.feature.$save(
                 //succes
                 function () {
+                    console.log("succes");
                     $location.path('/');
                 },
                 //error
                 function (error) {
+                    console.log("error");
                     _showValidationErrors($scope, error)
                 }
             );
@@ -50,14 +52,16 @@
 
     function FeaturesEditController($scope, $routeParams, $location, Feature) {
         $scope.feature = Feature.get({ id: $routeParams.id });
-        $scope.edit = function () {
-            $scope.feature.$update({ id: $scope.feature.Id },
+        $scope.edit = function () {          
+            $scope.feature.$update({ id: $routeParams.id },
                 //succes
                 function () {
+                    console.log("succes");
                     $location.path('/');
                 },
                 //error
                 function (error) {
+                    console.log("error");
                     _showValidationErrors($scope, error)
                 }
             );

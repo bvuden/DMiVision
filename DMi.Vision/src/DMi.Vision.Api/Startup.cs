@@ -55,8 +55,10 @@ namespace DMi.Vision.Api
             // Register Entity Framework
             services.AddEntityFramework()
                 .AddSqlServer()
-                .AddDbContext<VisionContext>(options => options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
-
+                .AddDbContext<VisionContext>(options =>
+                {
+                    options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]);
+                });
         }
 
         // Configure is called after ConfigureServices is called.

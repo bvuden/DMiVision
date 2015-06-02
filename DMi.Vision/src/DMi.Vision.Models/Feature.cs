@@ -5,21 +5,23 @@ using System.Threading.Tasks;
 
 namespace DMi.Vision.Models
 {
-    
+
     public class Feature : IDateTracking
     {
         private string _title;
         private string _description;
+        private List<Vote> _votes;
 
         public Feature()
         {
-
+            _votes = new List<Vote>();
         }
 
         public Feature(string title, string description)
         {
             _title = title;
             _description = description;
+            _votes = new List<Vote>();
         }
 
         public int Id { get; set; }
@@ -51,9 +53,12 @@ namespace DMi.Vision.Models
 
         public FeatureStatus Status { get; set; }
 
-        public IEnumerable<Vote> Votes { get; set; }
-    }
+        public  virtual List<Vote> Votes
+        {
+            get { return _votes; }
+            set { _votes = value; }
+        }
 
-    
+    }
 
 }

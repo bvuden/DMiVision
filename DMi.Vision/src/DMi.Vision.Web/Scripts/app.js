@@ -22,7 +22,7 @@
         .when('/', {
             templateUrl: '/Views/list.html',
             controller: 'FeaturesListController',
-            //requireToken: true
+            requireToken: true
 
         })
         .when('/features/add', {
