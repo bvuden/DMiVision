@@ -27,7 +27,9 @@
 }(), function() {
     "use strict";
     function a(a, b, c) {
-        a.features = c.query(), a.authorId = jwt_decode(b.token.access_token).sub;
+        c.query(function(b) {
+            a.features = b.Features, a.userAvailableVotePoints = b.UserAvailableVotePoints;
+        }), a.authorId = jwt_decode(b.token.access_token).sub;
     }
     function b(a, b, c, d) {
         a.feature = d.get({
@@ -81,6 +83,9 @@
             port: ":1482",
             id: "@id"
         }, {
+            query: {
+                isArray: !1
+            },
             update: {
                 method: "PUT"
             }

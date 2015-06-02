@@ -14,7 +14,10 @@
     FeaturesListController.$inject = ['$scope', '$sessionStorage', 'Feature'];
 
     function FeaturesListController($scope, $sessionStorage, Feature) {
-        $scope.features = Feature.query();
+        Feature.query(function (response) {
+            $scope.features = response.Features;
+            $scope.userAvailableVotePoints = response.UserAvailableVotePoints;
+        });
         $scope.authorId = jwt_decode($sessionStorage.token.access_token).sub;
     }
 

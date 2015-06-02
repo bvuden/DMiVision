@@ -8,6 +8,7 @@
               port: ":1482",
               id: '@id'
           }, {
+              query: {isArray:false},
               update: { method: 'PUT' }
           });
 
