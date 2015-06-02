@@ -37,9 +37,9 @@
     function c(a, b, c) {
         a.feature = new c(), a.add = function() {
             a.feature.$save(function() {
-                console.log("succes"), b.path("/");
+                b.path("/");
             }, function(b) {
-                console.log("error"), f(a, b);
+                f(a, b);
             });
         };
     }
@@ -50,9 +50,9 @@
             a.feature.$update({
                 id: b.id
             }, function() {
-                console.log("succes"), c.path("/");
+                c.path("/");
             }, function(b) {
-                console.log("error"), f(a, b);
+                f(a, b);
             });
         };
     }

@@ -34,12 +34,10 @@
             $scope.feature.$save(
                 //succes
                 function () {
-                    console.log("succes");
                     $location.path('/');
                 },
                 //error
                 function (error) {
-                    console.log("error");
                     _showValidationErrors($scope, error)
                 }
             );
@@ -56,12 +54,10 @@
             $scope.feature.$update({ id: $routeParams.id },
                 //succes
                 function () {
-                    console.log("succes");
                     $location.path('/');
                 },
                 //error
                 function (error) {
-                    console.log("error");
                     _showValidationErrors($scope, error)
                 }
             );

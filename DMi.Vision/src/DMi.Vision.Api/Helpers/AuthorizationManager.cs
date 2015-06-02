@@ -29,10 +29,10 @@ namespace DMi.Vision.Api.Helpers
             {
                 case "Read":
                     // to be able to read this resourcegroup, the user must be in the WebReadUser role
-                    return Eval(context.Principal.HasClaim("role", "WebReadUser"));
+                    return Eval(context.Principal.HasClaim("role", "DMiVisionUser"));
                 case "Write":
                     // to be able to write to this resourcegroup, the user must be in the WebWriteUser role
-                    return Eval(context.Principal.HasClaim("role", "WebWriteUser"));
+                    return Eval(context.Principal.HasClaim("role", "DMiVisionUser"));
                 default:
                     return Nok();
             }
