@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using DMi.BridgeToVnext.Attributes;
+using DMi.Vision.Api.Models;
+using DMi.Vision.Models;
 using Microsoft.AspNet.Mvc;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
@@ -9,14 +13,13 @@ using Microsoft.AspNet.Mvc;
 namespace DMi.Vision.Api.Controllers
 {
     [Route("api/features/{featureId}/[controller]")]
-    public class VotesController : Controller
+    public class VotesController : BaseController
     {
-        private VisionContext _dbContext;
 
         public VotesController(VisionContext dbContext)
+            : base(dbContext)
         {
-            var created = dbContext.Database.EnsureCreated();
-            _dbContext = dbContext;
+
         }
 
         // GET: api/values
@@ -39,9 +42,42 @@ namespace DMi.Vision.Api.Controllers
         //}
 
         // POST api/values
+        [ResourceAuthorize("Write", "Votes")]
         [HttpPost]
-        public void Post([FromBody]string value)
+        public IActionResult Post(int featureId, [FromBody]VoteAddOrEdit model)
         {
+            //TODO validate points for user (maxAvailable etc.)
+
+            // get vote for current user for the feature request
+            var userId = GetAuthenticatedUserId();
+            var userAvailablePoints = GetAvailableVotePointsForUser(userId);
+            var vote = _dbContext.Votes.SingleOrDefault(v => v.FeatureId == featureId && v.VoterId == userId);
+            var maxVotePoints = vote != null ? userAvailablePoints + vote.Points : userAvailablePoints;
+
+            //validate
+            if (model.UserGivenVotePoints > maxVotePoints)
+            {
+                ModelState.AddModelError("UserGivenVotePoints", "Given points exceeds available points");            
+            }
+
+            if (ModelState.IsValid)
+            {
+                if (vote != null)
+                {
+                    vote.Points = model.UserGivenVotePoints;
+                }
+                else
+                {
+                    //user did not vote on this feature request before
+                    var newVote = new Vote(userId, model.UserGivenVotePoints);
+                    newVote.FeatureId = featureId;
+                    _dbContext.Votes.Add(newVote);
+                }
+
+                _dbContext.SaveChanges();
+                return new HttpStatusCodeResult(201);
+            }
+            return new BadRequestObjectResult(ModelState);
         }
 
         // PUT api/values/5

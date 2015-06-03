@@ -22,15 +22,30 @@
     }
 
     /* Details Controller */
-    FeaturesDetailController.$inject = ['$scope', '$routeParams', '$location', 'Feature'];
+    FeaturesDetailController.$inject = ['$scope', '$routeParams', '$location', 'Feature', 'Vote'];
 
-    function FeaturesDetailController($scope, $routeParams, $location, Feature) {
-        Feature.get({ id: $routeParams.id }, function (response) {            
+    function FeaturesDetailController($scope, $routeParams, $location, Feature, Vote) {
+        //get feature data
+        Feature.get({ id: $routeParams.id }, function (response) {
             $scope.vm = response;
             $scope.maxPoints = response.UserAvailableVotePoints + response.UserGivenVotePoints;
         });
+        //update available vote points
         $scope.vote = function () {
             $scope.vm.UserAvailableVotePoints = $scope.maxPoints - $scope.vm.UserGivenVotePoints;
+        };
+        //save vote
+        $scope.saveVote = function () {
+            Vote.save({ featureId: $routeParams.id }, $scope.vm,
+                    //succes
+                    function () {
+                        $location.path('/');
+                    },
+                    //error
+                    function (error) {
+                        _showValidationErrors($scope, error)
+                    }
+                );
         };
     }
 
@@ -59,7 +74,7 @@
 
     function FeaturesEditController($scope, $routeParams, $location, Feature) {
         $scope.feature = Feature.get({ id: $routeParams.id });
-        $scope.edit = function () {          
+        $scope.edit = function () {
             $scope.feature.$update({ id: $routeParams.id },
                 //succes
                 function () {
@@ -75,11 +90,11 @@
 
 
     /* Delete controller*/
-   FeaturesDeleteController.$inject = ['$scope', '$routeParams', '$location', 'Feature'];
+    FeaturesDeleteController.$inject = ['$scope', '$routeParams', '$location', 'Feature'];
 
     function FeaturesDeleteController($scope, $routeParams, $location, Feature) {
         $scope.feature = Feature.get({ id: $routeParams.id });
-        $scope.remove = function () {            
+        $scope.remove = function () {
             $scope.feature.$remove({ id: $scope.feature.Id }, function () {
                 $location.path('/');
             });

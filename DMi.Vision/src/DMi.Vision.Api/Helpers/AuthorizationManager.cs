@@ -16,12 +16,30 @@ namespace DMi.Vision.Api.Helpers
             {
                 case "Features":
                     return AuthorizeFeatures(context);
+                case "Votes":
+                    return AuthorizeVotes(context);
                 default:
                     return Nok();
             }
         }
 
         private Task<bool> AuthorizeFeatures(ResourceAuthorizationContext context)
+        {
+            var action = context.Action.First().Value;
+
+            switch (action)
+            {
+                case "Read":
+                    // to be able to read this resourcegroup, the user must be in the WebReadUser role
+                    return Eval(context.Principal.HasClaim("role", "DMiVisionUser"));
+                case "Write":
+                    // to be able to write to this resourcegroup, the user must be in the WebWriteUser role
+                    return Eval(context.Principal.HasClaim("role", "DMiVisionUser"));
+                default:
+                    return Nok();
+            }
+        }
+        private Task<bool> AuthorizeVotes(ResourceAuthorizationContext context)
         {
             var action = context.Action.First().Value;
 

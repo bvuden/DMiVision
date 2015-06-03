@@ -13,14 +13,14 @@ namespace DMi.Vision.Api.Controllers
 {
 
     [Route("api/[controller]")]
-    public class FeaturesController : Controller
+    public class FeaturesController : BaseController
     {
-        private VisionContext _dbContext;
+       
 
         public FeaturesController(VisionContext dbContext)
+            :base(dbContext)
         {
-            var created = dbContext.Database.EnsureCreated();
-            _dbContext = dbContext;
+
         }
 
         [ResourceAuthorize("Read", "Features")]
@@ -38,7 +38,7 @@ namespace DMi.Vision.Api.Controllers
                     Title = feature.Title,
                     Description = feature.Description,
                     AuthorId = feature.AuthorId,
-                    TotalGivenVotePoints = feature.Votes.Sum(x => x.Points), //TODO check for null exception                    
+                    TotalGivenVotePoints = feature.Votes.Sum(x => x.Points), 
                 };
                 var userVote = feature.Votes.FirstOrDefault(x => x.VoterId == GetAuthenticatedUserId());
                 item.UserGivenVotePoints = userVote != null ? userVote.Points : 0;
@@ -58,7 +58,7 @@ namespace DMi.Vision.Api.Controllers
             {
                 var model = new FeatureAddOrEdit(feature.Title, feature.Description);
                 var authorVote = feature.Votes.FirstOrDefault(v => v.VoterId == GetAuthenticatedUserId());
-                model.TotalGivenVotePoints = feature.Votes.Sum(x => x.Points); //TODO check for null exception   
+                model.TotalGivenVotePoints = feature.Votes.Sum(x => x.Points); 
                 model.UserGivenVotePoints = authorVote != null ? authorVote.Points : 0;
                 model.UserAvailableVotePoints = GetAvailableVotePointsForUser(userId);
                 return new ObjectResult(model);
@@ -137,25 +137,6 @@ namespace DMi.Vision.Api.Controllers
                 }
             }
             return new BadRequestResult();
-        }
-
-
-        private string GetAuthenticatedUserId()
-        {
-            Claim subject = Request.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "sub");
-            return subject.Value;
-        }
-
-        private int GetAvailableVotePointsForUser(string userId)
-        {
-            //todo make max amount configurable
-            const int maxPoints = 100;
-            // get spend vote points
-
-            var userVotes = _dbContext.Votes.Where(v => v.VoterId == userId);
-            var spentPoints = userVotes != null ? userVotes.Sum(x => x.Points) : 0;
-
-            return maxPoints - spentPoints;
         }
     }
 }

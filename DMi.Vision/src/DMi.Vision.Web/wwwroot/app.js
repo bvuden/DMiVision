@@ -23,7 +23,7 @@
             requireToken: !0
         }), b.html5Mode(!0).hashPrefix("!");
     }
-    a.$inject = [ "$routeProvider", "$locationProvider" ], angular.module("appVision", [ "afOAuth2", "ngRoute", "ngStorage", "featuresService" ]).config(a);
+    a.$inject = [ "$routeProvider", "$locationProvider" ], angular.module("appVision", [ "afOAuth2", "ngRoute", "ngStorage", "featuresService", "votesService" ]).config(a);
 }(), function() {
     "use strict";
     function a(a, b, c) {
@@ -31,13 +31,21 @@
             a.features = b.Features, a.userAvailableVotePoints = b.UserAvailableVotePoints;
         }), a.authorId = jwt_decode(b.token.access_token).sub;
     }
-    function b(a, b, c, d) {
+    function b(a, b, c, d, e) {
         d.get({
             id: b.id
         }, function(b) {
             a.vm = b, a.maxPoints = b.UserAvailableVotePoints + b.UserGivenVotePoints;
         }), a.vote = function() {
             a.vm.UserAvailableVotePoints = a.maxPoints - a.vm.UserGivenVotePoints;
+        }, a.saveVote = function() {
+            e.save({
+                featureId: b.id
+            }, a.vm, function() {
+                c.path("/");
+            }, function(b) {
+                f(a, b);
+            });
         };
     }
     function c(a, b, c) {
@@ -77,7 +85,7 @@
         if (a.validationErrors = [], b.data && angular.isObject(b.data)) for (var c in b.data) a.validationErrors.push(b.data[c][0]); else a.validationErrors.push("Could not add feature.");
     }
     angular.module("appVision").controller("FeaturesListController", a).controller("FeaturesDetailController", b).controller("FeaturesAddController", c).controller("FeaturesEditController", d).controller("FeaturesDeleteController", e), 
-    a.$inject = [ "$scope", "$sessionStorage", "Feature" ], b.$inject = [ "$scope", "$routeParams", "$location", "Feature" ], 
+    a.$inject = [ "$scope", "$sessionStorage", "Feature" ], b.$inject = [ "$scope", "$routeParams", "$location", "Feature", "Vote" ], 
     c.$inject = [ "$scope", "$location", "Feature" ], d.$inject = [ "$scope", "$routeParams", "$location", "Feature" ], 
     e.$inject = [ "$scope", "$routeParams", "$location", "Feature" ];
 }(), function() {
@@ -94,6 +102,16 @@
                 method: "PUT"
             }
         });
+        return b;
+    } ]);
+}(), function() {
+    "use strict";
+    angular.module("votesService", [ "ngResource" ]).factory("Vote", [ "$resource", function(a) {
+        var b = a("http://localhost:port/api/features/:featureId/votes/:id", {
+            port: ":1482",
+            id: "@id",
+            featureId: "@featureId"
+        }, {});
         return b;
     } ]);
 }();

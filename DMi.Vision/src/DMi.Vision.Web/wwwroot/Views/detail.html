@@ -1,12 +1,30 @@
-﻿<div>
-    <span>Available points: {{vm.UserAvailableVotePoints}}</span>
+﻿
+
+<div>
+    <span ng-show="vm.UserAvailableVotePoints">Available points: {{vm.UserAvailableVotePoints}}</span>
+
+    <div class="bg-danger validationErrors" ng-show="validationErrors">
+        <ul>
+            <li ng-repeat="error in validationErrors">{{error}}</li>
+        </ul>
+    </div>
+
 
     <h1>{{vm.Title}}</h1>
-    <label for="description">Description</label><br/>
+    <label for="description">Description</label><br />
     <span id="description">{{vm.Description}}</span><br />
     <label for="totalPoints">Total Points</label>
-    <span id="totalPoints">{{vm.TotalGivenVotePoints}}</span><br/>
-    <label for="myPoints">My Points</label>
-    <input type="number" id="myPoints" class="form-control" ng-model="vm.UserGivenVotePoints" max="{{maxPoints}}" ng-change="vote()" >
+    <span id="totalPoints">{{vm.TotalGivenVotePoints}}</span><br />
 
+    <form name="formSaveVote" novalidate ng-submit="saveVote()">
+        <div class="col-xs-2">
+            <label for="myPoints">My Points</label>
+            <div class="input-group">
+                <input type="number" id="myPoints" class="form-control" ng-model="vm.UserGivenVotePoints" max="{{maxPoints}}" min="1" ng-change="vote()">
+                <span class="input-group-btn">
+                    <button type="submit" ng-disabled="formSaveVote.$invalid" class="btn btn-primary">Vote</button>
+                </span>
+            </div>
+        </div>
+    </form>
 </div>

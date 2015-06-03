@@ -13,6 +13,7 @@
         'ngStorage',
         // Custom modules 
         'featuresService',
+        'votesService'
         // 3rd Party Modules        
 
     ]).config(config);
