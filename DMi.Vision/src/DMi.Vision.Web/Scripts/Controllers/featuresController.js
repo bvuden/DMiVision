@@ -25,7 +25,13 @@
     FeaturesDetailController.$inject = ['$scope', '$routeParams', '$location', 'Feature'];
 
     function FeaturesDetailController($scope, $routeParams, $location, Feature) {
-        $scope.feature = Feature.get({ id: $routeParams.id });
+        Feature.get({ id: $routeParams.id }, function (response) {            
+            $scope.vm = response;
+            $scope.maxPoints = response.UserAvailableVotePoints + response.UserGivenVotePoints;
+        });
+        $scope.vote = function () {
+            $scope.vm.UserAvailableVotePoints = $scope.maxPoints - $scope.vm.UserGivenVotePoints;
+        };
     }
 
     /* Create Controller */

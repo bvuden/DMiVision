@@ -19,28 +19,38 @@ namespace DMi.Vision.Api.Models
 
         public int Id { get; set; }
 
-        [Required(ErrorMessage="Feature title is required")]
-        [MinLength(3,ErrorMessage ="Feature title must be at least 3 characters")]
+        [Required(ErrorMessage="Title is required")]
+        [MinLength(3,ErrorMessage ="Title must be at least 3 characters")]
         public string Title {
             get { return _title; }
             set { _title = value; }
         }
 
-        [Required(ErrorMessage = "Feature description is required")]
+        [Required(ErrorMessage = "Description is required")]
         public string Description
         {
             get { return _description; }
             set { _description = value; }
         }
 
-        /// <summary>
-        /// Amount of vote points the author has added to this feature request
-        /// </summary>
-        public int AuthorGivenVotePoints { get; set; }
 
-        ///// <summary>
-        ///// Amount of vote points available to the author of this feature request
-        ///// </summary>
-        //public int AuthorAvailableVotePoints { get; set; }
+
+        /// <summary>
+        /// Amount of vote points the user has added to this feature request
+        /// </summary>
+        [Required(ErrorMessage = "A vote is required")]
+        [Range(1,100,ErrorMessage ="Give at least one point to your feature request")]
+        public int UserGivenVotePoints { get; set; }
+
+        /// <summary>
+        /// Amount of vote points available to the currently logged in user
+        /// </summary>
+        public int UserAvailableVotePoints { get; set; }
+
+        /// <summary>
+        /// Total amount of vote points added to the feature request
+        /// </summary>
+        public int TotalGivenVotePoints { get; set; }
+
     }
 }

@@ -1,3 +1,12 @@
 ﻿<div>
-    <h1>{{feature.Title}}</h1>
+    <span>Available points: {{vm.UserAvailableVotePoints}}</span>
+
+    <h1>{{vm.Title}}</h1>
+    <label for="description">Description</label><br/>
+    <span id="description">{{vm.Description}}</span><br />
+    <label for="totalPoints">Total Points</label>
+    <span id="totalPoints">{{vm.TotalGivenVotePoints}}</span><br/>
+    <label for="myPoints">My Points</label>
+    <input type="number" id="myPoints" class="form-control" ng-model="vm.UserGivenVotePoints" max="{{maxPoints}}" ng-change="vote()" >
+
 </div>

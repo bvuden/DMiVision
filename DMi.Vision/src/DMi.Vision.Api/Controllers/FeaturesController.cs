@@ -27,10 +27,9 @@ namespace DMi.Vision.Api.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var features = _dbContext.Features.Include(f=>f.Votes);
-            var userVotes = _dbContext.Votes.Where(v => v.VoterId == GetAuthenticatedUserId());
-            var userTotalGivenVotePoints = userVotes!=null ? userVotes.Sum(x => x.Points) : 0;
-            var model = new FeatureList { UserAvailableVotePoints = 100 - userTotalGivenVotePoints };
+            var features = _dbContext.Features.Include(f => f.Votes);
+            var userId = GetAuthenticatedUserId();
+            var model = new FeatureList { UserAvailableVotePoints = GetAvailableVotePointsForUser(userId) };
             foreach (var feature in features)
             {
                 var item = new FeatureListItem
@@ -42,7 +41,7 @@ namespace DMi.Vision.Api.Controllers
                     TotalGivenVotePoints = feature.Votes.Sum(x => x.Points), //TODO check for null exception                    
                 };
                 var userVote = feature.Votes.FirstOrDefault(x => x.VoterId == GetAuthenticatedUserId());
-                item.UserGivenVotePoints = userVote != null ? userVote.Points : 0;                                
+                item.UserGivenVotePoints = userVote != null ? userVote.Points : 0;
                 model.Features.Add(item);
             }
             return new ObjectResult(model);
@@ -52,17 +51,22 @@ namespace DMi.Vision.Api.Controllers
         public IActionResult Get(int id)
         {
             var feature = _dbContext.Features.Include(x => x.Votes).ToList().FirstOrDefault(x => x.Id == id);
+            var userId = GetAuthenticatedUserId();
 
-            if (feature != null && feature.AuthorId == GetAuthenticatedUserId())
+
+            if (feature != null)
             {
                 var model = new FeatureAddOrEdit(feature.Title, feature.Description);
                 var authorVote = feature.Votes.FirstOrDefault(v => v.VoterId == GetAuthenticatedUserId());
-                model.AuthorGivenVotePoints = authorVote != null ? authorVote.Points : 0;
+                model.TotalGivenVotePoints = feature.Votes.Sum(x => x.Points); //TODO check for null exception   
+                model.UserGivenVotePoints = authorVote != null ? authorVote.Points : 0;
+                model.UserAvailableVotePoints = GetAvailableVotePointsForUser(userId);
                 return new ObjectResult(model);
             }
             return new BadRequestResult();
         }
 
+        // add new feature request
         [ResourceAuthorize("Write", "Features")]
         [HttpPost]
         public IActionResult Post([FromBody]FeatureAddOrEdit model)
@@ -75,11 +79,10 @@ namespace DMi.Vision.Api.Controllers
                 feature.Status = FeatureStatus.UnderReview;
                 feature.AuthorId = GetAuthenticatedUserId();
                 _dbContext.Features.Add(feature);
-                if (model.AuthorGivenVotePoints > 0)
-                {
-                    var vote = new Vote(feature.AuthorId, model.AuthorGivenVotePoints);
-                    feature.Votes.Add(vote);
-                }
+
+                var vote = new Vote(feature.AuthorId, model.UserGivenVotePoints);
+                feature.Votes.Add(vote);
+                                
                 _dbContext.SaveChanges();
                 return new HttpStatusCodeResult(201);
             }
@@ -103,11 +106,12 @@ namespace DMi.Vision.Api.Controllers
                 if (authorVote != null)
                 {
                     //edit vote
-                    authorVote.Points = model.AuthorGivenVotePoints;
+                    authorVote.Points = model.UserGivenVotePoints;
                 }
-                else {
+                else
+                {
                     //add vote
-                    var vote = new Vote(feature.AuthorId, model.AuthorGivenVotePoints);
+                    var vote = new Vote(feature.AuthorId, model.UserGivenVotePoints);
                     feature.Votes.Add(vote);
                 }
 
@@ -147,7 +151,10 @@ namespace DMi.Vision.Api.Controllers
             //todo make max amount configurable
             const int maxPoints = 100;
             // get spend vote points
-            var spentPoints = _dbContext.Votes.Where(v => v.VoterId == userId).Sum(x => x.Points);
+
+            var userVotes = _dbContext.Votes.Where(v => v.VoterId == userId);
+            var spentPoints = userVotes != null ? userVotes.Sum(x => x.Points) : 0;
+
             return maxPoints - spentPoints;
         }
     }

@@ -32,9 +32,13 @@
         }), a.authorId = jwt_decode(b.token.access_token).sub;
     }
     function b(a, b, c, d) {
-        a.feature = d.get({
+        d.get({
             id: b.id
-        });
+        }, function(b) {
+            a.vm = b, a.maxPoints = b.UserAvailableVotePoints + b.UserGivenVotePoints;
+        }), a.vote = function() {
+            a.vm.UserAvailableVotePoints = a.maxPoints - a.vm.UserGivenVotePoints;
+        };
     }
     function c(a, b, c) {
         a.feature = new c(), a.add = function() {
