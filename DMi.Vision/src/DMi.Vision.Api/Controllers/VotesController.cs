@@ -71,7 +71,7 @@ namespace DMi.Vision.Api.Controllers
                     //user did not vote on this feature request before
                     var newVote = new Vote(userId, model.Points);
                     newVote.FeatureId = featureId;
-                    _dbContext.Votes.Add(newVote);
+                   _dbContext.Votes.Add(newVote);                   
                 }
 
                 _dbContext.SaveChanges();
@@ -92,7 +92,7 @@ namespace DMi.Vision.Api.Controllers
         public IActionResult Delete(int featureId, int id)
         {
             var userId = GetAuthenticatedUserId();
-            var vote = _dbContext.Votes.Include(v=>v.Feature).SingleOrDefault(v => v.Id == id);
+            var vote = _dbContext.Votes.Include(v=>v.Feature).ToList().SingleOrDefault(v => v.Id == id);
             //you can only delete your own vote
             if (vote != null && vote.VoterId == userId)
             {
@@ -102,9 +102,9 @@ namespace DMi.Vision.Api.Controllers
                     _dbContext.SaveChanges();
                     return new HttpStatusCodeResult(200);
                 }
-                //ModelState.AddModelError()                
+                ModelState.AddModelError("", "You can't revoke votes on your own feature request.");                
             }
-            return new BadRequestResult();
+            return new BadRequestObjectResult(ModelState);
             
         }
     }

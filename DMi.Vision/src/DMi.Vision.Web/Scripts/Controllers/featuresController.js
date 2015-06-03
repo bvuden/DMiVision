@@ -47,6 +47,20 @@
                     }
                 );
         };
+        //save vote
+        $scope.deleteVote = function () {
+            Vote.delete({ featureId: $routeParams.id, id: $scope.vm.UserGivenVote.Id },
+                    //succes
+                    function () {
+                        $location.path('/');
+                    },
+                    //error
+                    function (error) {
+                        _showValidationErrors($scope, error)
+                    }
+                );
+        };
+
     }
 
     /* Create Controller */

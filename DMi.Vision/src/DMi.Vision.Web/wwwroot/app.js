@@ -46,6 +46,15 @@
             }, function(b) {
                 f(a, b);
             });
+        }, a.deleteVote = function() {
+            e["delete"]({
+                featureId: b.id,
+                id: a.vm.UserGivenVote.Id
+            }, function() {
+                c.path("/");
+            }, function(b) {
+                f(a, b);
+            });
         };
     }
     function c(a, b, c) {
