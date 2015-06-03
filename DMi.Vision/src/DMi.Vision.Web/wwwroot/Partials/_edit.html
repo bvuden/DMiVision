@@ -1,4 +1,6 @@
-﻿<div class="bg-danger validationErrors" ng-show="validationErrors">
+﻿<span ng-show="feature.UserAvailableVotePoints">Available points: {{feature.UserAvailableVotePoints}}</span>
+
+<div class="bg-danger validationErrors" ng-show="validationErrors">
     <ul>
         <li ng-repeat="error in validationErrors">{{error}}</li>
     </ul>
@@ -27,6 +29,9 @@
     <input name="Points"
               type="number"
               class="form-control"
-              ng-model="feature.UserGivenVotePoints"           
+              ng-model="feature.UserGivenVote.Points"
+           max="{{maxPoints}}"
+            min="1"           
+           ng-change="vote()"
            />
 </div>

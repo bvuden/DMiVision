@@ -34,13 +34,7 @@ namespace DMi.Vision.Api.Models
         }
 
 
-
-        /// <summary>
-        /// Amount of vote points the user has added to this feature request
-        /// </summary>
-        [Required(ErrorMessage = "A vote is required")]
-        [Range(1,100,ErrorMessage ="Give at least one point to your feature request")]
-        public int UserGivenVotePoints { get; set; }
+        public VoteAddOrEdit UserGivenVote { get; set; }
 
         /// <summary>
         /// Amount of vote points available to the currently logged in user

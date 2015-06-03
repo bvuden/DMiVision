@@ -28,15 +28,15 @@
         //get feature data
         Feature.get({ id: $routeParams.id }, function (response) {
             $scope.vm = response;
-            $scope.maxPoints = response.UserAvailableVotePoints + response.UserGivenVotePoints;
+            $scope.maxPoints = response.UserAvailableVotePoints + response.UserGivenVote.Points;
         });
         //update available vote points
         $scope.vote = function () {
-            $scope.vm.UserAvailableVotePoints = $scope.maxPoints - $scope.vm.UserGivenVotePoints;
+            $scope.vm.UserAvailableVotePoints = $scope.maxPoints - $scope.vm.UserGivenVote.Points;
         };
         //save vote
         $scope.saveVote = function () {
-            Vote.save({ featureId: $routeParams.id }, $scope.vm,
+            Vote.save({ featureId: $routeParams.id }, $scope.vm.UserGivenVote,
                     //succes
                     function () {
                         $location.path('/');
@@ -54,6 +54,11 @@
 
     function FeaturesAddController($scope, $location, Feature) {
         $scope.feature = new Feature();
+        $scope.maxPoints = 100;
+        //update available vote points
+        $scope.vote = function () {
+            $scope.feature.UserAvailableVotePoints = $scope.maxPoints - $scope.feature.UserGivenVote.Points;
+        };
         $scope.add = function () {
             $scope.feature.$save(
                 //succes
@@ -73,7 +78,16 @@
     FeaturesEditController.$inject = ['$scope', '$routeParams', '$location', 'Feature'];
 
     function FeaturesEditController($scope, $routeParams, $location, Feature) {
-        $scope.feature = Feature.get({ id: $routeParams.id });
+        Feature.get({ id: $routeParams.id }, function (response) {
+            $scope.feature = response;
+            $scope.maxPoints = response.UserAvailableVotePoints + response.UserGivenVote.Points;
+        });
+
+        //update available vote points
+        $scope.vote = function () {
+            $scope.feature.UserAvailableVotePoints = $scope.maxPoints - $scope.feature.UserGivenVote.Points;
+        };
+
         $scope.edit = function () {
             $scope.feature.$update({ id: $routeParams.id },
                 //succes

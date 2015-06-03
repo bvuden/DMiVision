@@ -55,7 +55,7 @@ namespace DMi.Vision.Api.Controllers
             var maxVotePoints = vote != null ? userAvailablePoints + vote.Points : userAvailablePoints;
 
             //validate
-            if (model.UserGivenVotePoints > maxVotePoints)
+            if (model.Points > maxVotePoints)
             {
                 ModelState.AddModelError("UserGivenVotePoints", "Given points exceeds available points");            
             }
@@ -64,12 +64,12 @@ namespace DMi.Vision.Api.Controllers
             {
                 if (vote != null)
                 {
-                    vote.Points = model.UserGivenVotePoints;
+                    vote.Points = model.Points;
                 }
                 else
                 {
                     //user did not vote on this feature request before
-                    var newVote = new Vote(userId, model.UserGivenVotePoints);
+                    var newVote = new Vote(userId, model.Points);
                     newVote.FeatureId = featureId;
                     _dbContext.Votes.Add(newVote);
                 }
@@ -86,10 +86,26 @@ namespace DMi.Vision.Api.Controllers
         {
         }
 
+        [ResourceAuthorize("Write", "Votes")]
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int featureId, int id)
         {
+            var userId = GetAuthenticatedUserId();
+            var vote = _dbContext.Votes.Include(v=>v.Feature).SingleOrDefault(v => v.Id == id);
+            //you can only delete your own vote
+            if (vote != null && vote.VoterId == userId)
+            {
+                //only delete vote if the vote is not from the original author of the feature request
+                if (vote.Feature.AuthorId != vote.VoterId) {
+                    _dbContext.Votes.Remove(vote);
+                    _dbContext.SaveChanges();
+                    return new HttpStatusCodeResult(200);
+                }
+                //ModelState.AddModelError()                
+            }
+            return new BadRequestResult();
+            
         }
     }
 }

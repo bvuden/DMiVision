@@ -10,6 +10,7 @@ namespace DMi.Vision.Api.Models
     public class VoteAddOrEdit
     {
         [Range(1, 100, ErrorMessage = "A minimum of one point is required for a vote")]
-        public int UserGivenVotePoints { get; set; }
+        public int Points { get; set; }
+        public int Id { get; set; }
     }
 }

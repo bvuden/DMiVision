@@ -35,13 +35,13 @@
         d.get({
             id: b.id
         }, function(b) {
-            a.vm = b, a.maxPoints = b.UserAvailableVotePoints + b.UserGivenVotePoints;
+            a.vm = b, a.maxPoints = b.UserAvailableVotePoints + b.UserGivenVote.Points;
         }), a.vote = function() {
-            a.vm.UserAvailableVotePoints = a.maxPoints - a.vm.UserGivenVotePoints;
+            a.vm.UserAvailableVotePoints = a.maxPoints - a.vm.UserGivenVote.Points;
         }, a.saveVote = function() {
             e.save({
                 featureId: b.id
-            }, a.vm, function() {
+            }, a.vm.UserGivenVote, function() {
                 c.path("/");
             }, function(b) {
                 f(a, b);
@@ -49,7 +49,9 @@
         };
     }
     function c(a, b, c) {
-        a.feature = new c(), a.add = function() {
+        a.feature = new c(), a.maxPoints = 100, a.vote = function() {
+            a.feature.UserAvailableVotePoints = a.maxPoints - a.feature.UserGivenVote.Points;
+        }, a.add = function() {
             a.feature.$save(function() {
                 b.path("/");
             }, function(b) {
@@ -58,9 +60,13 @@
         };
     }
     function d(a, b, c, d) {
-        a.feature = d.get({
+        d.get({
             id: b.id
-        }), a.edit = function() {
+        }, function(b) {
+            a.feature = b, a.maxPoints = b.UserAvailableVotePoints + b.UserGivenVote.Points;
+        }), a.vote = function() {
+            a.feature.UserAvailableVotePoints = a.maxPoints - a.feature.UserGivenVote.Points;
+        }, a.edit = function() {
             a.feature.$update({
                 id: b.id
             }, function() {

@@ -15,10 +15,10 @@ namespace DMi.Vision.Api.Controllers
     [Route("api/[controller]")]
     public class FeaturesController : BaseController
     {
-       
+
 
         public FeaturesController(VisionContext dbContext)
-            :base(dbContext)
+            : base(dbContext)
         {
 
         }
@@ -38,7 +38,7 @@ namespace DMi.Vision.Api.Controllers
                     Title = feature.Title,
                     Description = feature.Description,
                     AuthorId = feature.AuthorId,
-                    TotalGivenVotePoints = feature.Votes.Sum(x => x.Points), 
+                    TotalGivenVotePoints = feature.Votes.Sum(x => x.Points),
                 };
                 var userVote = feature.Votes.FirstOrDefault(x => x.VoterId == GetAuthenticatedUserId());
                 item.UserGivenVotePoints = userVote != null ? userVote.Points : 0;
@@ -57,9 +57,17 @@ namespace DMi.Vision.Api.Controllers
             if (feature != null)
             {
                 var model = new FeatureAddOrEdit(feature.Title, feature.Description);
-                var authorVote = feature.Votes.FirstOrDefault(v => v.VoterId == GetAuthenticatedUserId());
-                model.TotalGivenVotePoints = feature.Votes.Sum(x => x.Points); 
-                model.UserGivenVotePoints = authorVote != null ? authorVote.Points : 0;
+                var userVote = feature.Votes.FirstOrDefault(v => v.VoterId == GetAuthenticatedUserId());
+                model.TotalGivenVotePoints = feature.Votes.Sum(x => x.Points);
+                if (userVote != null)
+                {
+                    var userGivenVote = new VoteAddOrEdit { Id = userVote.Id, Points = userVote.Points };
+                    model.UserGivenVote = userGivenVote;
+                }
+                else
+                {
+                    model.UserGivenVote = new VoteAddOrEdit();
+                }
                 model.UserAvailableVotePoints = GetAvailableVotePointsForUser(userId);
                 return new ObjectResult(model);
             }
@@ -80,9 +88,9 @@ namespace DMi.Vision.Api.Controllers
                 feature.AuthorId = GetAuthenticatedUserId();
                 _dbContext.Features.Add(feature);
 
-                var vote = new Vote(feature.AuthorId, model.UserGivenVotePoints);
+                var vote = new Vote(feature.AuthorId, model.UserGivenVote.Points);
                 feature.Votes.Add(vote);
-                                
+
                 _dbContext.SaveChanges();
                 return new HttpStatusCodeResult(201);
             }
@@ -94,29 +102,31 @@ namespace DMi.Vision.Api.Controllers
         public IActionResult Put(int id, [FromBody]FeatureAddOrEdit model)
         {
             var feature = _dbContext.Features.Include(f => f.Votes).FirstOrDefault(x => x.Id == id);
+            var userId = GetAuthenticatedUserId();
 
-            if (ModelState.IsValid && feature != null && feature.AuthorId == GetAuthenticatedUserId())
+            if (ModelState.IsValid && feature != null && feature.AuthorId == userId)
             {
                 feature.Title = model.Title;
                 feature.Description = model.Description;
                 feature.DateModified = DateTime.Now;
 
-                //get author own vote
+                //get author own vote (can not be null)
                 var authorVote = feature.Votes.FirstOrDefault(x => x.VoterId == feature.AuthorId);
-                if (authorVote != null)
+
+                //get max points
+                var userAvailablePoints = GetAvailableVotePointsForUser(userId);
+                var maxVotePoints = userAvailablePoints + authorVote.Points;
+                if (model.UserGivenVote.Points > maxVotePoints)
                 {
-                    //edit vote
-                    authorVote.Points = model.UserGivenVotePoints;
+                    ModelState.AddModelError("UserGivenVotePoints", "Given points exceeds available points");
                 }
                 else
                 {
-                    //add vote
-                    var vote = new Vote(feature.AuthorId, model.UserGivenVotePoints);
-                    feature.Votes.Add(vote);
+                    //edit vote
+                    authorVote.Points = model.UserGivenVote.Points;
+                    _dbContext.SaveChanges();
+                    return new HttpStatusCodeResult(200);
                 }
-
-                _dbContext.SaveChanges();
-                return new HttpStatusCodeResult(200);
             }
             return new BadRequestObjectResult(ModelState);
         }
