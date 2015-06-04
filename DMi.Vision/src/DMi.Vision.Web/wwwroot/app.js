@@ -31,27 +31,27 @@
             a.features = b.Features, a.userAvailableVotePoints = b.UserAvailableVotePoints;
         }), a.authorId = jwt_decode(b.token.access_token).sub;
     }
-    function b(a, b, c, d, e) {
-        d.get({
-            id: b.id
-        }, function(b) {
-            a.vm = b, a.maxPoints = b.UserAvailableVotePoints + b.UserGivenVote.Points;
+    function b(a, b, c, d, e, g) {
+        e.get({
+            id: c.id
+        }, function(c) {
+            a.vm = c, a.maxPoints = c.UserAvailableVotePoints + c.UserGivenVote.Points, a.isAuthor = jwt_decode(b.token.access_token).sub === c.AuthorId;
         }), a.vote = function() {
             a.vm.UserAvailableVotePoints = a.maxPoints - a.vm.UserGivenVote.Points;
         }, a.saveVote = function() {
-            e.save({
-                featureId: b.id
+            g.save({
+                featureId: c.id
             }, a.vm.UserGivenVote, function() {
-                c.path("/");
+                d.path("/");
             }, function(b) {
                 f(a, b);
             });
         }, a.deleteVote = function() {
-            e["delete"]({
-                featureId: b.id,
+            g["delete"]({
+                featureId: c.id,
                 id: a.vm.UserGivenVote.Id
             }, function() {
-                c.path("/");
+                d.path("/");
             }, function(b) {
                 f(a, b);
             });
@@ -100,7 +100,7 @@
         if (a.validationErrors = [], b.data && angular.isObject(b.data)) for (var c in b.data) a.validationErrors.push(b.data[c][0]); else a.validationErrors.push("Could not add feature.");
     }
     angular.module("appVision").controller("FeaturesListController", a).controller("FeaturesDetailController", b).controller("FeaturesAddController", c).controller("FeaturesEditController", d).controller("FeaturesDeleteController", e), 
-    a.$inject = [ "$scope", "$sessionStorage", "Feature" ], b.$inject = [ "$scope", "$routeParams", "$location", "Feature", "Vote" ], 
+    a.$inject = [ "$scope", "$sessionStorage", "Feature" ], b.$inject = [ "$scope", "$sessionStorage", "$routeParams", "$location", "Feature", "Vote" ], 
     c.$inject = [ "$scope", "$location", "Feature" ], d.$inject = [ "$scope", "$routeParams", "$location", "Feature" ], 
     e.$inject = [ "$scope", "$routeParams", "$location", "Feature" ];
 }(), function() {

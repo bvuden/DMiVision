@@ -57,8 +57,10 @@ namespace DMi.Vision.Api.Controllers
             if (feature != null)
             {
                 var model = new FeatureAddOrEdit(feature.Title, feature.Description);
-                var userVote = feature.Votes.FirstOrDefault(v => v.VoterId == GetAuthenticatedUserId());
+                model.AuthorId = feature.AuthorId;
                 model.TotalGivenVotePoints = feature.Votes.Sum(x => x.Points);
+
+                var userVote = feature.Votes.FirstOrDefault(v => v.VoterId == GetAuthenticatedUserId());               
                 if (userVote != null)
                 {
                     var userGivenVote = new VoteAddOrEdit { Id = userVote.Id, Points = userVote.Points };

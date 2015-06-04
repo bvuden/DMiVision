@@ -34,6 +34,11 @@ namespace DMi.Vision.Api.Models
         }
 
 
+        public string AuthorId { get; set; }
+
+        /// <summary>
+        /// vote given by the current user
+        /// </summary>
         public VoteAddOrEdit UserGivenVote { get; set; }
 
         /// <summary>

@@ -22,13 +22,14 @@
     }
 
     /* Details Controller */
-    FeaturesDetailController.$inject = ['$scope', '$routeParams', '$location', 'Feature', 'Vote'];
+    FeaturesDetailController.$inject = ['$scope', '$sessionStorage', '$routeParams', '$location', 'Feature', 'Vote'];
 
-    function FeaturesDetailController($scope, $routeParams, $location, Feature, Vote) {
+    function FeaturesDetailController($scope, $sessionStorage, $routeParams, $location, Feature, Vote) {
         //get feature data
         Feature.get({ id: $routeParams.id }, function (response) {
             $scope.vm = response;
             $scope.maxPoints = response.UserAvailableVotePoints + response.UserGivenVote.Points;
+            $scope.isAuthor = jwt_decode($sessionStorage.token.access_token).sub === response.AuthorId;
         });
         //update available vote points
         $scope.vote = function () {
@@ -47,7 +48,7 @@
                     }
                 );
         };
-        //save vote
+        //revoke vote
         $scope.deleteVote = function () {
             Vote.delete({ featureId: $routeParams.id, id: $scope.vm.UserGivenVote.Id },
                     //succes
@@ -60,7 +61,6 @@
                     }
                 );
         };
-
     }
 
     /* Create Controller */
