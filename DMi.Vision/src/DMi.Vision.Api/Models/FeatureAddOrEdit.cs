@@ -37,19 +37,17 @@ namespace DMi.Vision.Api.Models
         public string AuthorId { get; set; }
 
         /// <summary>
+        /// Total amount of vote points added to the feature request
+        /// </summary>
+        public int TotalGivenVotePoints { get; set; }
+
+        /// <summary>
         /// vote given by the current user
         /// </summary>
         public VoteAddOrEdit UserGivenVote { get; set; }
 
-        /// <summary>
-        /// Amount of vote points available to the currently logged in user
-        /// </summary>
-        public int UserAvailableVotePoints { get; set; }
+        public UserInfo UserInfo { get; set; }
 
-        /// <summary>
-        /// Total amount of vote points added to the feature request
-        /// </summary>
-        public int TotalGivenVotePoints { get; set; }
 
     }
 }

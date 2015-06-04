@@ -28,20 +28,21 @@
     "use strict";
     function a(a, b, c) {
         c.query(function(b) {
-            a.features = b.Features, a.userAvailableVotePoints = b.UserAvailableVotePoints;
-        }), a.authorId = jwt_decode(b.token.access_token).sub;
+            a.features = b.Features, a.userInfo = b.UserInfo;
+        });
     }
     function b(a, b, c, d, e, g) {
         e.get({
             id: c.id
-        }, function(c) {
-            a.vm = c, a.maxPoints = c.UserAvailableVotePoints + c.UserGivenVote.Points, a.isAuthor = jwt_decode(b.token.access_token).sub === c.AuthorId;
+        }, function(b) {
+            a.feature = b, a.userInfo = b.UserInfo, a.maxPoints = b.UserInfo.AvailableVotePoints + b.UserGivenVote.Points, 
+            a.isAuthor = b.UserInfo.UserId === b.AuthorId;
         }), a.vote = function() {
-            a.vm.UserAvailableVotePoints = a.maxPoints - a.vm.UserGivenVote.Points;
+            a.userInfo.AvailableVotePoints = a.maxPoints - a.feature.UserGivenVote.Points;
         }, a.saveVote = function() {
             g.save({
                 featureId: c.id
-            }, a.vm.UserGivenVote, function() {
+            }, a.feature.UserGivenVote, function() {
                 d.path("/");
             }, function(b) {
                 f(a, b);
@@ -49,7 +50,7 @@
         }, a.deleteVote = function() {
             g["delete"]({
                 featureId: c.id,
-                id: a.vm.UserGivenVote.Id
+                id: a.feature.UserGivenVote.Id
             }, function() {
                 d.path("/");
             }, function(b) {
@@ -59,7 +60,7 @@
     }
     function c(a, b, c) {
         a.feature = new c(), a.maxPoints = 100, a.vote = function() {
-            a.feature.UserAvailableVotePoints = a.maxPoints - a.feature.UserGivenVote.Points;
+            console.log(a.feature.UserGivenVote.Points), a.userInfo.AvailableVotePoints = a.maxPoints - a.feature.UserGivenVote.Points;
         }, a.add = function() {
             a.feature.$save(function() {
                 b.path("/");
@@ -72,9 +73,9 @@
         d.get({
             id: b.id
         }, function(b) {
-            a.feature = b, a.maxPoints = b.UserAvailableVotePoints + b.UserGivenVote.Points;
+            a.feature = b, a.userInfo = b.UserInfo, a.maxPoints = b.UserInfo.AvailableVotePoints + b.UserGivenVote.Points;
         }), a.vote = function() {
-            a.feature.UserAvailableVotePoints = a.maxPoints - a.feature.UserGivenVote.Points;
+            a.userInfo.AvailableVotePoints = a.maxPoints - a.feature.UserGivenVote.Points;
         }, a.edit = function() {
             a.feature.$update({
                 id: b.id
@@ -90,7 +91,7 @@
             id: b.id
         }), a.remove = function() {
             a.feature.$remove({
-                id: a.feature.Id
+                id: b.id
             }, function() {
                 c.path("/");
             });

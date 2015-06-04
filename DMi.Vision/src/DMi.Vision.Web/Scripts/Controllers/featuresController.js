@@ -16,9 +16,9 @@
     function FeaturesListController($scope, $sessionStorage, Feature) {
         Feature.query(function (response) {
             $scope.features = response.Features;
-            $scope.userAvailableVotePoints = response.UserAvailableVotePoints;
+            $scope.userInfo = response.UserInfo;
         });
-        $scope.authorId = jwt_decode($sessionStorage.token.access_token).sub;
+        //$scope.authorId = jwt_decode($sessionStorage.token.access_token).sub;
     }
 
     /* Details Controller */
@@ -27,17 +27,18 @@
     function FeaturesDetailController($scope, $sessionStorage, $routeParams, $location, Feature, Vote) {
         //get feature data
         Feature.get({ id: $routeParams.id }, function (response) {
-            $scope.vm = response;
-            $scope.maxPoints = response.UserAvailableVotePoints + response.UserGivenVote.Points;
-            $scope.isAuthor = jwt_decode($sessionStorage.token.access_token).sub === response.AuthorId;
+            $scope.feature = response;
+            $scope.userInfo = response.UserInfo;
+            $scope.maxPoints = response.UserInfo.AvailableVotePoints + response.UserGivenVote.Points;
+            $scope.isAuthor = response.UserInfo.UserId === response.AuthorId;
         });
         //update available vote points
         $scope.vote = function () {
-            $scope.vm.UserAvailableVotePoints = $scope.maxPoints - $scope.vm.UserGivenVote.Points;
+            $scope.userInfo.AvailableVotePoints = $scope.maxPoints - $scope.feature.UserGivenVote.Points;
         };
         //save vote
         $scope.saveVote = function () {
-            Vote.save({ featureId: $routeParams.id }, $scope.vm.UserGivenVote,
+            Vote.save({ featureId: $routeParams.id }, $scope.feature.UserGivenVote,
                     //succes
                     function () {
                         $location.path('/');
@@ -50,7 +51,7 @@
         };
         //revoke vote
         $scope.deleteVote = function () {
-            Vote.delete({ featureId: $routeParams.id, id: $scope.vm.UserGivenVote.Id },
+            Vote.delete({ featureId: $routeParams.id, id: $scope.feature.UserGivenVote.Id },
                     //succes
                     function () {
                         $location.path('/');
@@ -68,10 +69,12 @@
 
     function FeaturesAddController($scope, $location, Feature) {
         $scope.feature = new Feature();
+              
         $scope.maxPoints = 100;
         //update available vote points
         $scope.vote = function () {
-            $scope.feature.UserAvailableVotePoints = $scope.maxPoints - $scope.feature.UserGivenVote.Points;
+            console.log($scope.feature.UserGivenVote.Points);
+            $scope.userInfo.AvailableVotePoints = $scope.maxPoints - $scope.feature.UserGivenVote.Points;
         };
         $scope.add = function () {
             $scope.feature.$save(
@@ -94,12 +97,13 @@
     function FeaturesEditController($scope, $routeParams, $location, Feature) {
         Feature.get({ id: $routeParams.id }, function (response) {
             $scope.feature = response;
-            $scope.maxPoints = response.UserAvailableVotePoints + response.UserGivenVote.Points;
+            $scope.userInfo = response.UserInfo;
+            $scope.maxPoints = response.UserInfo.AvailableVotePoints + response.UserGivenVote.Points;
         });
 
         //update available vote points
         $scope.vote = function () {
-            $scope.feature.UserAvailableVotePoints = $scope.maxPoints - $scope.feature.UserGivenVote.Points;
+            $scope.userInfo.AvailableVotePoints = $scope.maxPoints - $scope.feature.UserGivenVote.Points;
         };
 
         $scope.edit = function () {
@@ -123,7 +127,7 @@
     function FeaturesDeleteController($scope, $routeParams, $location, Feature) {
         $scope.feature = Feature.get({ id: $routeParams.id });
         $scope.remove = function () {
-            $scope.feature.$remove({ id: $scope.feature.Id }, function () {
+            $scope.feature.$remove({ id: $routeParams.id }, function () {
                 $location.path('/');
             });
         };

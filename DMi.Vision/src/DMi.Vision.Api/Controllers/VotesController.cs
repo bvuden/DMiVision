@@ -49,10 +49,9 @@ namespace DMi.Vision.Api.Controllers
             //TODO validate points for user (maxAvailable etc.)
 
             // get vote for current user for the feature request
-            var userId = GetAuthenticatedUserId();
-            var userAvailablePoints = GetAvailableVotePointsForUser(userId);
-            var vote = _dbContext.Votes.SingleOrDefault(v => v.FeatureId == featureId && v.VoterId == userId);
-            var maxVotePoints = vote != null ? userAvailablePoints + vote.Points : userAvailablePoints;
+            var userInfo = new UserInfo(Request.HttpContext.User, _dbContext);
+            var vote = _dbContext.Votes.SingleOrDefault(v => v.FeatureId == featureId && v.VoterId == userInfo.UserId);
+            var maxVotePoints = vote != null ? userInfo.AvailableVotePoints + vote.Points : userInfo.AvailableVotePoints;
 
             //validate
             if (model.Points > maxVotePoints)
@@ -69,7 +68,7 @@ namespace DMi.Vision.Api.Controllers
                 else
                 {
                     //user did not vote on this feature request before
-                    var newVote = new Vote(userId, model.Points);
+                    var newVote = new Vote(userInfo.UserId, model.Points);
                     newVote.FeatureId = featureId;
                    _dbContext.Votes.Add(newVote);                   
                 }
@@ -91,7 +90,7 @@ namespace DMi.Vision.Api.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int featureId, int id)
         {
-            var userId = GetAuthenticatedUserId();
+            var userId = Request.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "sub").Value;
             var vote = _dbContext.Votes.Include(v=>v.Feature).ToList().SingleOrDefault(v => v.Id == id);
             //you can only delete your own vote
             if (vote != null && vote.VoterId == userId)

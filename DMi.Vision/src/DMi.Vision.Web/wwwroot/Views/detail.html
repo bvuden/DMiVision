@@ -1,7 +1,7 @@
 ﻿
 
 <div>
-    <span ng-show="vm.UserAvailableVotePoints">Available points: {{vm.UserAvailableVotePoints}}</span>
+    <span ng-show="userInfo.AvailableVotePoints">Available points: {{userInfo.AvailableVotePoints}}</span>
 
     <div class="bg-danger validationErrors" ng-show="validationErrors">
         <ul>
@@ -10,20 +10,20 @@
     </div>
 
 
-    <h1>{{vm.Title}}</h1>
+    <h1>{{feature.Title}}</h1>
     <label for="description">Description</label><br />
-    <span id="description">{{vm.Description}}</span><br />
+    <span id="description">{{feature.Description}}</span><br />
     <label for="totalPoints">Total Points</label>
-    <span id="totalPoints">{{vm.TotalGivenVotePoints}}</span><br />
+    <span id="totalPoints">{{feature.TotalGivenVotePoints}}</span><br />
 
     <form name="formSaveVote" novalidate ng-submit="saveVote()">
         <div class="col-xs-2">
             <label for="myPoints">My Points</label>
             <div class="input-group">
-                <input type="number" id="myPoints" class="form-control" ng-model="vm.UserGivenVote.Points" max="{{maxPoints}}" min="1" ng-change="vote()">
+                <input type="number" id="myPoints" class="form-control" ng-model="feature.UserGivenVote.Points" max="{{maxPoints}}" min="1" ng-change="vote()">
                 <span class="input-group-btn">
                     <button type="submit" ng-disabled="formSaveVote.$invalid" class="btn btn-primary">Vote</button>
-                    <button type="button" ng-hide="vm.UserGivenVote.Id == 0 || isAuthor" ng-click="deleteVote()" class="btn btn-danger">Revoke</button>
+                    <button type="button" ng-hide="feature.UserGivenVote.Id == 0 || isAuthor" ng-click="deleteVote()" class="btn btn-danger">Pull out</button>
                 </span>
             </div>
         </div>

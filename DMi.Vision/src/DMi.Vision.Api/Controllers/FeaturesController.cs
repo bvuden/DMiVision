@@ -19,17 +19,18 @@ namespace DMi.Vision.Api.Controllers
 
         public FeaturesController(VisionContext dbContext)
             : base(dbContext)
-        {
-
-        }
+        { }
 
         [ResourceAuthorize("Read", "Features")]
         [HttpGet]
         public IActionResult Get()
         {
             var features = _dbContext.Features.Include(f => f.Votes);
-            var userId = GetAuthenticatedUserId();
-            var model = new FeatureList { UserAvailableVotePoints = GetAvailableVotePointsForUser(userId) };
+            var model = new FeatureList()
+            {
+                UserInfo = new UserInfo(Request.HttpContext.User, _dbContext)
+            };
+
             foreach (var feature in features)
             {
                 var item = new FeatureListItem
@@ -40,7 +41,7 @@ namespace DMi.Vision.Api.Controllers
                     AuthorId = feature.AuthorId,
                     TotalGivenVotePoints = feature.Votes.Sum(x => x.Points),
                 };
-                var userVote = feature.Votes.FirstOrDefault(x => x.VoterId == GetAuthenticatedUserId());
+                var userVote = feature.Votes.FirstOrDefault(x => x.VoterId == model.UserInfo.UserId);
                 item.UserGivenVotePoints = userVote != null ? userVote.Points : 0;
                 model.Features.Add(item);
             }
@@ -51,16 +52,17 @@ namespace DMi.Vision.Api.Controllers
         public IActionResult Get(int id)
         {
             var feature = _dbContext.Features.Include(x => x.Votes).ToList().FirstOrDefault(x => x.Id == id);
-            var userId = GetAuthenticatedUserId();
-
 
             if (feature != null)
             {
-                var model = new FeatureAddOrEdit(feature.Title, feature.Description);
+                var model = new FeatureAddOrEdit(feature.Title, feature.Description)
+                {
+                    UserInfo = new UserInfo(Request.HttpContext.User, _dbContext)
+                };
                 model.AuthorId = feature.AuthorId;
                 model.TotalGivenVotePoints = feature.Votes.Sum(x => x.Points);
 
-                var userVote = feature.Votes.FirstOrDefault(v => v.VoterId == GetAuthenticatedUserId());               
+                var userVote = feature.Votes.FirstOrDefault(v => v.VoterId == model.UserInfo.UserId);
                 if (userVote != null)
                 {
                     var userGivenVote = new VoteAddOrEdit { Id = userVote.Id, Points = userVote.Points };
@@ -70,7 +72,6 @@ namespace DMi.Vision.Api.Controllers
                 {
                     model.UserGivenVote = new VoteAddOrEdit();
                 }
-                model.UserAvailableVotePoints = GetAvailableVotePointsForUser(userId);
                 return new ObjectResult(model);
             }
             return new BadRequestResult();
@@ -87,7 +88,7 @@ namespace DMi.Vision.Api.Controllers
                 feature.DateCreated = DateTime.Now;
                 feature.DateModified = feature.DateCreated;
                 feature.Status = FeatureStatus.UnderReview;
-                feature.AuthorId = GetAuthenticatedUserId();
+                feature.AuthorId = Request.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "sub").Value;
                 _dbContext.Features.Add(feature);
 
                 var vote = new Vote(feature.AuthorId, model.UserGivenVote.Points);
@@ -104,9 +105,9 @@ namespace DMi.Vision.Api.Controllers
         public IActionResult Put(int id, [FromBody]FeatureAddOrEdit model)
         {
             var feature = _dbContext.Features.Include(f => f.Votes).FirstOrDefault(x => x.Id == id);
-            var userId = GetAuthenticatedUserId();
+            var userInfo = new UserInfo(Request.HttpContext.User, _dbContext);
 
-            if (ModelState.IsValid && feature != null && feature.AuthorId == userId)
+            if (ModelState.IsValid && feature != null && feature.AuthorId == userInfo.UserId)
             {
                 feature.Title = model.Title;
                 feature.Description = model.Description;
@@ -116,8 +117,7 @@ namespace DMi.Vision.Api.Controllers
                 var authorVote = feature.Votes.FirstOrDefault(x => x.VoterId == feature.AuthorId);
 
                 //get max points
-                var userAvailablePoints = GetAvailableVotePointsForUser(userId);
-                var maxVotePoints = userAvailablePoints + authorVote.Points;
+                var maxVotePoints = userInfo.AvailableVotePoints + authorVote.Points;
                 if (model.UserGivenVote.Points > maxVotePoints)
                 {
                     ModelState.AddModelError("UserGivenVotePoints", "Given points exceeds available points");
@@ -141,7 +141,7 @@ namespace DMi.Vision.Api.Controllers
             Feature feature = _dbContext.Features.SingleOrDefault(x => x.Id == id);
             if (feature != null)
             {
-                if (feature.AuthorId == GetAuthenticatedUserId())
+                if (feature.AuthorId == Request.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "sub").Value)
                 {
                     _dbContext.Features.Remove(feature);
                     _dbContext.SaveChanges();

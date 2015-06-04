@@ -17,23 +17,6 @@ namespace DMi.Vision.Api.Controllers
         {
             var created = dbContext.Database.EnsureCreated();
             _dbContext = dbContext;
-        }
-
-        protected string GetAuthenticatedUserId()
-        {
-            Claim subject = Request.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "sub");
-            return subject.Value;
-        }
-        protected int GetAvailableVotePointsForUser(string userId)
-        {
-            //todo make max amount configurable
-            const int maxPoints = 100;
-            // get spend vote points
-
-            var userVotes = _dbContext.Votes.Where(v => v.VoterId == userId);
-            var spentPoints = userVotes != null ? userVotes.Sum(x => x.Points) : 0;
-
-            return maxPoints - spentPoints;
-        }
+       }
     }
 }

@@ -7,7 +7,6 @@ namespace DMi.Vision.Api.Models
 {
     public class FeatureList
     {
-
         private List<FeatureListItem> _features;
 
         public FeatureList()
@@ -17,7 +16,7 @@ namespace DMi.Vision.Api.Models
         /// <summary>
         /// Amount of vote points available to the currently logged in user
         /// </summary>
-        public int UserAvailableVotePoints { get; set; }
+        public UserInfo UserInfo { get; set; }
 
         /// <summary>
         /// Collection of feature requests

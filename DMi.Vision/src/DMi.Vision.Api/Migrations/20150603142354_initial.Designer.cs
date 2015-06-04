@@ -12,7 +12,7 @@ namespace DMi.Vision.Api.Migrations
     {
         public override string Id
         {
-            get { return "20150601113145_initial"; }
+            get { return "20150603142354_initial"; }
         }
         
         public override string ProductVersion
