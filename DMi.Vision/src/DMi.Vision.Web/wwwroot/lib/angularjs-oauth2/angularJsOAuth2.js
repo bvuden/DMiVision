@@ -143,6 +143,9 @@ angular.module('oauth2.interceptor', []).factory('OAuth2Interceptor', ['$rootSco
   			else if (response.status === 500) {
   				$rootScope.$broadcast('oauth2:internalservererror');
   			}
+  			else if (response.status === 400) {
+  			    return $q.reject(response);
+  			}
   			return response;
   		}
 	};
