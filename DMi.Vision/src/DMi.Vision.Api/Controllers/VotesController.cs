@@ -23,6 +23,7 @@ namespace DMi.Vision.Api.Controllers
         }
 
         // GET: api/values
+        [ResourceAuthorize("Read", "Votes")]
         [HttpGet]
         public IActionResult Get(int featureId)
         {
@@ -79,11 +80,11 @@ namespace DMi.Vision.Api.Controllers
             return new BadRequestObjectResult(ModelState);
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
+        //// PUT api/values/5
+        //[HttpPut("{id}")]
+        //public void Put(int id, [FromBody]string value)
+        //{
+        //}
 
         [ResourceAuthorize("Write", "Votes")]
         // DELETE api/values/5

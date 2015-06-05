@@ -28,7 +28,7 @@
     <script src="app.js"></script>
 
 </head>
-<body ng-cloak>
+<body ng-cloak >
     <!--site="https://localhost:44300"-->
     <div class="header">
         <div class="navbar navbar-default" role="navigation">
@@ -46,7 +46,7 @@
                 </div>
 
                 <div class="collapse navbar-collapse" id="js-navbar-collapse">
-
+                    
                     <!--<ul class="nav navbar-nav">
                         <li class="active"><a href="/">Home</a></li>
                         <li><a ng-href="#/about">About</a></li>
@@ -68,7 +68,9 @@
             </div>
         </div>
     </div>
-
+    <div ng-controller="MainController">
+        <span>Available points: {{userInfo.availableVotePoints()}}</span>
+    </div>
     <div class="container-fluid">
         <ng-view></ng-view>
     </div>

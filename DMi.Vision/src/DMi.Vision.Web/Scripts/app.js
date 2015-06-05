@@ -4,23 +4,33 @@
     config.$inject = ['$routeProvider', '$locationProvider'];
 
 
+
     angular.module('appVision', [
         //'oauth',
         'afOAuth2',
-        
+
         // Angular modules 
         'ngRoute',
         'ngStorage',
         // Custom modules 
         'featuresService',
-        'votesService'
+        'votesService',
+        'userInfoService'
         // 3rd Party Modules        
 
-    ]).config(config);
+    ])
+        .factory('Shared')
+        .config(config);
 
     function config($routeProvider, $locationProvider) {
         $routeProvider
         .when('/', {
+            //templateUrl: '/Views/list.html',
+            controller: 'MainController',
+            requireToken: true
+
+        })
+        .when('/features', {
             templateUrl: '/Views/list.html',
             controller: 'FeaturesListController',
             requireToken: true

@@ -11,37 +11,37 @@
 
 
     /* List Controller*/
-    FeaturesListController.$inject = ['$scope', '$sessionStorage', 'Feature'];
+    FeaturesListController.$inject = ['$scope', '$sessionStorage', 'Feature', 'Shared'];
 
-    function FeaturesListController($scope, $sessionStorage, Feature) {
+    function FeaturesListController($scope, $sessionStorage, Feature, Shared) {
         Feature.query(function (response) {
             $scope.features = response.Features;
-            $scope.userInfo = response.UserInfo;
+            $scope.userInfo = Shared;
         });
-        //$scope.authorId = jwt_decode($sessionStorage.token.access_token).sub;
     }
 
     /* Details Controller */
-    FeaturesDetailController.$inject = ['$scope', '$sessionStorage', '$routeParams', '$location', 'Feature', 'Vote'];
+    FeaturesDetailController.$inject = ['$scope', '$sessionStorage', '$routeParams', '$location', 'Feature', 'Vote', 'Shared'];
 
-    function FeaturesDetailController($scope, $sessionStorage, $routeParams, $location, Feature, Vote) {
+    function FeaturesDetailController($scope, $sessionStorage, $routeParams, $location, Feature, Vote, Shared) {
         //get feature data
         Feature.get({ id: $routeParams.id }, function (response) {
             $scope.feature = response;
-            $scope.userInfo = response.UserInfo;
-            $scope.maxPoints = response.UserInfo.AvailableVotePoints + response.UserGivenVote.Points;
-            $scope.isAuthor = response.UserInfo.UserId === response.AuthorId;
+            //$scope.userInfo = response.UserInfo;            
+            //$scope.maxPoints = response.UserInfo.AvailableVotePoints + response.UserGivenVote.Points;
+            $scope.maxPoints = Shared.availableVotePoints() + response.UserGivenVote.Points;
+            $scope.isAuthor = Shared.userId() === response.AuthorId;
         });
         //update available vote points
         $scope.vote = function () {
-            $scope.userInfo.AvailableVotePoints = $scope.maxPoints - $scope.feature.UserGivenVote.Points;
+            Shared.setAvailableVotePoints($scope.maxPoints - $scope.feature.UserGivenVote.Points)
         };
         //save vote
         $scope.saveVote = function () {
             Vote.save({ featureId: $routeParams.id }, $scope.feature.UserGivenVote,
                     //succes
                     function () {
-                        $location.path('/');
+                        $location.path('/features');
                     },
                     //error
                     function (error) {
@@ -54,7 +54,7 @@
             Vote.delete({ featureId: $routeParams.id, id: $scope.feature.UserGivenVote.Id },
                     //succes
                     function () {
-                        $location.path('/');
+                        $location.path('/features');
                     },
                     //error
                     function (error) {
@@ -65,22 +65,23 @@
     }
 
     /* Create Controller */
-    FeaturesAddController.$inject = ['$scope', '$location', 'Feature'];
+    FeaturesAddController.$inject = ['$scope', '$sessionStorage', '$location', 'Feature', 'Shared'];
 
-    function FeaturesAddController($scope, $location, Feature) {
+    function FeaturesAddController($scope, $sessionStorage, $location, Feature, Shared) {
         $scope.feature = new Feature();
-              
-        $scope.maxPoints = 100;
+
+        $scope.maxPoints  = Shared.availableVotePoints();
+
         //update available vote points
         $scope.vote = function () {
-            console.log($scope.feature.UserGivenVote.Points);
-            $scope.userInfo.AvailableVotePoints = $scope.maxPoints - $scope.feature.UserGivenVote.Points;
+            console.log($scope.maxPoints);
+            Shared.setAvailableVotePoints($scope.maxPoints - $scope.feature.UserGivenVote.Points);
         };
         $scope.add = function () {
             $scope.feature.$save(
                 //succes
                 function () {
-                    $location.path('/');
+                    $location.path('/features');
                 },
                 //error
                 function (error) {
@@ -92,25 +93,25 @@
 
 
     /* Edit controller */
-    FeaturesEditController.$inject = ['$scope', '$routeParams', '$location', 'Feature'];
+    FeaturesEditController.$inject = ['$scope', '$routeParams', '$location', 'Feature', 'Shared'];
 
-    function FeaturesEditController($scope, $routeParams, $location, Feature) {
+    function FeaturesEditController($scope, $routeParams, $location, Feature, Shared) {
         Feature.get({ id: $routeParams.id }, function (response) {
             $scope.feature = response;
-            $scope.userInfo = response.UserInfo;
-            $scope.maxPoints = response.UserInfo.AvailableVotePoints + response.UserGivenVote.Points;
+            //$scope.userInfo = response.UserInfo;
+            $scope.maxPoints = Shared.availableVotePoints() + response.UserGivenVote.Points;
         });
 
         //update available vote points
         $scope.vote = function () {
-            $scope.userInfo.AvailableVotePoints = $scope.maxPoints - $scope.feature.UserGivenVote.Points;
+            Shared.setAvailableVotePoints($scope.maxPoints - $scope.feature.UserGivenVote.Points);
         };
 
         $scope.edit = function () {
             $scope.feature.$update({ id: $routeParams.id },
                 //succes
                 function () {
-                    $location.path('/');
+                    $location.path('/features');
                 },
                 //error
                 function (error) {
@@ -128,7 +129,7 @@
         $scope.feature = Feature.get({ id: $routeParams.id });
         $scope.remove = function () {
             $scope.feature.$remove({ id: $routeParams.id }, function () {
-                $location.path('/');
+                $location.path('/features');
             });
         };
     }

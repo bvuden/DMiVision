@@ -16,7 +16,7 @@ namespace DMi.Vision.Api.Models
         /// <summary>
         /// Amount of vote points available to the currently logged in user
         /// </summary>
-        public UserInfo UserInfo { get; set; }
+        //public UserInfo UserInfo { get; set; }
 
         /// <summary>
         /// Collection of feature requests

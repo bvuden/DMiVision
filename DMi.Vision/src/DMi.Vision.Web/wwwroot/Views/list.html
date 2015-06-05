@@ -1,6 +1,5 @@
 ﻿<div>
     <h1>Features</h1>
-    <span>Available points: {{userInfo.AvailableVotePoints}}</span>
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
@@ -13,7 +12,7 @@
         <tbody>
             <tr ng-repeat="feature in features">
                 <td>
-                    <div ng-if="feature.AuthorId == userInfo.UserId">
+                    <div ng-if="feature.AuthorId == userInfo.userId()">
                         <a href="/features/edit/{{feature.Id}}" class="btn btn-default btn-xs">edit</a>
                         <a href="/features/delete/{{feature.Id}}" class="btn btn-danger btn-xs">delete</a>
                     </div>

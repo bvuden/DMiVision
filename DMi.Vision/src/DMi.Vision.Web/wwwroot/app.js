@@ -2,6 +2,9 @@
     "use strict";
     function a(a, b) {
         a.when("/", {
+            controller: "MainController",
+            requireToken: !0
+        }).when("/features", {
             templateUrl: "/Views/list.html",
             controller: "FeaturesListController",
             requireToken: !0
@@ -23,27 +26,26 @@
             requireToken: !0
         }), b.html5Mode(!0).hashPrefix("!");
     }
-    a.$inject = [ "$routeProvider", "$locationProvider" ], angular.module("appVision", [ "afOAuth2", "ngRoute", "ngStorage", "featuresService", "votesService" ]).config(a);
+    a.$inject = [ "$routeProvider", "$locationProvider" ], angular.module("appVision", [ "afOAuth2", "ngRoute", "ngStorage", "featuresService", "votesService", "userInfoService" ]).factory("Shared").config(a);
 }(), function() {
     "use strict";
-    function a(a, b, c) {
+    function a(a, b, c, d) {
         c.query(function(b) {
-            a.features = b.Features, a.userInfo = b.UserInfo;
+            a.features = b.Features, a.userInfo = d;
         });
     }
-    function b(a, b, c, d, e, g) {
+    function b(a, b, c, d, e, g, h) {
         e.get({
             id: c.id
         }, function(b) {
-            a.feature = b, a.userInfo = b.UserInfo, a.maxPoints = b.UserInfo.AvailableVotePoints + b.UserGivenVote.Points, 
-            a.isAuthor = b.UserInfo.UserId === b.AuthorId;
+            a.feature = b, a.maxPoints = h.availableVotePoints() + b.UserGivenVote.Points, a.isAuthor = h.userId() === b.AuthorId;
         }), a.vote = function() {
-            a.userInfo.AvailableVotePoints = a.maxPoints - a.feature.UserGivenVote.Points;
+            h.setAvailableVotePoints(a.maxPoints - a.feature.UserGivenVote.Points);
         }, a.saveVote = function() {
             g.save({
                 featureId: c.id
             }, a.feature.UserGivenVote, function() {
-                d.path("/");
+                d.path("/features");
             }, function(b) {
                 f(a, b);
             });
@@ -52,35 +54,35 @@
                 featureId: c.id,
                 id: a.feature.UserGivenVote.Id
             }, function() {
-                d.path("/");
+                d.path("/features");
             }, function(b) {
                 f(a, b);
             });
         };
     }
-    function c(a, b, c) {
-        a.feature = new c(), a.maxPoints = 100, a.vote = function() {
-            console.log(a.feature.UserGivenVote.Points), a.userInfo.AvailableVotePoints = a.maxPoints - a.feature.UserGivenVote.Points;
+    function c(a, b, c, d, e) {
+        a.feature = new d(), a.maxPoints = e.availableVotePoints(), a.vote = function() {
+            console.log(a.maxPoints), e.setAvailableVotePoints(a.maxPoints - a.feature.UserGivenVote.Points);
         }, a.add = function() {
             a.feature.$save(function() {
-                b.path("/");
+                c.path("/features");
             }, function(b) {
                 f(a, b);
             });
         };
     }
-    function d(a, b, c, d) {
+    function d(a, b, c, d, e) {
         d.get({
             id: b.id
         }, function(b) {
-            a.feature = b, a.userInfo = b.UserInfo, a.maxPoints = b.UserInfo.AvailableVotePoints + b.UserGivenVote.Points;
+            a.feature = b, a.maxPoints = e.availableVotePoints() + b.UserGivenVote.Points;
         }), a.vote = function() {
-            a.userInfo.AvailableVotePoints = a.maxPoints - a.feature.UserGivenVote.Points;
+            e.setAvailableVotePoints(a.maxPoints - a.feature.UserGivenVote.Points);
         }, a.edit = function() {
             a.feature.$update({
                 id: b.id
             }, function() {
-                c.path("/");
+                c.path("/features");
             }, function(b) {
                 f(a, b);
             });
@@ -93,7 +95,7 @@
             a.feature.$remove({
                 id: b.id
             }, function() {
-                c.path("/");
+                c.path("/features");
             });
         };
     }
@@ -101,9 +103,43 @@
         if (a.validationErrors = [], b.data && angular.isObject(b.data)) for (var c in b.data) a.validationErrors.push(b.data[c][0]); else a.validationErrors.push("Could not add feature.");
     }
     angular.module("appVision").controller("FeaturesListController", a).controller("FeaturesDetailController", b).controller("FeaturesAddController", c).controller("FeaturesEditController", d).controller("FeaturesDeleteController", e), 
-    a.$inject = [ "$scope", "$sessionStorage", "Feature" ], b.$inject = [ "$scope", "$sessionStorage", "$routeParams", "$location", "Feature", "Vote" ], 
-    c.$inject = [ "$scope", "$location", "Feature" ], d.$inject = [ "$scope", "$routeParams", "$location", "Feature" ], 
+    a.$inject = [ "$scope", "$sessionStorage", "Feature", "Shared" ], b.$inject = [ "$scope", "$sessionStorage", "$routeParams", "$location", "Feature", "Vote", "Shared" ], 
+    c.$inject = [ "$scope", "$sessionStorage", "$location", "Feature", "Shared" ], d.$inject = [ "$scope", "$routeParams", "$location", "Feature", "Shared" ], 
     e.$inject = [ "$scope", "$routeParams", "$location", "Feature" ];
+}(), function() {
+    "use strict";
+    function a(a, b, c, d, e, f) {
+        if (f.set(), void 0 != c.token) {
+            var g = jwt_decode(c.token.access_token).sub;
+            d.get({
+                id: g
+            }, function(b) {
+                e.setAvailableVotePoints(b.AvailableVotePoints), e.setUserId(b.UserId), console.log(e.userId()), 
+                a.userInfo = e;
+            }), b.path("/features");
+        }
+    }
+    angular.module("appVision").controller("MainController", a), a.$inject = [ "$scope", "$location", "$sessionStorage", "UserInfo", "Shared", "AccessToken" ];
+}(), function() {
+    "use strict";
+    function a() {
+        var a, b;
+        return {
+            userId: function() {
+                return b;
+            },
+            setUserId: function(a) {
+                b = a;
+            },
+            availableVotePoints: function() {
+                return a;
+            },
+            setAvailableVotePoints: function(b) {
+                a = b;
+            }
+        };
+    }
+    angular.module("appVision").factory("Shared", a);
 }(), function() {
     "use strict";
     angular.module("featuresService", [ "ngResource" ]).factory("Feature", [ "$resource", function(a) {
@@ -117,6 +153,15 @@
             update: {
                 method: "PUT"
             }
+        });
+        return b;
+    } ]);
+}(), function() {
+    "use strict";
+    angular.module("userInfoService", [ "ngResource" ]).factory("UserInfo", [ "$resource", function(a) {
+        var b = a("http://localhost:port/api/users/:id", {
+            port: ":1482",
+            id: "@id"
         });
         return b;
     } ]);

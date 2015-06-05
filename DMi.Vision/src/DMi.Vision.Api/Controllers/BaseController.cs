@@ -18,5 +18,10 @@ namespace DMi.Vision.Api.Controllers
             var created = dbContext.Database.EnsureCreated();
             _dbContext = dbContext;
        }
+        protected string GetAuthenticatedUserId()
+        {
+            Claim subject = Request.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "sub");
+            return subject.Value;
+        }
     }
 }

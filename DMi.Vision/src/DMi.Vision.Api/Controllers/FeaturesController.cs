@@ -26,10 +26,10 @@ namespace DMi.Vision.Api.Controllers
         public IActionResult Get()
         {
             var features = _dbContext.Features.Include(f => f.Votes);
-            var model = new FeatureList()
-            {
-                UserInfo = new UserInfo(Request.HttpContext.User, _dbContext)
-            };
+            var model = new FeatureList();
+            //{
+            //    UserInfo = new UserInfo(Request.HttpContext.User, _dbContext)
+            //};
 
             foreach (var feature in features)
             {
@@ -41,7 +41,7 @@ namespace DMi.Vision.Api.Controllers
                     AuthorId = feature.AuthorId,
                     TotalGivenVotePoints = feature.Votes.Sum(x => x.Points),
                 };
-                var userVote = feature.Votes.FirstOrDefault(x => x.VoterId == model.UserInfo.UserId);
+                var userVote = feature.Votes.FirstOrDefault(x => x.VoterId == GetAuthenticatedUserId());
                 item.UserGivenVotePoints = userVote != null ? userVote.Points : 0;
                 model.Features.Add(item);
             }
@@ -55,14 +55,12 @@ namespace DMi.Vision.Api.Controllers
 
             if (feature != null)
             {
-                var model = new FeatureAddOrEdit(feature.Title, feature.Description)
-                {
-                    UserInfo = new UserInfo(Request.HttpContext.User, _dbContext)
-                };
+                var model = new FeatureAddOrEdit(feature.Title, feature.Description);
+
                 model.AuthorId = feature.AuthorId;
                 model.TotalGivenVotePoints = feature.Votes.Sum(x => x.Points);
 
-                var userVote = feature.Votes.FirstOrDefault(v => v.VoterId == model.UserInfo.UserId);
+                var userVote = feature.Votes.FirstOrDefault(v => v.VoterId == GetAuthenticatedUserId());
                 if (userVote != null)
                 {
                     var userGivenVote = new VoteAddOrEdit { Id = userVote.Id, Points = userVote.Points };
@@ -88,7 +86,7 @@ namespace DMi.Vision.Api.Controllers
                 feature.DateCreated = DateTime.Now;
                 feature.DateModified = feature.DateCreated;
                 feature.Status = FeatureStatus.UnderReview;
-                feature.AuthorId = Request.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "sub").Value;
+                feature.AuthorId = GetAuthenticatedUserId();
                 _dbContext.Features.Add(feature);
 
                 var vote = new Vote(feature.AuthorId, model.UserGivenVote.Points);
@@ -141,7 +139,7 @@ namespace DMi.Vision.Api.Controllers
             Feature feature = _dbContext.Features.SingleOrDefault(x => x.Id == id);
             if (feature != null)
             {
-                if (feature.AuthorId == Request.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "sub").Value)
+                if (feature.AuthorId == GetAuthenticatedUserId())
                 {
                     _dbContext.Features.Remove(feature);
                     _dbContext.SaveChanges();

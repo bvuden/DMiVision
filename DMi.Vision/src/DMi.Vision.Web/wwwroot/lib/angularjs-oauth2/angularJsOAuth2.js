@@ -27,6 +27,7 @@ angular.module('oauth2.accessToken', ['ngStorage']).factory('AccessToken', ['$ro
 		if (token !== null) {
 			setExpiresAt(token);
 			$sessionStorage.token = token;
+			console.log("set token in sessionstorage");
 		}
 		return token;
 	}
@@ -45,7 +46,7 @@ angular.module('oauth2.accessToken', ['ngStorage']).factory('AccessToken', ['$ro
             }
         }
 
-        if ((token.access_token && token.expires_in) || token.error) {
+        if((token.access_token && token.expires_in) || token.error){
             return token;
         }
         return null;
@@ -58,10 +59,8 @@ angular.module('oauth2.accessToken', ['ngStorage']).factory('AccessToken', ['$ro
 		// Try and get the token from the hash params on the URL
 		var hashValues = window.location.hash;
 		if (hashValues.length > 0) {
-			//if (hashValues.indexOf('#/') == 0) {
-			//    hashValues = hashValues.substring(2);
-			    if (hashValues.indexOf('#') == 0) {
-			        hashValues = hashValues.substring(1);
+			if (hashValues.indexOf('#') == 0) {
+				hashValues = hashValues.substring(1);
 			}
 			service.token = setTokenFromHashParams(hashValues);
 		}
@@ -133,25 +132,18 @@ angular.module('oauth2.interceptor', []).factory('OAuth2Interceptor', ['$rootSco
   			return response;
   		},
   		responseError: function(response) {
-  		    var token = $sessionStorage.token;
-
-  		    switch (response.status) {
-  		        case 401:
-  		            if (expired(token)) {
-  		                $rootScope.$broadcast('oauth2:authExpired', token);
-  		            } else {
-  		                $rootScope.$broadcast('oauth2:unauthorized', token);
-  		            }
-  		            break;
-  		        case 500:
-  		            $rootScope.$broadcast('oauth2:internalservererror');
-  		            break;
-  		        case 400:
-  		            return $q.reject(response);
-  		        default:
-  		            break;
-  		    }
-  		    return response;
+  			var token = $sessionStorage.token;
+  			if (response.status === 401) {
+  				if (expired(token)) {
+  					$rootScope.$broadcast('oauth2:authExpired', token);
+  				} else {
+  					$rootScope.$broadcast('oauth2:unauthorized', token);
+  				}
+  			}
+  			else if (response.status === 500) {
+  				$rootScope.$broadcast('oauth2:internalservererror');
+  			}
+  			return response;
   		}
 	};
   	return service;
