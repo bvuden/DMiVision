@@ -114,8 +114,7 @@
             d.get({
                 id: g
             }, function(b) {
-                e.setAvailableVotePoints(b.AvailableVotePoints), e.setUserId(b.UserId), console.log(e.userId()), 
-                a.userInfo = e;
+                e.setAvailableVotePoints(b.AvailableVotePoints), e.setUserId(b.UserId), a.userInfo = e;
             }), b.path("/features");
         }
     }
