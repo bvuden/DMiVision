@@ -10,11 +10,13 @@
         "Microsoft.Owin": "3.0.1",
         "EntityFramework": "7.0.0-beta4",
         "EntityFramework.SqlServer": "7.0.0-beta4",
-        "EntityFramework.Commands": "7.0.0-beta4",        
+        "EntityFramework.Commands": "7.0.0-beta4",
         "DMi.Vision.Models": "1.0.0-*",
         "BridgeToVnext": "1.0.0-*",
         "Thinktecture.IdentityServer3.AccessTokenValidation": "1.2.2",
-        "Microsoft.Framework.Logging.Console": "1.0.0-beta4"        
+        "Microsoft.Framework.Logging.Console": "1.0.0-beta4",
+        "RestSharp": "105.1.0",
+        "Newtonsoft.Json": "6.0.8"
     },
 
     "commands": {

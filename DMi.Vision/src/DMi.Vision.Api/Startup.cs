@@ -9,6 +9,7 @@ using Microsoft.AspNet.Routing;
 using Microsoft.Data.Entity;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
+using Microsoft.Owin.Security.OpenIdConnect;
 using Owin;
 using Thinktecture.IdentityServer.AccessTokenValidation;
 
@@ -70,7 +71,7 @@ namespace DMi.Vision.Api
                 o => o.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
                 {
                     Authority = Configuration.Get("SecurityTokenService:Authority"),
-                    RequiredScopes = new[] { "dmivisionapi" }
+                    RequiredScopes = new[] { "dmivisionapi", "profile" }
                 })
             );
 

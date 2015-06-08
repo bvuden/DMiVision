@@ -28,7 +28,7 @@ namespace DMi.Vision.Api.Models
                 return subject.Value;
             }
         }
-
+        public string Name { get; set; }
 
         /// <summary>
         /// Amount of vote points available to the currently logged in user

@@ -27,7 +27,7 @@
         .when('/', {
             //templateUrl: '/Views/list.html',
             controller: 'MainController',
-            requireToken: true
+           // requireToken: true
 
         })
         .when('/features', {

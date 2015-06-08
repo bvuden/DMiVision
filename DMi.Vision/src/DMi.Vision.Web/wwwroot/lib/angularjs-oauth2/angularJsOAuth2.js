@@ -12,7 +12,7 @@ angular.module('oauth2.accessToken', ['ngStorage']).factory('AccessToken', ['$ro
 	var service = {
 		token: null
 	};
-	var oAuth2HashParams = ['access_token', 'token_type', 'expires_in', 'scope', 'state', 'error', 'error_description'];
+	var oAuth2HashParams = ['access_token', 'id_token', 'token_type', 'expires_in', 'scope', 'state', 'error', 'error_description'];
 	
 	function setExpiresAt(token) {
 		if(token){
@@ -27,7 +27,7 @@ angular.module('oauth2.accessToken', ['ngStorage']).factory('AccessToken', ['$ro
 		if (token !== null) {
 			setExpiresAt(token);
 			$sessionStorage.token = token;
-			console.log("set token in sessionstorage");
+			console.log(token);
 		}
 		return token;
 	}
@@ -169,13 +169,17 @@ angular.module('oauth2.endpoint', []).factory('Endpoint', ['AccessToken', functi
 		}
 	};
 	
-	service.init = function(params) {
+	service.init = function (params) {
+	    var state = ((Date.now() + Math.random()) * Math.random()).toString().replace(".", "");
+	    var nonce = ((Date.now() + Math.random()) * Math.random()).toString().replace(".", "");
+
 		service.url = params.authorizationUrl + '?' +
 				  	  'client_id=' + encodeURI(params.clientId) + '&' +
 				  	  'redirect_uri=' + encodeURI(params.redirectUrl) + '&' +
 				  	  'response_type=' + encodeURI(params.responseType) + '&' +
 				  	  'scope=' + encodeURI(params.scope) + '&' +
-				  	  'state=' + encodeURI(params.state);
+				  	  'state=' + encodeURI(state) + '&' +
+                      'nonce=' + encodeURI(nonce);
 		service.signOutUrl = params.signOutUrl;
 		if (params.signOutAppendToken == 'true') {
 			service.appendSignoutToken = true;

@@ -13,6 +13,7 @@
         //do this upfront
          AccessToken.set();
 
+
         if ($sessionStorage.token != undefined) {
             //get user info
             var userId = jwt_decode($sessionStorage.token.access_token).sub;

@@ -2,8 +2,7 @@
     "use strict";
     function a(a, b) {
         a.when("/", {
-            controller: "MainController",
-            requireToken: !0
+            controller: "MainController"
         }).when("/features", {
             templateUrl: "/Views/list.html",
             controller: "FeaturesListController",
