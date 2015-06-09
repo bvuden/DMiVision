@@ -39,6 +39,7 @@ namespace DMi.Vision.Api.Controllers
                     Title = feature.Title,
                     Description = feature.Description,
                     AuthorId = feature.AuthorId,
+                    AuthorName = feature.AuthorName,
                     TotalGivenVotePoints = feature.Votes.Sum(x => x.Points),
                 };
                 var userVote = feature.Votes.FirstOrDefault(x => x.VoterId == GetAuthenticatedUserId());
@@ -58,6 +59,7 @@ namespace DMi.Vision.Api.Controllers
                 var model = new FeatureAddOrEdit(feature.Title, feature.Description);
 
                 model.AuthorId = feature.AuthorId;
+                model.AuthorName = feature.AuthorName;
                 model.TotalGivenVotePoints = feature.Votes.Sum(x => x.Points);
 
                 var userVote = feature.Votes.FirstOrDefault(v => v.VoterId == GetAuthenticatedUserId());
@@ -87,6 +89,7 @@ namespace DMi.Vision.Api.Controllers
                 feature.DateModified = feature.DateCreated;
                 feature.Status = FeatureStatus.UnderReview;
                 feature.AuthorId = GetAuthenticatedUserId();
+                feature.AuthorName = GetAuthenticatedUserName();
                 _dbContext.Features.Add(feature);
 
                 var vote = new Vote(feature.AuthorId, model.UserGivenVote.Points);

@@ -35,6 +35,7 @@ namespace DMi.Vision.Api.Models
 
 
         public string AuthorId { get; set; }
+        public string AuthorName { get; set; }
 
         /// <summary>
         /// Total amount of vote points added to the feature request

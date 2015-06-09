@@ -8,9 +8,19 @@ using DMi.Vision.Api;
 namespace DMi.Vision.Api.Migrations
 {
     [ContextType(typeof(VisionContext))]
-    partial class VisionContextModelSnapshot : ModelSnapshot
+    partial class authorName
     {
-        public override IModel Model
+        public override string Id
+        {
+            get { return "20150609083037_authorName"; }
+        }
+        
+        public override string ProductVersion
+        {
+            get { return "7.0.0-beta4-12943"; }
+        }
+        
+        public override IModel Target
         {
             get
             {
