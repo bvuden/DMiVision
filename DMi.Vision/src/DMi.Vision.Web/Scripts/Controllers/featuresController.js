@@ -51,9 +51,11 @@
         };
         //revoke vote
         $scope.deleteVote = function () {
+            
             Vote.delete({ featureId: $routeParams.id, id: $scope.feature.UserGivenVote.Id },
                     //succes
-                    function () {
+                    function (response) {
+                        Shared.setAvailableVotePoints(response.AvailableVotePoints)
                         $location.path('/features');
                     },
                     //error

@@ -52,8 +52,8 @@
             g["delete"]({
                 featureId: c.id,
                 id: a.feature.UserGivenVote.Id
-            }, function() {
-                d.path("/features");
+            }, function(a) {
+                h.setAvailableVotePoints(a.AvailableVotePoints), d.path("/features");
             }, function(b) {
                 f(a, b);
             });

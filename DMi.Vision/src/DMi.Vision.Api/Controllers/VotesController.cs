@@ -100,7 +100,9 @@ namespace DMi.Vision.Api.Controllers
                 if (vote.Feature.AuthorId != vote.VoterId) {
                     _dbContext.Votes.Remove(vote);
                     _dbContext.SaveChanges();
-                    return new HttpStatusCodeResult(200);
+                    //return new userinfo with available points
+                    var userInfo = new UserInfo(Request.HttpContext.User, _dbContext);
+                    return new ObjectResult(userInfo);
                 }
                 ModelState.AddModelError("", "You can't revoke votes on your own feature request.");                
             }
