@@ -42,7 +42,7 @@
                         <span class="icon-bar"></span>
                     </button>
 
-                    <a class="navbar-brand" href="/">DMi Vision</a>
+                    <a class="navbar-brand" href="/features">DMi Vision</a>
                 </div>
 
                 <div class="collapse navbar-collapse" id="js-navbar-collapse">                    
@@ -52,7 +52,7 @@
                         li><a ng-href="#/">Contact</a></li>
                     </ul>-->
                     <ul class="nav navbar-nav navbar-right">
-                        <li ng-show="userInfo.userName()"><a href="#">Welcome {{userInfo.userName()}}, you have {{userInfo.availableVotePoints()}} votepoints left</a></li>
+                        <li ng-show="userInfo.userName()"><a href="#">Welcome {{userInfo.userName()}}<span ng-show="userInfo.availableVotePoints()">, you have {{userInfo.availableVotePoints()}} votepoints left</spanng-show="userInfo.userName()"></a></li>
                         <li>
                             <oauth2 authorization-url="https://dmiteststs.azurewebsites.net/connect/authorize"
                                     client-id="implicitclient"
@@ -68,9 +68,6 @@
             </div>
         </div>
     </div>
-    <!--<div>
-        <span ng-show="userInfo.availableVotePoints()">Available points: {{userInfo.availableVotePoints()}}</span>
-    </div>-->
     <div class="container-fluid">
         <ng-view></ng-view>
     </div>

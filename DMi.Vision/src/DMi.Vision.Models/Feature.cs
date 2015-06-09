@@ -27,9 +27,14 @@ namespace DMi.Vision.Models
         public int Id { get; set; }
 
         /// <summary>
-        /// unique identifier of user in the system
+        /// unique identifier of the author
         /// </summary>
         public string AuthorId { get; set; }
+
+        /// <summary>
+        /// unique identifier of the author
+        /// </summary>
+        public string AuthorName { get; set; }
 
         /// <summary>
         /// Gets or sets the date and time the feature was created.
