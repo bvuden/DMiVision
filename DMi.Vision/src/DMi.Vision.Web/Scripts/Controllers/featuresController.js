@@ -17,6 +17,7 @@
         Feature.query(function (response) {
             $scope.features = response.Features;
             $scope.userInfo = Shared;
+            $scope.descriptionMaxSize = 500;
         });
     }
 

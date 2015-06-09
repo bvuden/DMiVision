@@ -30,7 +30,7 @@
     "use strict";
     function a(a, b, c, d) {
         c.query(function(b) {
-            a.features = b.Features, a.userInfo = d;
+            a.features = b.Features, a.userInfo = d, a.descriptionMaxSize = 500;
         });
     }
     function b(a, b, c, d, e, g, h) {
