@@ -29,7 +29,7 @@
 }(), function() {
     "use strict";
     function a(a, b, c, d) {
-        c.query(function(b) {
+        d.setTempAvailableVotePoints(d.availableVotePoints()), c.query(function(b) {
             a.features = b.Features, a.userInfo = d, a.descriptionMaxSize = 500;
         });
     }
@@ -39,12 +39,12 @@
         }, function(b) {
             a.feature = b, a.maxPoints = h.availableVotePoints() + b.UserGivenVote.Points, a.isAuthor = h.userId() === b.AuthorId;
         }), a.vote = function() {
-            h.setAvailableVotePoints(a.maxPoints - a.feature.UserGivenVote.Points);
+            h.setTempAvailableVotePoints(a.maxPoints - a.feature.UserGivenVote.Points);
         }, a.saveVote = function() {
             g.save({
                 featureId: c.id
             }, a.feature.UserGivenVote, function() {
-                d.path("/features");
+                h.setAvailableVotePoints(h.tempAvailableVotePoints()), d.path("/features");
             }, function(b) {
                 f(a, b);
             });
@@ -61,10 +61,10 @@
     }
     function c(a, b, c, d, e) {
         a.feature = new d(), a.maxPoints = e.availableVotePoints(), a.vote = function() {
-            console.log(a.maxPoints), e.setAvailableVotePoints(a.maxPoints - a.feature.UserGivenVote.Points);
+            e.setTempAvailableVotePoints(a.maxPoints - a.feature.UserGivenVote.Points);
         }, a.add = function() {
             a.feature.$save(function() {
-                c.path("/features");
+                e.setAvailableVotePoints(e.tempAvailableVotePoints()), c.path("/features");
             }, function(b) {
                 f(a, b);
             });
@@ -76,12 +76,12 @@
         }, function(b) {
             a.feature = b, a.maxPoints = e.availableVotePoints() + b.UserGivenVote.Points;
         }), a.vote = function() {
-            e.setAvailableVotePoints(a.maxPoints - a.feature.UserGivenVote.Points);
+            e.setTempAvailableVotePoints(a.maxPoints - a.feature.UserGivenVote.Points);
         }, a.edit = function() {
             a.feature.$update({
                 id: b.id
             }, function() {
-                c.path("/features");
+                e.setAvailableVotePoints(e.tempAvailableVotePoints()), c.path("/features");
             }, function(b) {
                 f(a, b);
             });
@@ -113,8 +113,8 @@
             d.get({
                 id: g
             }, function(b) {
-                e.setAvailableVotePoints(b.AvailableVotePoints), e.setUserId(b.UserId), e.setUserName(b.Name), 
-                a.userInfo = e;
+                e.setAvailableVotePoints(b.AvailableVotePoints), e.setTempAvailableVotePoints(b.AvailableVotePoints), 
+                e.setUserId(b.UserId), e.setUserName(b.Name), a.userInfo = e;
             }), b.path("/features");
         }
     }
@@ -122,25 +122,31 @@
 }(), function() {
     "use strict";
     function a() {
-        var a, b, c;
+        var a, b, c, d;
         return {
             userId: function() {
-                return b;
-            },
-            setUserId: function(a) {
-                b = a;
-            },
-            userName: function() {
                 return c;
             },
-            setUserName: function(a) {
+            setUserId: function(a) {
                 c = a;
+            },
+            userName: function() {
+                return d;
+            },
+            setUserName: function(a) {
+                d = a;
             },
             availableVotePoints: function() {
                 return a;
             },
             setAvailableVotePoints: function(b) {
                 a = b;
+            },
+            tempAvailableVotePoints: function() {
+                return b;
+            },
+            setTempAvailableVotePoints: function(a) {
+                b = a;
             }
         };
     }

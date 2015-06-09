@@ -7,6 +7,7 @@
 
     function Shared() {
         var availableVotePoints;
+        var tempAvailableVotePoints;
         var userId;
         var userName;
         return {
@@ -27,6 +28,12 @@
             },
             setAvailableVotePoints: function (newValue) {
                 availableVotePoints = newValue;
+            },
+            tempAvailableVotePoints: function () {
+                return tempAvailableVotePoints;
+            },
+            setTempAvailableVotePoints: function (newValue) {
+                tempAvailableVotePoints = newValue;
             }
         };
     }

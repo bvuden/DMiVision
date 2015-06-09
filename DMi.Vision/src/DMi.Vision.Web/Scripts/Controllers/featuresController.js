@@ -14,6 +14,9 @@
     FeaturesListController.$inject = ['$scope', '$sessionStorage', 'Feature', 'Shared'];
 
     function FeaturesListController($scope, $sessionStorage, Feature, Shared) {
+        //reset temp points
+        Shared.setTempAvailableVotePoints(Shared.availableVotePoints());
+
         Feature.query(function (response) {
             $scope.features = response.Features;
             $scope.userInfo = Shared;
@@ -35,13 +38,14 @@
         });
         //update available vote points
         $scope.vote = function () {
-            Shared.setAvailableVotePoints($scope.maxPoints - $scope.feature.UserGivenVote.Points)
+            Shared.setTempAvailableVotePoints($scope.maxPoints - $scope.feature.UserGivenVote.Points)
         };
         //save vote
         $scope.saveVote = function () {
             Vote.save({ featureId: $routeParams.id }, $scope.feature.UserGivenVote,
                     //succes
                     function () {
+                        Shared.setAvailableVotePoints(Shared.tempAvailableVotePoints());
                         $location.path('/features');
                     },
                     //error
@@ -72,18 +76,17 @@
 
     function FeaturesAddController($scope, $sessionStorage, $location, Feature, Shared) {
         $scope.feature = new Feature();
-
         $scope.maxPoints  = Shared.availableVotePoints();
 
         //update available vote points
         $scope.vote = function () {
-            console.log($scope.maxPoints);
-            Shared.setAvailableVotePoints($scope.maxPoints - $scope.feature.UserGivenVote.Points);
+            Shared.setTempAvailableVotePoints($scope.maxPoints - $scope.feature.UserGivenVote.Points);
         };
         $scope.add = function () {
             $scope.feature.$save(
                 //succes
                 function () {
+                    Shared.setAvailableVotePoints(Shared.tempAvailableVotePoints());
                     $location.path('/features');
                 },
                 //error
@@ -107,13 +110,14 @@
 
         //update available vote points
         $scope.vote = function () {
-            Shared.setAvailableVotePoints($scope.maxPoints - $scope.feature.UserGivenVote.Points);
+            Shared.setTempAvailableVotePoints($scope.maxPoints - $scope.feature.UserGivenVote.Points);
         };
 
         $scope.edit = function () {
             $scope.feature.$update({ id: $routeParams.id },
                 //succes
                 function () {
+                    Shared.setAvailableVotePoints(Shared.tempAvailableVotePoints());
                     $location.path('/features');
                 },
                 //error

@@ -19,6 +19,7 @@
             var userId = jwt_decode($sessionStorage.token.access_token).sub;
             UserInfo.get({ id: userId }, function (response) {
                 Shared.setAvailableVotePoints(response.AvailableVotePoints);
+                Shared.setTempAvailableVotePoints(response.AvailableVotePoints);
                 Shared.setUserId(response.UserId);
                 Shared.setUserName(response.Name);
                 $scope.userInfo = Shared;

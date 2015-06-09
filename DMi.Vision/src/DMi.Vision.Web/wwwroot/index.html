@@ -52,7 +52,14 @@
                         li><a ng-href="#/">Contact</a></li>
                     </ul>-->
                     <ul class="nav navbar-nav navbar-right">
-                        <li ng-show="userInfo.userName()"><a href="#">Welcome {{userInfo.userName()}}<span ng-show="userInfo.availableVotePoints()">, you have {{userInfo.availableVotePoints()}} votepoints left</spanng-show="userInfo.userName()"></a></li>
+                        <li ng-show="userInfo.userName()">
+                            <a href="#">Welcome {{userInfo.userName()}}
+                                <span ng-show="userInfo.availableVotePoints()">, you have </span>
+                            <span ng-show="userInfo.availableVotePoints()==userInfo.tempAvailableVotePoints()">{{userInfo.availableVotePoints()}}</span>
+                            <span ng-show="userInfo.availableVotePoints()!=userInfo.tempAvailableVotePoints()">{{userInfo.tempAvailableVotePoints()}}</span>
+                             <span>votepoints left </span>
+                            </a>
+                        </li>
                         <li>
                             <oauth2 authorization-url="https://dmiteststs.azurewebsites.net/connect/authorize"
                                     client-id="implicitclient"
