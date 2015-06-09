@@ -27,9 +27,6 @@ namespace DMi.Vision.Api.Controllers
         {
             var features = _dbContext.Features.Include(f => f.Votes);
             var model = new FeatureList();
-            //{
-            //    UserInfo = new UserInfo(Request.HttpContext.User, _dbContext)
-            //};
 
             foreach (var feature in features)
             {

@@ -47,8 +47,6 @@ namespace DMi.Vision.Api.Models
         /// </summary>
         public VoteAddOrEdit UserGivenVote { get; set; }
 
-       // public UserInfo UserInfo { get; set; }
-
 
     }
 }
