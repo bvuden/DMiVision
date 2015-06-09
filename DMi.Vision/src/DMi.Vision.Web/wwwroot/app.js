@@ -113,7 +113,8 @@
             d.get({
                 id: g
             }, function(b) {
-                e.setAvailableVotePoints(b.AvailableVotePoints), e.setUserId(b.UserId), a.userInfo = e;
+                e.setAvailableVotePoints(b.AvailableVotePoints), e.setUserId(b.UserId), e.setUserName(b.Name), 
+                a.userInfo = e;
             }), b.path("/features");
         }
     }
@@ -121,13 +122,19 @@
 }(), function() {
     "use strict";
     function a() {
-        var a, b;
+        var a, b, c;
         return {
             userId: function() {
                 return b;
             },
             setUserId: function(a) {
                 b = a;
+            },
+            userName: function() {
+                return c;
+            },
+            setUserName: function(a) {
+                c = a;
             },
             availableVotePoints: function() {
                 return a;

@@ -48,10 +48,12 @@ namespace DMi.Vision.Api.Controllers
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var temp = JObject.Parse(response.Content);
-
-                userInfo.Name = (string)temp["name"];
-
-                return new ObjectResult(userInfo);
+                //make sure returned user is requesting user
+                if ((string)temp["sub"] == userInfo.UserId)
+                {
+                    userInfo.Name = (string)temp["name"];
+                    return new ObjectResult(userInfo);
+                }               
             }
             return new BadRequestResult();
 
