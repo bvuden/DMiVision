@@ -14,3 +14,14 @@ input.ng-valid.ng-touched {
 .light {
     color:#808080;
 }
+#overlay {
+    background: rgba(225, 225, 225, 0.50) url(/Images/spinner.png) center center no-repeat;
+        margin-left: -3%;
+    margin-top:-20px;
+    z-index:100;
+    width:103%;
+    height: 102%;
+    position:absolute;
+    display: block;
+
+}

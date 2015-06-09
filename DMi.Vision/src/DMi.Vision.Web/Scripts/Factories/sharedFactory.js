@@ -10,7 +10,15 @@
         var tempAvailableVotePoints;
         var userId;
         var userName;
+        var loading=false;
         return {
+            loading: function () {
+                return loading;
+            },
+            setLoading: function (newValue) {
+                loading = newValue;
+            },
+
             userId: function () {
                 return userId;
             },

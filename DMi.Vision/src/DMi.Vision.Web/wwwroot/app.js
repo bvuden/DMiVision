@@ -29,8 +29,8 @@
 }(), function() {
     "use strict";
     function a(a, b, c, d) {
-        d.setTempAvailableVotePoints(d.availableVotePoints()), c.query(function(b) {
-            a.features = b.Features, a.userInfo = d, a.descriptionMaxSize = 500;
+        d.setTempAvailableVotePoints(d.availableVotePoints()), d.loading = !0, c.query(function(b) {
+            a.features = b.Features, a.userInfo = d, a.descriptionMaxSize = 500, d.loading = !1;
         });
     }
     function b(a, b, c, d, e, g, h) {
@@ -122,8 +122,14 @@
 }(), function() {
     "use strict";
     function a() {
-        var a, b, c, d;
+        var a, b, c, d, e = !1;
         return {
+            loading: function() {
+                return e;
+            },
+            setLoading: function(a) {
+                e = a;
+            },
             userId: function() {
                 return c;
             },

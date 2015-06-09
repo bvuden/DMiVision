@@ -16,11 +16,14 @@
     function FeaturesListController($scope, $sessionStorage, Feature, Shared) {
         //reset temp points
         Shared.setTempAvailableVotePoints(Shared.availableVotePoints());
+        //
+        Shared.loading=true;
 
         Feature.query(function (response) {
             $scope.features = response.Features;
             $scope.userInfo = Shared;
             $scope.descriptionMaxSize = 500;
+            Shared.loading = false;
         });
     }
 

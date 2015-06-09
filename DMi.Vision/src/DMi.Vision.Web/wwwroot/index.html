@@ -28,9 +28,9 @@
     <script src="app.js"></script>
 
 </head>
-<body ng-cloak >
+<body ng-cloak ng-controller="MainController" >    
     <!--site="https://localhost:44300"-->
-    <header class="header" ng-controller="MainController">
+    <header class="header" >
         <div class="navbar navbar-default" role="navigation">
             <div class="container">
                 <div class="navbar-header">
@@ -75,8 +75,9 @@
             </div>
         </div>
     </header>
-    <div class="container">
-        <ng-view></ng-view>
+    <div id="overlay" ng-show="userInfo.loading">show me</div>
+    <div class="container" ng-hide="userInfo.loading">
+        <ng-view ></ng-view>       
     </div>
 </body>
 </html>
