@@ -8,20 +8,17 @@ namespace DMi.Vision.Models
 
     public class Feature : IDateTracking
     {
-        private string _title;
-        private string _description;
-        private List<Vote> _votes;
 
         public Feature()
         {
-            _votes = new List<Vote>();
+            Votes = new List<Vote>();
         }
 
         public Feature(string title, string description)
         {
-            _title = title;
-            _description = description;
-            _votes = new List<Vote>();
+            Title = title;
+            Description = description;
+            Votes = new List<Vote>();
         }
 
         public int Id { get; set; }
@@ -45,24 +42,14 @@ namespace DMi.Vision.Models
         /// </summary>
         public DateTime DateModified { get; set; }
 
-        public string Title
-        {
-            get { return _title; }
-            set { _title = value; }
-        }
-        public string Description
-        {
-            get { return _description; }
-            set { _description = value; }
-        }
+        public string Title { get; set; }
+        
+        public string Description { get; set; }
 
         public FeatureStatus Status { get; set; }
 
-        public  virtual List<Vote> Votes
-        {
-            get { return _votes; }
-            set { _votes = value; }
-        }
+        public virtual List<Vote> Votes { get; set; }
+
 
     }
 

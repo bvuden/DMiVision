@@ -20,14 +20,8 @@ namespace DMi.Vision.Api.Models
         /// <summary>
         /// Unique identifier of the currently logged in user
         /// </summary>
-        public string UserId
-        {
-            get
-            {
-                Claim subject = _user.Claims.FirstOrDefault(x => x.Type == "sub");
-                return subject.Value;
-            }
-        }
+        public string UserId => _user.Claims.FirstOrDefault(x => x.Type == "sub").Value;
+        
         public string Name { get; set; }
 
         /// <summary>
@@ -42,7 +36,7 @@ namespace DMi.Vision.Api.Models
 
                 // get spend vote points
                 var userVotes = _dbContext.Votes.Where(v => v.VoterId == UserId);
-                var spentPoints = userVotes != null ? userVotes.Sum(x => x.Points) : 0;
+                var spentPoints = userVotes?.Sum(x => x.Points) ?? 0;
 
                 return maxPoints - spentPoints;
             }

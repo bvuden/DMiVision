@@ -8,33 +8,25 @@ namespace DMi.Vision.Api.Models
 {
     public class FeatureAddOrEdit
     {
-        private string _title;
-        private string _description;
 
         public FeatureAddOrEdit(string title, string description)
         {
-            _title = title;
-            _description = description;
+            Title = title;
+            Description = description;
         }
 
         public int Id { get; set; }
 
-        [Required(ErrorMessage="Title is required")]
-        [MinLength(3,ErrorMessage ="Title must be at least 3 characters")]
-        public string Title {
-            get { return _title; }
-            set { _title = value; }
-        }
+        [Required(ErrorMessage = "Title is required")]
+        [MinLength(3, ErrorMessage = "Title must be at least 3 characters")]
+        public string Title { get; set; }
+
 
         [Required(ErrorMessage = "Description is required")]
-        public string Description
-        {
-            get { return _description; }
-            set { _description = value; }
-        }
-
+        public string Description { get; set; }
 
         public string AuthorId { get; set; }
+
         public string AuthorName { get; set; }
 
         /// <summary>

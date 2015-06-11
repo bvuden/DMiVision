@@ -7,11 +7,9 @@ namespace DMi.Vision.Api.Models
 {
     public class FeatureList
     {
-        private List<FeatureListItem> _features;
-
         public FeatureList()
         {
-            _features = new List<FeatureListItem>();
+            Features = new List<FeatureListItem>();
         }
         /// <summary>
         /// Amount of vote points available to the currently logged in user
@@ -21,11 +19,8 @@ namespace DMi.Vision.Api.Models
         /// <summary>
         /// Collection of feature requests
         /// </summary>
-        public List<FeatureListItem> Features
-        {
-            get { return _features; }
-            set { _features = value; }
-        }
+        public List<FeatureListItem> Features { get; }
+
 
     }
 

@@ -15,8 +15,6 @@ namespace DMi.Vision.Api.Controllers
     [Route("api/[controller]")]
     public class FeaturesController : BaseController
     {
-
-
         public FeaturesController(VisionContext dbContext)
             : base(dbContext)
         { }
@@ -40,7 +38,7 @@ namespace DMi.Vision.Api.Controllers
                     TotalGivenVotePoints = feature.Votes.Sum(x => x.Points),
                 };
                 var userVote = feature.Votes.FirstOrDefault(x => x.VoterId == GetAuthenticatedUserId());
-                item.UserGivenVotePoints = userVote != null ? userVote.Points : 0;
+                item.UserGivenVotePoints = userVote?.Points ?? 0;
                 model.Features.Add(item);
             }
             return new ObjectResult(model);
@@ -112,7 +110,7 @@ namespace DMi.Vision.Api.Controllers
                 feature.DateModified = DateTime.Now;
 
                 //get author own vote (can not be null)
-                var authorVote = feature.Votes.FirstOrDefault(x => x.VoterId == feature.AuthorId);
+                var authorVote = feature.Votes.Single(x => x.VoterId == feature.AuthorId);
 
                 //get max points
                 var maxVotePoints = userInfo.AvailableVotePoints + authorVote.Points;

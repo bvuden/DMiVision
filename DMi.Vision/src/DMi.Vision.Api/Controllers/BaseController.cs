@@ -20,12 +20,9 @@ namespace DMi.Vision.Api.Controllers
             var created = dbContext.Database.EnsureCreated();
             _dbContext = dbContext;
         }
-        protected string GetAuthenticatedUserId()
-        {
-            Claim subject = Request.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "sub");
-            return subject.Value;
-        }
 
+        protected string GetAuthenticatedUserId() => Request.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "sub").Value;
+        
         protected string GetAuthenticatedUserName()
         {
 
@@ -53,8 +50,6 @@ namespace DMi.Vision.Api.Controllers
 
             }
             return string.Empty;
-
         }
-
     }
 }

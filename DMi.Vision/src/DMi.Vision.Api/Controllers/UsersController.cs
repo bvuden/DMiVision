@@ -16,11 +16,9 @@ namespace DMi.Vision.Api.Controllers
     [Route("api/[controller]")]
     public class UsersController : BaseController
     {
-
         public UsersController(VisionContext dbContext)
             : base(dbContext)
         { }
-
 
         // GET api/values/5
         [ResourceAuthorize("Read", "Users")]
@@ -56,9 +54,6 @@ namespace DMi.Vision.Api.Controllers
                 }               
             }
             return new BadRequestResult();
-
         }
-
-
     }
 }

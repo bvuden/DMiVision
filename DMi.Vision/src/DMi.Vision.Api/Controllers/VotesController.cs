@@ -15,12 +15,9 @@ namespace DMi.Vision.Api.Controllers
     [Route("api/features/{featureId}/[controller]")]
     public class VotesController : BaseController
     {
-
         public VotesController(VisionContext dbContext)
             : base(dbContext)
-        {
-
-        }
+        { }
 
         // GET: api/values
         [ResourceAuthorize("Read", "Votes")]
@@ -52,12 +49,12 @@ namespace DMi.Vision.Api.Controllers
             // get vote for current user for the feature request
             var userInfo = new UserInfo(Request.HttpContext.User, _dbContext);
             var vote = _dbContext.Votes.SingleOrDefault(v => v.FeatureId == featureId && v.VoterId == userInfo.UserId);
-            var maxVotePoints = vote != null ? userInfo.AvailableVotePoints + vote.Points : userInfo.AvailableVotePoints;
+            var maxVotePoints = userInfo.AvailableVotePoints + (vote?.Points ?? 0);
 
             //validate
             if (model.Points > maxVotePoints)
             {
-                ModelState.AddModelError("UserGivenVotePoints", "Given points exceeds available points");            
+                ModelState.AddModelError("UserGivenVotePoints", "Given points exceeds available points");
             }
 
             if (ModelState.IsValid)
@@ -71,7 +68,7 @@ namespace DMi.Vision.Api.Controllers
                     //user did not vote on this feature request before
                     var newVote = new Vote(userInfo.UserId, model.Points);
                     newVote.FeatureId = featureId;
-                   _dbContext.Votes.Add(newVote);                   
+                    _dbContext.Votes.Add(newVote);
                 }
 
                 _dbContext.SaveChanges();
@@ -92,22 +89,22 @@ namespace DMi.Vision.Api.Controllers
         public IActionResult Delete(int featureId, int id)
         {
             var userId = Request.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "sub").Value;
-            var vote = _dbContext.Votes.Include(v=>v.Feature).ToList().SingleOrDefault(v => v.Id == id);
+            var vote = _dbContext.Votes.Include(v => v.Feature).ToList().SingleOrDefault(v => v.Id == id);
             //you can only delete your own vote
             if (vote != null && vote.VoterId == userId)
             {
                 //only delete vote if the vote is not from the original author of the feature request
-                if (vote.Feature.AuthorId != vote.VoterId) {
+                if (vote.Feature.AuthorId != vote.VoterId)
+                {
                     _dbContext.Votes.Remove(vote);
                     _dbContext.SaveChanges();
                     //return new userinfo with available points
                     var userInfo = new UserInfo(Request.HttpContext.User, _dbContext);
                     return new ObjectResult(userInfo);
                 }
-                ModelState.AddModelError("", "You can't revoke votes on your own feature request.");                
+                ModelState.AddModelError("", "You can't revoke votes on your own feature request.");
             }
             return new BadRequestObjectResult(ModelState);
-            
         }
     }
 }
