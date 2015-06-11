@@ -36,8 +36,7 @@ namespace DMi.Vision.Api.Models
 
                 // get spend vote points
                 var userVotes = _dbContext.Votes.Where(v => v.VoterId == UserId);
-                var spentPoints = userVotes?.Sum(x => x.Points) ?? 0;
-
+                var spentPoints = userVotes?.Sum(x => x.Points) ?? 0;                
                 return maxPoints - spentPoints;
             }
         }

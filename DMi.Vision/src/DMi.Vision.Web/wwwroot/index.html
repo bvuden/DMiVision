@@ -75,8 +75,9 @@
             </div>
         </div>
     </header>
-    <div id="overlay" ng-show="userInfo.loading">show me</div>
-    <div class="container" ng-hide="userInfo.loading">
+    <!--<div id="overlay" ng-show="userInfo.loading">show me</div>-->
+    <spinner show="userInfo.loading" delay="200"></spinner>
+    <div ng-cloak class="container" >
         <ng-view ></ng-view>       
     </div>
 </body>

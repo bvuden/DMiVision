@@ -8,6 +8,7 @@ using DMi.Vision.Api.Models;
 using DMi.Vision.Models;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
+using System.Threading;
 
 namespace DMi.Vision.Api.Controllers
 {
@@ -23,6 +24,8 @@ namespace DMi.Vision.Api.Controllers
         [HttpGet]
         public IActionResult Get()
         {
+            //Thread.Sleep(1000);
+
             var features = _dbContext.Features.Include(f => f.Votes);
             var model = new FeatureList();
 

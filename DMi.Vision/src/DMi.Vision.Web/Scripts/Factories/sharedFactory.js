@@ -1,9 +1,9 @@
 ﻿(function () {
-    'use strict';
+//    'use strict';
 
     angular
         .module('appVision')
-        .factory('Shared', Shared);
+        .factory('Shared', Shared)
 
     function Shared() {
         var availableVotePoints;

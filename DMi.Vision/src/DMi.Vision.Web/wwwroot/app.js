@@ -25,7 +25,39 @@
             requireToken: !0
         }), b.html5Mode(!0).hashPrefix("!");
     }
-    a.$inject = [ "$routeProvider", "$locationProvider" ], angular.module("appVision", [ "afOAuth2", "ngRoute", "ngStorage", "featuresService", "votesService", "userInfoService" ]).factory("Shared").config(a);
+    a.$inject = [ "$routeProvider", "$locationProvider" ], angular.module("appVision", [ "afOAuth2", "ngRoute", "ngStorage", "featuresService", "votesService", "userInfoService" ]).directive("spinner", [ "$timeout", function(a) {
+        return {
+            restrict: "E",
+            template: '<div id="overlay"></div>',
+            scope: {
+                show: "=",
+                delay: "@"
+            },
+            link: function(b, c, d) {
+                function e() {
+                    i || (i = a(g.bind(this, !0), h()));
+                }
+                function f() {
+                    i && a.cancel(i), i = null, g(!1);
+                }
+                function g(a) {
+                    a ? c.css({
+                        display: ""
+                    }) : c.css({
+                        display: "none"
+                    });
+                }
+                function h() {
+                    var a = parseInt(b.delay);
+                    return angular.isNumber(a) ? a : 200;
+                }
+                var i;
+                b.$watch("show", function(a) {
+                    a ? e() : f();
+                });
+            }
+        };
+    } ]).config(a);
 }(), function() {
     "use strict";
     function a(a, b, c, d) {
@@ -120,7 +152,6 @@
     }
     angular.module("appVision").controller("MainController", a), a.$inject = [ "$scope", "$location", "$sessionStorage", "UserInfo", "Shared", "AccessToken" ];
 }(), function() {
-    "use strict";
     function a() {
         var a, b, c, d, e = !1;
         return {

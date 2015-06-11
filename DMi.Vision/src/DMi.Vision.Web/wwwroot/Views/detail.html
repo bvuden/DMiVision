@@ -21,7 +21,7 @@
 
         <form name="formSaveVote" novalidate ng-submit="saveVote()">
                 <label for="myPoints">My Points</label>
-                <div class="input-group col-md-2">
+                <div class="input-group col-md-4">
                     <input type="number" id="myPoints" class="form-control" ng-model="feature.UserGivenVote.Points" max="{{maxPoints}}" min="1" ng-change="vote()">
                     <span class="input-group-btn">
                         <button type="submit" ng-disabled="formSaveVote.$invalid" class="btn btn-primary">Vote</button>
