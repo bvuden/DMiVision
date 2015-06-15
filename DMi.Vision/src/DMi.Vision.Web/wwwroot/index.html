@@ -53,8 +53,7 @@
                     </ul>-->
                     <ul class="nav navbar-nav navbar-right">
                         <li ng-show="userInfo.userName()">
-                            <a href="#">Welcome {{userInfo.userName()}}
-                                <span ng-show="userInfo.availableVotePoints()">, you have </span>
+                            <a href="#">Welcome {{userInfo.userName()}}<span ng-show="userInfo.availableVotePoints()">, you have </span>
                             <span ng-show="userInfo.availableVotePoints()==userInfo.tempAvailableVotePoints()">{{userInfo.availableVotePoints()}}</span>
                             <span ng-show="userInfo.availableVotePoints()!=userInfo.tempAvailableVotePoints()">{{userInfo.tempAvailableVotePoints()}}</span>
                              <span>votepoints left </span>
@@ -76,7 +75,7 @@
         </div>
     </header>
     <!--<div id="overlay" ng-show="userInfo.loading">show me</div>-->
-    <spinner show="userInfo.loading" delay="200"></spinner>
+    <spinner show="userInfo.loading" delay="300"></spinner>
     <div ng-cloak class="container" >
         <ng-view ></ng-view>       
     </div>

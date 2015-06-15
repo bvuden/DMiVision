@@ -27,7 +27,6 @@ angular.module('oauth2.accessToken', ['ngStorage']).factory('AccessToken', ['$ro
 		if (token !== null) {
 			setExpiresAt(token);
 			$sessionStorage.token = token;
-			console.log(token);
 		}
 		return token;
 	}
@@ -82,7 +81,7 @@ angular.module('oauth2.accessToken', ['ngStorage']).factory('AccessToken', ['$ro
 			$rootScope.$broadcast('oauth2:authSuccess');
 			if ($sessionStorage.oauthRedirectRoute) {
 				var path = $sessionStorage.oauthRedirectRoute;
-				$sessionStorage.oauthRedirectRoute = null;
+				$sessionStorage.oauthRedirectRoute = null;				    
 				$location.path(path);
 			}
 		}
@@ -216,7 +215,7 @@ angular.module('oauth2.directive', []).directive('oauth2', ['$rootScope', '$http
 
 	definition.link = function(scope, element, attrs) {
 		function compile() {
-			var tpl = '<p class="navbar-btn"><a class="{{buttonClass}}"><span href="#" ng-hide="signedIn" ng-click="signIn()" >{{signInText}}</span><span href="#" ng-show="signedIn" ng-click="signOut()">{{signOutText}}</span></a></p>';
+		    var tpl = '<p class="navbar-btn"><a class="{{buttonClass}}" href="#" ng-hide="signedIn" ng-click="signIn()">{{signInText}}</a><a class="{{buttonClass}}" href="#" ng-show="signedIn" ng-click="signOut()">{{signOutText}}</a></p>';
 			if (scope.template) {
 				$http.get(scope.template, { cache: $templateCache }).success(function(html) {
 		        element.html(html);

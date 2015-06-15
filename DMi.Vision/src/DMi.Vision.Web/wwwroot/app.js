@@ -61,19 +61,21 @@
 }(), function() {
     "use strict";
     function a(a, b, c, d) {
-        d.setTempAvailableVotePoints(d.availableVotePoints()), d.loading = !0, c.query(function(b) {
+        d.loading = !0, window.location.href.indexOf("#") > 0 && window.location.replace("/"), 
+        d.setTempAvailableVotePoints(d.availableVotePoints()), c.query(function(b) {
             a.features = b.Features, a.userInfo = d, a.descriptionMaxSize = 500, d.loading = !1;
         });
     }
     function b(a, b, c, d, e, g, h) {
-        e.get({
+        h.loading = !0, e.get({
             id: c.id
         }, function(b) {
-            a.feature = b, a.maxPoints = h.availableVotePoints() + b.UserGivenVote.Points, a.isAuthor = h.userId() === b.AuthorId;
+            a.feature = b, a.maxPoints = h.availableVotePoints() + b.UserGivenVote.Points, a.isAuthor = h.userId() === b.AuthorId, 
+            h.loading = !1;
         }), a.vote = function() {
             h.setTempAvailableVotePoints(a.maxPoints - a.feature.UserGivenVote.Points);
         }, a.saveVote = function() {
-            g.save({
+            h.loading = !0, g.save({
                 featureId: c.id
             }, a.feature.UserGivenVote, function() {
                 h.setAvailableVotePoints(h.tempAvailableVotePoints()), d.path("/features");
@@ -81,13 +83,13 @@
                 f(a, b);
             });
         }, a.deleteVote = function() {
-            g["delete"]({
+            h.loading = !0, g["delete"]({
                 featureId: c.id,
                 id: a.feature.UserGivenVote.Id
             }, function(a) {
                 h.setAvailableVotePoints(a.AvailableVotePoints), d.path("/features");
             }, function(b) {
-                f(a, b);
+                h.loading = !1, f(a, b);
             });
         };
     }
@@ -98,15 +100,15 @@
             a.feature.$save(function() {
                 e.setAvailableVotePoints(e.tempAvailableVotePoints()), c.path("/features");
             }, function(b) {
-                f(a, b);
+                e.loading = !1, f(a, b);
             });
         };
     }
     function d(a, b, c, d, e) {
-        d.get({
+        e.loading = !0, d.get({
             id: b.id
         }, function(b) {
-            a.feature = b, a.maxPoints = e.availableVotePoints() + b.UserGivenVote.Points;
+            a.feature = b, a.maxPoints = e.availableVotePoints() + b.UserGivenVote.Points, e.loading = !1;
         }), a.vote = function() {
             e.setTempAvailableVotePoints(a.maxPoints - a.feature.UserGivenVote.Points);
         }, a.edit = function() {
@@ -115,7 +117,7 @@
             }, function() {
                 e.setAvailableVotePoints(e.tempAvailableVotePoints()), c.path("/features");
             }, function(b) {
-                f(a, b);
+                e.loading = !1, f(a, b);
             });
         };
     }

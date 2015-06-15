@@ -14,15 +14,22 @@
     FeaturesListController.$inject = ['$scope', '$sessionStorage', 'Feature', 'Shared'];
 
     function FeaturesListController($scope, $sessionStorage, Feature, Shared) {
+
+        Shared.loading = true;
+
+        //clean url after login
+        if (window.location.href.indexOf('#') > 0) {
+            window.location.replace('/');
+        }
+        
         //reset temp points
         Shared.setTempAvailableVotePoints(Shared.availableVotePoints());
-        //
-        Shared.loading=true;
-
+               
         Feature.query(function (response) {
             $scope.features = response.Features;
             $scope.userInfo = Shared;
             $scope.descriptionMaxSize = 500;
+
             Shared.loading = false;
         });
     }
@@ -31,6 +38,7 @@
     FeaturesDetailController.$inject = ['$scope', '$sessionStorage', '$routeParams', '$location', 'Feature', 'Vote', 'Shared'];
 
     function FeaturesDetailController($scope, $sessionStorage, $routeParams, $location, Feature, Vote, Shared) {
+        Shared.loading = true;
         //get feature data
         Feature.get({ id: $routeParams.id }, function (response) {
             $scope.feature = response;
@@ -38,6 +46,8 @@
             //$scope.maxPoints = response.UserInfo.AvailableVotePoints + response.UserGivenVote.Points;
             $scope.maxPoints = Shared.availableVotePoints() + response.UserGivenVote.Points;
             $scope.isAuthor = Shared.userId() === response.AuthorId;
+
+            Shared.loading = false;
         });
         //update available vote points
         $scope.vote = function () {
@@ -45,6 +55,9 @@
         };
         //save vote
         $scope.saveVote = function () {
+
+            Shared.loading = true;
+
             Vote.save({ featureId: $routeParams.id }, $scope.feature.UserGivenVote,
                     //succes
                     function () {
@@ -60,6 +73,8 @@
         //revoke vote
         $scope.deleteVote = function () {
             
+            Shared.loading = true;
+
             Vote.delete({ featureId: $routeParams.id, id: $scope.feature.UserGivenVote.Id },
                     //succes
                     function (response) {
@@ -68,6 +83,7 @@
                     },
                     //error
                     function (error) {
+                        Shared.loading = false;
                         _showValidationErrors($scope, error)
                     }
                 );
@@ -94,6 +110,7 @@
                 },
                 //error
                 function (error) {
+                    Shared.loading = false;
                     _showValidationErrors($scope, error)
                 }
             );
@@ -105,10 +122,13 @@
     FeaturesEditController.$inject = ['$scope', '$routeParams', '$location', 'Feature', 'Shared'];
 
     function FeaturesEditController($scope, $routeParams, $location, Feature, Shared) {
+        Shared.loading = true;
         Feature.get({ id: $routeParams.id }, function (response) {
             $scope.feature = response;
             //$scope.userInfo = response.UserInfo;
             $scope.maxPoints = Shared.availableVotePoints() + response.UserGivenVote.Points;
+
+            Shared.loading = false;
         });
 
         //update available vote points
@@ -125,6 +145,7 @@
                 },
                 //error
                 function (error) {
+                    Shared.loading = false;
                     _showValidationErrors($scope, error)
                 }
             );
