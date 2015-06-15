@@ -7,9 +7,10 @@ namespace DMi.Vision.Api.Models
 {
     public class FeatureList
     {
+        private List<FeatureListItem> _features;
         public FeatureList()
         {
-            Features = new List<FeatureListItem>();
+            _features = new List<FeatureListItem>();
         }
         /// <summary>
         /// Amount of vote points available to the currently logged in user
@@ -19,8 +20,15 @@ namespace DMi.Vision.Api.Models
         /// <summary>
         /// Collection of feature requests
         /// </summary>
-        public List<FeatureListItem> Features { get; }
+        public IQueryable<FeatureListItem> Features {
+            get { return _features.AsQueryable(); }
+            set { _features = value.ToList(); }
+        }
+            
 
+        public void AddFeature(FeatureListItem feature) {
+            _features.Add(feature);
+        }
 
     }
 

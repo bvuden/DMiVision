@@ -9,6 +9,7 @@ using DMi.Vision.Models;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using System.Threading;
+using DMi.Vision.Api.Helpers;
 
 namespace DMi.Vision.Api.Controllers
 {
@@ -22,7 +23,7 @@ namespace DMi.Vision.Api.Controllers
 
         [ResourceAuthorize("Read", "Features")]
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get(string sort="-TotalGivenVotePoints")
         {
             //Thread.Sleep(1000);
 
@@ -42,8 +43,9 @@ namespace DMi.Vision.Api.Controllers
                 };
                 var userVote = feature.Votes.FirstOrDefault(x => x.VoterId == GetAuthenticatedUserId());
                 item.UserGivenVotePoints = userVote?.Points ?? 0;
-                model.Features.Add(item);
+                model.AddFeature(item);
             }
+            model.Features= model.Features.ApplySort(sort);
             return new ObjectResult(model);
         }
 

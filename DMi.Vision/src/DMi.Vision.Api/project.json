@@ -16,7 +16,8 @@
         "Thinktecture.IdentityServer3.AccessTokenValidation": "1.2.2",
         "Microsoft.Framework.Logging.Console": "1.0.0-beta4",
         "RestSharp": "105.1.0",
-        "Newtonsoft.Json": "6.0.8"
+        "Newtonsoft.Json": "6.0.8",
+        "System.Linq.Dynamic": "1.0.4"
     },
 
     "commands": {

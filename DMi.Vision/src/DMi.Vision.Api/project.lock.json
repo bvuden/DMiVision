@@ -16,7 +16,8 @@
       "Thinktecture.IdentityServer3.AccessTokenValidation >= 1.2.2",
       "Microsoft.Framework.Logging.Console >= 1.0.0-beta4",
       "RestSharp >= 105.1.0",
-      "Newtonsoft.Json >= 6.0.8"
+      "Newtonsoft.Json >= 6.0.8",
+      "System.Linq.Dynamic >= 1.0.4"
     ],
     "DNX,Version=v4.5.1": []
   },
@@ -3789,6 +3790,34 @@
         "System.IdentityModel.Tokens.Jwt.nuspec",
         "lib/net45/System.IdentityModel.Tokens.Jwt.dll",
         "lib/net45/System.IdentityModel.Tokens.Jwt.Xml"
+      ]
+    },
+    "System.Linq.Dynamic/1.0.4": {
+      "serviceable": false,
+      "sha": "WfRPE4I3T4ED6T3SJGkPQxCfmS6mG2c9ww3OeXf8f+bLFL/k19fSH7jR6SZfw2r9F2wA0PZjFNbeTYVdYuTD8w==",
+      "frameworks": {
+        "DNX,Version=v4.5.1": {
+          "dependencies": {},
+          "frameworkAssemblies": [],
+          "runtimeAssemblies": [
+            "lib/net40/System.Linq.Dynamic.dll"
+          ],
+          "compileAssemblies": [
+            "lib/net40/System.Linq.Dynamic.dll"
+          ]
+        },
+        "DNXCore,Version=v5.0": {
+          "dependencies": {},
+          "frameworkAssemblies": [],
+          "runtimeAssemblies": [],
+          "compileAssemblies": []
+        }
+      },
+      "files": [
+        "System.Linq.Dynamic.1.0.4.nupkg",
+        "System.Linq.Dynamic.1.0.4.nupkg.sha512",
+        "System.Linq.Dynamic.nuspec",
+        "lib/net40/System.Linq.Dynamic.dll"
       ]
     },
     "System.Reflection.Metadata/1.0.18-beta": {
