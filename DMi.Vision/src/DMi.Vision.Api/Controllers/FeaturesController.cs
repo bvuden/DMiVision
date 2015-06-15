@@ -136,12 +136,14 @@ namespace DMi.Vision.Api.Controllers
         [ResourceAuthorize("Write", "Features")]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
-        {
-            Feature feature = _dbContext.Features.SingleOrDefault(x => x.Id == id);
+        {            
+            Feature feature = _dbContext.Features.Include(f=>f.Votes).SingleOrDefault(x => x.Id == id);
             if (feature != null)
             {
                 if (feature.AuthorId == GetAuthenticatedUserId())
                 {
+                    //Cascade on delete is not supported yet in EF7, delete votes explicitly
+                    _dbContext.Votes.RemoveRange(feature.Votes);
                     _dbContext.Features.Remove(feature);
                     _dbContext.SaveChanges();
                     return new HttpStatusCodeResult(200);
