@@ -17,17 +17,27 @@ namespace DMi.Vision.Api.Controllers
     [Route("api/[controller]")]
     public class FeaturesController : BaseController
     {
+        const int maxPageSize = 10;
+
         public FeaturesController(VisionContext dbContext)
             : base(dbContext)
         { }
 
+        
+        [Route(null, Name = "Features")]
         [ResourceAuthorize("Read", "Features")]
         [HttpGet]
-        public IActionResult Get(string sort="-TotalGivenVotePoints")
+        public IActionResult Get(string sort = "-TotalGivenVotePoints", int page = 1, int pageSize = maxPageSize)
         {
             //Thread.Sleep(1000);
-
             var features = _dbContext.Features.Include(f => f.Votes);
+
+            // ensure the page size isn't larger than the maximum.
+            if (pageSize > maxPageSize)
+            {
+                pageSize = maxPageSize;
+            }
+
             var model = new FeatureList();
 
             foreach (var feature in features)
@@ -45,7 +55,50 @@ namespace DMi.Vision.Api.Controllers
                 item.UserGivenVotePoints = userVote?.Points ?? 0;
                 model.AddFeature(item);
             }
-            model.Features= model.Features.ApplySort(sort);
+
+            // calculate data for metadata
+            var totalCount = model.Features.Count();
+            var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+            // apply sorting and paging
+            model.Features = model.Features.ApplySort(sort).Skip(pageSize * (page - 1)).Take(pageSize);
+
+            // create response header with pagination information
+            string prevLink = page > 1 ? Url.Link("Features", new
+            {
+                page = page - 1,
+                pageSize = pageSize,
+                sort = sort
+            }) : "";
+
+
+            var nextLink = page < totalPages ? Url.Link("Features",
+                new
+                {
+                    page = page + 1,
+                    pageSize = pageSize,
+                    sort = sort
+                }) : "";
+
+            var paginationHeader = new
+            {
+                currentPage = page,
+                pageSize = pageSize,
+                totalCount = totalCount,
+                totalPages = totalPages,
+                previousPageLink = prevLink,
+                nextPageLink = nextLink
+            };
+
+            var jsonPagination = new List<string>();
+            jsonPagination.Add(Newtonsoft.Json.JsonConvert.SerializeObject(paginationHeader));
+
+            var access = new List<string>() { "X-Pagination" };
+                        
+            Context.Response.Headers.Add("X-Pagination", jsonPagination.ToArray());
+            Context.Response.Headers.Add("Access-Control-Expose-Headers", access.ToArray());
+
+
             return new ObjectResult(model);
         }
 
@@ -138,8 +191,8 @@ namespace DMi.Vision.Api.Controllers
         [ResourceAuthorize("Write", "Features")]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
-        {            
-            Feature feature = _dbContext.Features.Include(f=>f.Votes).SingleOrDefault(x => x.Id == id);
+        {
+            Feature feature = _dbContext.Features.Include(f => f.Votes).SingleOrDefault(x => x.Id == id);
             if (feature != null)
             {
                 if (feature.AuthorId == GetAuthenticatedUserId())

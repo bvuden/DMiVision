@@ -16,22 +16,42 @@
     function FeaturesListController($scope, $sessionStorage, Feature, Shared) {
 
         Shared.loading = true;
-
+        console.log($sessionStorage.token);
         //clean url after login
         if (window.location.href.indexOf('#') > 0) {
             window.location.replace('/');
         }
-        
+
         //reset temp points
         Shared.setTempAvailableVotePoints(Shared.availableVotePoints());
-               
-        Feature.query(function (response) {
+
+        Feature.query(function (response, responseHeaders) {
+            query(response, responseHeaders);           
+        });
+
+        //navigate between page results
+        $scope.navigateToPage = function (pageNumber) {
+            Shared.loading = true;
+            Feature.query({ page: pageNumber, pageSize: $scope.pagination.pageSize }, function (response, responseHeaders) {
+                query(response, responseHeaders);
+            });
+        };
+
+        function query(response, responseHeaders) {
+            // get pagination metadata from response header as json object
+            var pagination = JSON.parse(responseHeaders()['x-pagination']);
+            var pageNumbers = [];
+            for (var i = 1; i <= pagination.totalPages; i++) {
+                pageNumbers.push(i);
+            }
+            //console.log(pagination);
+            pagination.pageNumbers = pageNumbers;
             $scope.features = response.Features;
             $scope.userInfo = Shared;
             $scope.descriptionMaxSize = 500;
-
+            $scope.pagination = pagination;
             Shared.loading = false;
-        });
+        }
     }
 
     /* Details Controller */
@@ -72,7 +92,7 @@
         };
         //revoke vote
         $scope.deleteVote = function () {
-            
+
             Shared.loading = true;
 
             Vote.delete({ featureId: $routeParams.id, id: $scope.feature.UserGivenVote.Id },
@@ -95,7 +115,7 @@
 
     function FeaturesAddController($scope, $sessionStorage, $location, Feature, Shared) {
         $scope.feature = new Feature();
-        $scope.maxPoints  = Shared.availableVotePoints();
+        $scope.maxPoints = Shared.availableVotePoints();
 
         //update available vote points
         $scope.vote = function () {

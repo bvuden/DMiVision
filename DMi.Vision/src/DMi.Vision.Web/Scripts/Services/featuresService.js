@@ -6,18 +6,17 @@
         var resource =
           $resource('http://localhost:port/api/features/:id', {
               port: ":1482",
-              id: '@id'
+              id: '@id',
+              page: 1,
+              pageSize: 10
           }, {
-              query: {isArray:false},
+              query: { isArray: false },
               update: { method: 'PUT' }
           });
 
         return resource;
     }
         ])
-
-
-
 })();
 
 //(function () {

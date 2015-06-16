@@ -61,10 +61,22 @@
 }(), function() {
     "use strict";
     function a(a, b, c, d) {
-        d.loading = !0, window.location.href.indexOf("#") > 0 && window.location.replace("/"), 
-        d.setTempAvailableVotePoints(d.availableVotePoints()), c.query(function(b) {
-            a.features = b.Features, a.userInfo = d, a.descriptionMaxSize = 500, d.loading = !1;
-        });
+        function e(b, c) {
+            for (var e = JSON.parse(c()["x-pagination"]), f = [], g = 1; g <= e.totalPages; g++) f.push(g);
+            e.pageNumbers = f, a.features = b.Features, a.userInfo = d, a.descriptionMaxSize = 500, 
+            a.pagination = e, d.loading = !1;
+        }
+        d.loading = !0, console.log(b.token), window.location.href.indexOf("#") > 0 && window.location.replace("/"), 
+        d.setTempAvailableVotePoints(d.availableVotePoints()), c.query(function(a, b) {
+            e(a, b);
+        }), a.navigateToPage = function(b) {
+            d.loading = !0, c.query({
+                page: b,
+                pageSize: a.pagination.pageSize
+            }, function(a, b) {
+                e(a, b);
+            });
+        };
     }
     function b(a, b, c, d, e, g, h) {
         h.loading = !0, e.get({
@@ -195,7 +207,9 @@
     angular.module("featuresService", [ "ngResource" ]).factory("Feature", [ "$resource", function(a) {
         var b = a("http://localhost:port/api/features/:id", {
             port: ":1482",
-            id: "@id"
+            id: "@id",
+            page: 1,
+            pageSize: 10
         }, {
             query: {
                 isArray: !1
