@@ -22,6 +22,7 @@
                 Shared.setTempAvailableVotePoints(response.AvailableVotePoints);
                 Shared.setUserId(response.UserId);
                 Shared.setUserName(response.Name);
+                Shared.setIsAdmin(response.IsAdmin);
                 $scope.userInfo = Shared;
             });
             $location.path('/features');

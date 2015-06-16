@@ -10,6 +10,7 @@
         var tempAvailableVotePoints;
         var userId;
         var userName;
+        var isAdmin;
         var loading=false;
         return {
             loading: function () {
@@ -18,7 +19,12 @@
             setLoading: function (newValue) {
                 loading = newValue;
             },
-
+            isAdmin: function () {
+                return isAdmin;
+            },
+            setIsAdmin: function (newValue) {
+                isAdmin = newValue;
+            },
             userId: function () {
                 return userId;
             },

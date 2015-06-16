@@ -160,19 +160,25 @@
                 id: g
             }, function(b) {
                 e.setAvailableVotePoints(b.AvailableVotePoints), e.setTempAvailableVotePoints(b.AvailableVotePoints), 
-                e.setUserId(b.UserId), e.setUserName(b.Name), a.userInfo = e;
+                e.setUserId(b.UserId), e.setUserName(b.Name), e.setIsAdmin(b.IsAdmin), a.userInfo = e;
             }), b.path("/features");
         }
     }
     angular.module("appVision").controller("MainController", a), a.$inject = [ "$scope", "$location", "$sessionStorage", "UserInfo", "Shared", "AccessToken" ];
 }(), function() {
     function a() {
-        var a, b, c, d, e = !1;
+        var a, b, c, d, e, f = !1;
         return {
             loading: function() {
-                return e;
+                return f;
             },
             setLoading: function(a) {
+                f = a;
+            },
+            isAdmin: function() {
+                return e;
+            },
+            setIsAdmin: function(a) {
                 e = a;
             },
             userId: function() {

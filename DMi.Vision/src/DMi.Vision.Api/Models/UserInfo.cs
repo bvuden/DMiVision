@@ -40,5 +40,7 @@ namespace DMi.Vision.Api.Models
                 return maxPoints - spentPoints;
             }
         }
+
+        public bool IsAdmin { get; internal set; }
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNet.Mvc;
 using System.Security.Claims;
 using RestSharp;
 using Newtonsoft.Json.Linq;
+using DMi.Vision.Api.Models;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,6 +15,7 @@ namespace DMi.Vision.Api.Controllers
     public abstract class BaseController : Controller
     {
         protected VisionContext _dbContext;
+        private JObject _userinfo;
 
         public BaseController(VisionContext dbContext)
         {
@@ -22,10 +24,20 @@ namespace DMi.Vision.Api.Controllers
         }
 
         protected string GetAuthenticatedUserId() => Request.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "sub").Value;
-        
+
         protected string GetAuthenticatedUserName()
         {
+            var userinfo = GetAuthenticatedUserInfo();
+            return userinfo.Name;
+        }
 
+        protected bool AuthenticatedUserIsAdmin() {
+            var userinfo = GetAuthenticatedUserInfo();
+            return userinfo.IsAdmin;
+        }
+
+        private UserInfo GetAuthenticatedUserInfo()
+        {
             var userId = GetAuthenticatedUserId();
             // get userinfo from STS
             var uri = "http://" + Request.Host + "/api/users/" + userId;
@@ -46,10 +58,13 @@ namespace DMi.Vision.Api.Controllers
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var temp = JObject.Parse(response.Content);
-                return (string)temp["Name"];
-
+                var userInfo = new UserInfo(Request.HttpContext.User, _dbContext);
+                userInfo.Name = (string)temp["Name"];
+                userInfo.IsAdmin = (bool)temp["IsAdmin"];
+                return userInfo;
             }
-            return string.Empty;
+            return null;
         }
+
     }
 }

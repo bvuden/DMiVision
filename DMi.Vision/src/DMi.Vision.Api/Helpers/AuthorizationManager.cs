@@ -32,11 +32,14 @@ namespace DMi.Vision.Api.Helpers
             switch (action)
             {
                 case "Read":
-                    // to be able to read this resourcegroup, the user must be in the WebReadUser role
+                    // to be able to read this resourcegroup, the user must be in the DMiVisionUser role
                     return Eval(context.Principal.HasClaim("role", "DMiVisionUser"));
                 case "Write":
-                    // to be able to write to this resourcegroup, the user must be in the WebWriteUser role
+                    // to be able to write to this resourcegroup, the user must be in the DMiVisionUser role
                     return Eval(context.Principal.HasClaim("role", "DMiVisionUser"));
+                case "Delete":
+                    // to be able to delete from this resourcegroup, the user must be in the DMiVisionAdmin role
+                    return Eval(context.Principal.HasClaim("role","DMiVisionAdmin"));
                 default:
                     return Nok();
             }

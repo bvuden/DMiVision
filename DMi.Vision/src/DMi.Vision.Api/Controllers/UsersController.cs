@@ -50,6 +50,10 @@ namespace DMi.Vision.Api.Controllers
                 if ((string)temp["sub"] == userInfo.UserId)
                 {
                     userInfo.Name = (string)temp["name"];
+                    var roles = temp["role"].Children();
+                    if (roles.Contains("DMiVisionAdmin")){
+                        userInfo.IsAdmin = true;
+                    }
                     return new ObjectResult(userInfo);
                 }               
             }

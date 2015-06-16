@@ -21,6 +21,11 @@
                     <a title="edit" href="/features/edit/{{feature.Id}}" class="btn btn-default btn-xs">edit</a>
                 </h3>
             </div>
+            <div ng-if="userInfo.isAdmin()">
+                <h3>
+                    <a title="delete" href="/features/delete/{{feature.Id}}" class="btn btn-danger btn-xs">delete</a>
+                </h3>
+            </div>
         </div>
     </div>
     <div ng-show="pagination.totalPages > 1" class="col-md-8 text-center">
