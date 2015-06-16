@@ -13,7 +13,8 @@
         // Custom modules 
         'featuresService',
         'votesService',
-        'userInfoService'
+        'userInfoService',
+        'statusService'
         // 3rd Party Modules        
 
     ])
@@ -78,7 +79,7 @@
         .when('/', {
             //templateUrl: '/Views/list.html',
             controller: 'MainController',
-           // requireToken: true
+            // requireToken: true
 
         })
         .when('/features', {
@@ -105,6 +106,11 @@
         .when('/features/delete/:id', {
             templateUrl: '/Views/delete.html',
             controller: 'FeaturesDeleteController',
+            requireToken: true
+        })
+        .when('/features/:id/status', {
+            templateUrl: '/Views/status.html',
+            controller: 'FeaturesStatusController',
             requireToken: true
         });
         //.otherwise({

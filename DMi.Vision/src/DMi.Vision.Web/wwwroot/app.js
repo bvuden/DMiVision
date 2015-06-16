@@ -23,9 +23,13 @@
             templateUrl: "/Views/delete.html",
             controller: "FeaturesDeleteController",
             requireToken: !0
+        }).when("/features/:id/status", {
+            templateUrl: "/Views/status.html",
+            controller: "FeaturesStatusController",
+            requireToken: !0
         }), b.html5Mode(!0).hashPrefix("!");
     }
-    a.$inject = [ "$routeProvider", "$locationProvider" ], angular.module("appVision", [ "afOAuth2", "ngRoute", "ngStorage", "featuresService", "votesService", "userInfoService" ]).directive("spinner", [ "$timeout", function(a) {
+    a.$inject = [ "$routeProvider", "$locationProvider" ], angular.module("appVision", [ "afOAuth2", "ngRoute", "ngStorage", "featuresService", "votesService", "userInfoService", "statusService" ]).directive("spinner", [ "$timeout", function(a) {
         return {
             restrict: "E",
             template: '<div id="overlay"></div>',
@@ -66,8 +70,10 @@
             e.pageNumbers = f, a.features = b.Features, a.userInfo = d, a.descriptionMaxSize = 500, 
             a.pagination = e, d.loading = !1;
         }
-        d.loading = !0, console.log(b.token), window.location.href.indexOf("#") > 0 && window.location.replace("/"), 
-        d.setTempAvailableVotePoints(d.availableVotePoints()), c.query(function(a, b) {
+        d.loading = !0, window.location.href.indexOf("#") > 0 && window.location.replace("/"), 
+        d.setTempAvailableVotePoints(d.availableVotePoints()), c.query({
+            pageSize: 3
+        }, function(a, b) {
             e(a, b);
         }), a.navigateToPage = function(b) {
             d.loading = !0, c.query({
@@ -78,7 +84,7 @@
             });
         };
     }
-    function b(a, b, c, d, e, g, h) {
+    function b(a, b, c, d, e, f, h) {
         h.loading = !0, e.get({
             id: c.id
         }, function(b) {
@@ -87,21 +93,21 @@
         }), a.vote = function() {
             h.setTempAvailableVotePoints(a.maxPoints - a.feature.UserGivenVote.Points);
         }, a.saveVote = function() {
-            h.loading = !0, g.save({
+            h.loading = !0, f.save({
                 featureId: c.id
             }, a.feature.UserGivenVote, function() {
                 h.setAvailableVotePoints(h.tempAvailableVotePoints()), d.path("/features");
             }, function(b) {
-                f(a, b);
+                g(a, b);
             });
         }, a.deleteVote = function() {
-            h.loading = !0, g["delete"]({
+            h.loading = !0, f["delete"]({
                 featureId: c.id,
                 id: a.feature.UserGivenVote.Id
             }, function(a) {
                 h.setAvailableVotePoints(a.AvailableVotePoints), d.path("/features");
             }, function(b) {
-                h.loading = !1, f(a, b);
+                h.loading = !1, g(a, b);
             });
         };
     }
@@ -112,7 +118,7 @@
             a.feature.$save(function() {
                 e.setAvailableVotePoints(e.tempAvailableVotePoints()), c.path("/features");
             }, function(b) {
-                e.loading = !1, f(a, b);
+                e.loading = !1, g(a, b);
             });
         };
     }
@@ -129,7 +135,7 @@
             }, function() {
                 e.setAvailableVotePoints(e.tempAvailableVotePoints()), c.path("/features");
             }, function(b) {
-                e.loading = !1, f(a, b);
+                e.loading = !1, g(a, b);
             });
         };
     }
@@ -144,13 +150,22 @@
             });
         };
     }
-    function f(a, b) {
+    function f(a, b, c, d) {
+        d.query(function(b) {
+            a.statusOptions = b;
+        }), d.get({
+            featureId: b.id
+        }, function(b) {
+            a.feature = b;
+        });
+    }
+    function g(a, b) {
         if (a.validationErrors = [], b.data && angular.isObject(b.data)) for (var c in b.data) a.validationErrors.push(b.data[c][0]); else a.validationErrors.push("Could not add feature.");
     }
-    angular.module("appVision").controller("FeaturesListController", a).controller("FeaturesDetailController", b).controller("FeaturesAddController", c).controller("FeaturesEditController", d).controller("FeaturesDeleteController", e), 
+    angular.module("appVision").controller("FeaturesListController", a).controller("FeaturesDetailController", b).controller("FeaturesAddController", c).controller("FeaturesEditController", d).controller("FeaturesDeleteController", e).controller("FeaturesStatusController", f), 
     a.$inject = [ "$scope", "$sessionStorage", "Feature", "Shared" ], b.$inject = [ "$scope", "$sessionStorage", "$routeParams", "$location", "Feature", "Vote", "Shared" ], 
     c.$inject = [ "$scope", "$sessionStorage", "$location", "Feature", "Shared" ], d.$inject = [ "$scope", "$routeParams", "$location", "Feature", "Shared" ], 
-    e.$inject = [ "$scope", "$routeParams", "$location", "Feature" ];
+    e.$inject = [ "$scope", "$routeParams", "$location", "Feature" ], f.$inject = [ "$scope", "$routeParams", "$location", "Status" ];
 }(), function() {
     "use strict";
     function a(a, b, c, d, e, f) {
@@ -222,6 +237,20 @@
             },
             update: {
                 method: "PUT"
+            }
+        });
+        return b;
+    } ]);
+}(), function() {
+    "use strict";
+    angular.module("statusService", [ "ngResource" ]).factory("Status", [ "$resource", function(a) {
+        var b = a("http://localhost:port/api/features/:featureId/status", {
+            port: ":1482",
+            featureId: "@featureId"
+        }, {
+            query: {
+                isArray: !0,
+                url: "http://localhost:port/api/status"
             }
         });
         return b;

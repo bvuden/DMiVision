@@ -7,7 +7,8 @@
         .controller('FeaturesDetailController', FeaturesDetailController)
         .controller('FeaturesAddController', FeaturesAddController)
         .controller('FeaturesEditController', FeaturesEditController)
-        .controller('FeaturesDeleteController', FeaturesDeleteController);
+        .controller('FeaturesDeleteController', FeaturesDeleteController)
+        .controller('FeaturesStatusController', FeaturesStatusController);
 
 
     /* List Controller*/
@@ -16,7 +17,7 @@
     function FeaturesListController($scope, $sessionStorage, Feature, Shared) {
 
         Shared.loading = true;
-        console.log($sessionStorage.token);
+        //console.log($sessionStorage.token);
         //clean url after login
         if (window.location.href.indexOf('#') > 0) {
             window.location.replace('/');
@@ -25,7 +26,7 @@
         //reset temp points
         Shared.setTempAvailableVotePoints(Shared.availableVotePoints());
 
-        Feature.query(function (response, responseHeaders) {
+        Feature.query({pageSize:3},function (response, responseHeaders) {
             query(response, responseHeaders);           
         });
 
@@ -185,6 +186,18 @@
         };
     }
 
+    /* Status controller */
+    FeaturesStatusController.$inject = ['$scope', '$routeParams', '$location', 'Status']
+
+    function FeaturesStatusController($scope, $routeParams, $location, Status) {
+        // get all available status options
+        Status.query(function (response) {
+            $scope.statusOptions = response;
+        });
+        Status.get({ featureId: $routeParams.id }, function (response) {
+            $scope.feature = response;
+        })
+    }
 
     /* Utility Functions */
     function _showValidationErrors($scope, error) {

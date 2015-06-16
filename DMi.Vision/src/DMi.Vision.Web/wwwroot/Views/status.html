@@ -1,0 +1,16 @@
+﻿<div class="row">
+
+    <div class="col-md-8">
+        <h2>{{feature.Title}}</h2>
+        <form name="formChangeStatus" novalidate ng-submit="changeStatus()">
+            
+            <div class="form-group">
+                <label for="Status">Change status</label>
+                <select name="Status" ng-model="feature.Status" ng-options="item.id as item.name for item in statusOptions">
+                </select>
+            </div>
+            <a href="/features" class="btn btn-default">Cancel</a>
+            <button type="submit" ng-disabled="formChangeStatus.$invalid" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+</div>

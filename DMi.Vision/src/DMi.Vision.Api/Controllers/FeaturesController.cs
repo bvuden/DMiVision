@@ -93,10 +93,10 @@ namespace DMi.Vision.Api.Controllers
             var jsonPagination = new List<string>();
             jsonPagination.Add(Newtonsoft.Json.JsonConvert.SerializeObject(paginationHeader));
 
-            var access = new List<string>() { "X-Pagination" };
+            var accessToHeaders = new List<string>() { "X-Pagination" };
                         
             Context.Response.Headers.Add("X-Pagination", jsonPagination.ToArray());
-            Context.Response.Headers.Add("Access-Control-Expose-Headers", access.ToArray());
+            Context.Response.Headers.Add("Access-Control-Expose-Headers", accessToHeaders.ToArray());
 
 
             return new ObjectResult(model);
@@ -161,7 +161,7 @@ namespace DMi.Vision.Api.Controllers
             var feature = _dbContext.Features.Include(f => f.Votes).FirstOrDefault(x => x.Id == id);
             var userInfo = new UserInfo(Request.HttpContext.User, _dbContext);
 
-            if (ModelState.IsValid && feature != null && feature.AuthorId == userInfo.UserId)
+            if (ModelState.IsValid && feature != null && (feature.AuthorId == userInfo.UserId))
             {
                 feature.Title = model.Title;
                 feature.Description = model.Description;
