@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using DMi.Vision.Models;
 
 namespace DMi.Vision.Api.Models
 {
@@ -21,9 +22,11 @@ namespace DMi.Vision.Api.Models
         [MinLength(3, ErrorMessage = "Title must be at least 3 characters")]
         public string Title { get; set; }
 
-
         [Required(ErrorMessage = "Description is required")]
         public string Description { get; set; }
+
+        public string Status { get; set; }
+        public bool IsLocked { get; set; }
 
         public string AuthorId { get; set; }
 

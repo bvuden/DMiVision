@@ -23,7 +23,7 @@ namespace DMi.Vision.Api.Controllers
             : base(dbContext)
         { }
 
-        
+
         [Route(null, Name = "Features")]
         [ResourceAuthorize("Read", "Features")]
         [HttpGet]
@@ -47,6 +47,8 @@ namespace DMi.Vision.Api.Controllers
                     Id = feature.Id,
                     Title = feature.Title,
                     Description = feature.Description,
+                    Status = feature.Status.ToFriendlyString(),
+                    IsLocked = feature.Status != FeatureStatus.UnderReview,
                     AuthorId = feature.AuthorId,
                     AuthorName = feature.AuthorName,
                     TotalGivenVotePoints = feature.Votes.Sum(x => x.Points),
@@ -94,7 +96,7 @@ namespace DMi.Vision.Api.Controllers
             jsonPagination.Add(Newtonsoft.Json.JsonConvert.SerializeObject(paginationHeader));
 
             var accessToHeaders = new List<string>() { "X-Pagination" };
-                        
+
             Context.Response.Headers.Add("X-Pagination", jsonPagination.ToArray());
             Context.Response.Headers.Add("Access-Control-Expose-Headers", accessToHeaders.ToArray());
 
@@ -112,6 +114,8 @@ namespace DMi.Vision.Api.Controllers
             {
                 var model = new FeatureAddOrEdit(feature.Title, feature.Description);
 
+                model.Status = feature.Status.ToFriendlyString();
+                model.IsLocked = feature.Status != FeatureStatus.UnderReview;
                 model.AuthorId = feature.AuthorId;
                 model.AuthorName = feature.AuthorName;
                 model.TotalGivenVotePoints = feature.Votes.Sum(x => x.Points);
@@ -162,7 +166,7 @@ namespace DMi.Vision.Api.Controllers
             var feature = _dbContext.Features.Include(f => f.Votes).FirstOrDefault(x => x.Id == id);
             var userInfo = new UserInfo(Request.HttpContext.User, _dbContext);
 
-            if (ModelState.IsValid && feature != null && (feature.AuthorId == userInfo.UserId))
+            if (IsValidPutRequest(feature, userInfo))
             {
                 feature.Title = model.Title;
                 feature.Description = model.Description;
@@ -196,13 +200,30 @@ namespace DMi.Vision.Api.Controllers
             Feature feature = _dbContext.Features.Include(f => f.Votes).SingleOrDefault(x => x.Id == id);
             if (feature != null)
             {
-                    //Cascade on delete is not supported yet in EF7, delete votes explicitly
-                    _dbContext.Votes.RemoveRange(feature.Votes);
-                    _dbContext.Features.Remove(feature);
-                    _dbContext.SaveChanges();
-                    return new HttpStatusCodeResult(200);
+                //Cascade on delete is not supported yet in EF7, delete votes explicitly
+                _dbContext.Votes.RemoveRange(feature.Votes);
+                _dbContext.Features.Remove(feature);
+                _dbContext.SaveChanges();
+                return new HttpStatusCodeResult(200);
             }
             return new BadRequestResult();
+        }
+
+        private bool IsValidPutRequest(Feature feature, UserInfo userInfo)
+        {
+
+            var valid = false;
+
+            if (feature != null)
+            {
+                valid = feature.AuthorId == userInfo.UserId;
+                if (feature.Status != FeatureStatus.UnderReview)
+                {
+                    ModelState.AddModelError("status", "This feature request can not be edited.");
+                }
+                valid = valid == ModelState.IsValid;
+            }
+            return valid;
         }
     }
 }

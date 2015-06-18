@@ -86,8 +86,8 @@
         h.loading = !0, e.get({
             id: c.id
         }, function(b) {
-            a.feature = b, a.maxPoints = h.availableVotePoints() + b.UserGivenVote.Points, a.isAuthor = h.userId() === b.AuthorId, 
-            h.loading = !1;
+            a.feature = b, console.log(a.feature), a.maxPoints = h.availableVotePoints() + b.UserGivenVote.Points, 
+            a.isAuthor = h.userId() === b.AuthorId, h.loading = !1;
         }), a.vote = function() {
             h.setTempAvailableVotePoints(a.maxPoints - a.feature.UserGivenVote.Points);
         }, a.saveVote = function() {
@@ -96,7 +96,7 @@
             }, a.feature.UserGivenVote, function() {
                 h.setAvailableVotePoints(h.tempAvailableVotePoints()), d.path("/features");
             }, function(b) {
-                g(a, b);
+                h.loading = !1, g(a, b);
             });
         }, a.deleteVote = function() {
             h.loading = !0, f["delete"]({

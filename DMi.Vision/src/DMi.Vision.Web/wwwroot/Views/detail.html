@@ -13,19 +13,24 @@
         <span id="description">{{feature.Description}}</span><br />
         <label for="author">Author</label><br />
         <span id="author">{{feature.AuthorName}}</span><br />
-
+        <label for="status">Status</label><br />
+        <span id="status">{{feature.Status}}</span><br />
         <label for="totalPoints">Total Points</label>
         <span id="totalPoints">{{feature.TotalGivenVotePoints}}</span><br />
 
-        <form name="formSaveVote" novalidate ng-submit="saveVote()">
-                <label for="myPoints">My Points</label>
-                <div class="input-group col-md-4">
-                    <input type="number" id="myPoints" class="form-control" ng-model="feature.UserGivenVote.Points" max="{{maxPoints}}" min="1" ng-change="vote()">
-                    <span class="input-group-btn">
-                        <button type="submit" ng-disabled="formSaveVote.$invalid" class="btn btn-primary">Vote</button>
-                        <button type="button" ng-hide="feature.UserGivenVote.Id == 0 || isAuthor" ng-click="deleteVote()" class="btn btn-danger">Unvote</button>
-                    </span>
+        <form ng-if="!feature.IsLocked" name="formSaveVote" novalidate ng-submit="saveVote()">
+            <label for="myPoints">My Points</label>
+            <div class="input-group col-md-4">
+                <input type="number" id="myPoints" class="form-control" ng-model="feature.UserGivenVote.Points" max="{{maxPoints}}" min="1" ng-change="vote()">
+                <span class="input-group-btn">
+                    <button type="submit" ng-disabled="formSaveVote.$invalid" class="btn btn-primary">Vote</button>
+                    <button type="button" ng-if="feature.UserGivenVote.Id != 0 && !isAuthor" ng-click="deleteVote()" class="btn btn-danger">Unvote</button>
+                </span>
             </div>
         </form>
+        <div ng-if="feature.IsLocked">
+            <label for="myPoints">My Points</label>
+            <span id="myPoints">{{feature.UserGivenVote.Points}}</span>
+        </div>
     </div>
 </div>

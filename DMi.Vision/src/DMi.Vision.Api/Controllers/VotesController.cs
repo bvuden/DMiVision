@@ -44,35 +44,42 @@ namespace DMi.Vision.Api.Controllers
         [HttpPost]
         public IActionResult Post(int featureId, [FromBody]VoteAddOrEdit model)
         {
-            //TODO validate points for user (maxAvailable etc.)
-
             // get vote for current user for the feature request
             var userInfo = new UserInfo(Request.HttpContext.User, _dbContext);
-            var vote = _dbContext.Votes.SingleOrDefault(v => v.FeatureId == featureId && v.VoterId == userInfo.UserId);
-            var maxVotePoints = userInfo.AvailableVotePoints + (vote?.Points ?? 0);
+            var feature = _dbContext.Features.FirstOrDefault(f => f.Id == featureId);
 
-            //validate
-            if (model.Points > maxVotePoints)
+            if (feature != null)
             {
-                ModelState.AddModelError("UserGivenVotePoints", "Given points exceeds available points");
-            }
+                var vote = _dbContext.Votes.SingleOrDefault(v => v.FeatureId == featureId && v.VoterId == userInfo.UserId);
+                var maxVotePoints = userInfo.AvailableVotePoints + (vote?.Points ?? 0);
 
-            if (ModelState.IsValid)
-            {
-                if (vote != null)
+                //validate
+                if (feature.Status != FeatureStatus.UnderReview)
                 {
-                    vote.Points = model.Points;
+                    ModelState.AddModelError("", "This feature request can not be voted on.");
                 }
-                else
+                if (model.Points > maxVotePoints)
                 {
-                    //user did not vote on this feature request before
-                    var newVote = new Vote(userInfo.UserId, model.Points);
-                    newVote.FeatureId = featureId;
-                    _dbContext.Votes.Add(newVote);
+                    ModelState.AddModelError("UserGivenVotePoints", "Given points exceeds available points");
                 }
 
-                _dbContext.SaveChanges();
-                return new HttpStatusCodeResult(201);
+                if (ModelState.IsValid)
+                {
+                    if (vote != null)
+                    {
+                        vote.Points = model.Points;
+                    }
+                    else
+                    {
+                        //user did not vote on this feature request before
+                        var newVote = new Vote(userInfo.UserId, model.Points);
+                        newVote.FeatureId = featureId;
+                        _dbContext.Votes.Add(newVote);
+                    }
+
+                    _dbContext.SaveChanges();
+                    return new HttpStatusCodeResult(201);
+                }
             }
             return new BadRequestObjectResult(ModelState);
         }
@@ -93,8 +100,19 @@ namespace DMi.Vision.Api.Controllers
             //you can only delete your own vote
             if (vote != null && vote.VoterId == userId)
             {
-                //only delete vote if the vote is not from the original author of the feature request
-                if (vote.Feature.AuthorId != vote.VoterId)
+                //validate
+                if (vote.Feature.Status != FeatureStatus.UnderReview)
+                {
+                    ModelState.AddModelError("", "This feature request can not be voted on.");
+                }
+
+                //you can not delete your own vote if you are the author of the feature request
+                if (vote.Feature.AuthorId == vote.VoterId)
+                {
+                    ModelState.AddModelError("", "You can't revoke votes on your own feature request.");
+                }
+
+                if (ModelState.IsValid)
                 {
                     _dbContext.Votes.Remove(vote);
                     _dbContext.SaveChanges();
@@ -102,7 +120,6 @@ namespace DMi.Vision.Api.Controllers
                     var userInfo = new UserInfo(Request.HttpContext.User, _dbContext);
                     return new ObjectResult(userInfo);
                 }
-                ModelState.AddModelError("", "You can't revoke votes on your own feature request.");
             }
             return new BadRequestObjectResult(ModelState);
         }

@@ -63,6 +63,7 @@
         //get feature data
         Feature.get({ id: $routeParams.id }, function (response) {
             $scope.feature = response;
+            console.log($scope.feature);
             //$scope.userInfo = response.UserInfo;            
             //$scope.maxPoints = response.UserInfo.AvailableVotePoints + response.UserGivenVote.Points;
             $scope.maxPoints = Shared.availableVotePoints() + response.UserGivenVote.Points;
@@ -87,6 +88,7 @@
                     },
                     //error
                     function (error) {
+                        Shared.loading = false;
                         _showValidationErrors($scope, error)
                     }
                 );

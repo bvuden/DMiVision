@@ -13,12 +13,12 @@
             <div class="col-md-6">
                 <h3><a href="/features/detail/{{feature.Id}}">{{feature.Title}}</a></h3>                
                 <p>{{feature.Description | limitTo:descriptionMaxSize }} {{feature.Description.length < descriptionMaxSize ? '' : '...'}}</p>
-                <p>{{feature.AuthorName}}</p>
+                <p>{{feature.AuthorName}} | {{feature.Status}}</p>
             </div>
         <div class="col-md-1">
-            <div >
+            <div>
                 <h3>
-                    <a ng-if="feature.AuthorId == userInfo.userId()" title="edit" href="/features/edit/{{feature.Id}}" class="btn btn-default btn-xs">edit</a>
+                    <a ng-if="feature.AuthorId == userInfo.userId() && !feature.IsLocked" title="edit" href="/features/edit/{{feature.Id}}" class="btn btn-default btn-xs">edit</a>
                     <a ng-if="userInfo.isAdmin()" title="change status" href="/features/{{feature.Id}}/status" class="btn btn-default btn-xs">change status</a>
                     <a ng-if="userInfo.isAdmin()" title="delete" href="/features/delete/{{feature.Id}}" class="btn btn-danger btn-xs">delete</a>
                 </h3>

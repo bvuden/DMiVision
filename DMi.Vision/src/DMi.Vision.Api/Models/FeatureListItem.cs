@@ -14,6 +14,9 @@ namespace DMi.Vision.Api.Models
 
         public string Description { get; set; }
 
+        public string Status { get; set; }
+        public bool IsLocked { get; set; }
+
         /// <summary>
         /// unique identifier of user in the system
         /// </summary>
