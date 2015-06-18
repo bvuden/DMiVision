@@ -31,10 +31,6 @@ namespace DMi.Vision.Api.Controllers
             return userinfo.Name;
         }
 
-        protected bool AuthenticatedUserIsAdmin() {
-            var userinfo = GetAuthenticatedUserInfo();
-            return userinfo.IsAdmin;
-        }
 
         private UserInfo GetAuthenticatedUserInfo()
         {

@@ -10,7 +10,8 @@ using Microsoft.AspNet.Mvc;
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace DMi.Vision.Api.Controllers
-{    
+{
+    
     public class StatusController : BaseController
     {
         public StatusController(VisionContext dbContext)
@@ -20,7 +21,7 @@ namespace DMi.Vision.Api.Controllers
         }
 
         [Route("api/[controller]")]
-        [ResourceAuthorize("Read", "Status")]
+        //[ResourceAuthorize("Read", "Status")]
         [HttpGet]
         public IActionResult Get()
         {
@@ -38,7 +39,7 @@ namespace DMi.Vision.Api.Controllers
         }
 
         [Route("api/features/{featureId}/[controller]")]
-        [ResourceAuthorize("Write", "Status")]
+        //[ResourceAuthorize("Write", "Status")]
         [HttpGet("{featureId}")]
         public IActionResult Get(int featureId)
         {
@@ -58,22 +59,33 @@ namespace DMi.Vision.Api.Controllers
         //    return "value";
         //}
 
-        //// POST api/values
-        //[HttpPost]
-        //public void Post([FromBody]string value)
-        //{
-        //}
 
-        //// PUT api/values/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody]string value)
-        //{
-        //}
+        [Route("api/features/{featureId}/[controller]/{id}")]
+        [ResourceAuthorize("Write", "Status")]
+        [HttpPut("{featureId},{id}")]
+        public IActionResult Put(int featureId, int id)
+        {
+            Feature feature = _dbContext.Features.SingleOrDefault(x => x.Id == featureId);
+            if (feature != null)
+            {
+                //change status
+                feature.Status = (FeatureStatus)id;
+                _dbContext.SaveChanges();
+                return new HttpStatusCodeResult(200);
+            }
+            return new BadRequestObjectResult(ModelState);
 
-        //// DELETE api/values/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
+            //// PUT api/values/5
+            //[HttpPut("{id}")]
+            //public void Put(int id, [FromBody]string value)
+            //{
+            //}
+
+            //// DELETE api/values/5
+            //[HttpDelete("{id}")]
+            //public void Delete(int id)
+            //{
+            //}
+        }
     }
 }

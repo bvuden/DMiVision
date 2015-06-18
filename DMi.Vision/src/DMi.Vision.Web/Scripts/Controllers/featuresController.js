@@ -26,7 +26,7 @@
         //reset temp points
         Shared.setTempAvailableVotePoints(Shared.availableVotePoints());
 
-        Feature.query({pageSize:3},function (response, responseHeaders) {
+        Feature.query(function (response, responseHeaders) {
             query(response, responseHeaders);           
         });
 
@@ -187,16 +187,43 @@
     }
 
     /* Status controller */
-    FeaturesStatusController.$inject = ['$scope', '$routeParams', '$location', 'Status']
+    FeaturesStatusController.$inject = ['$scope', '$routeParams', '$location', 'Status','Shared','UserInfo']
 
-    function FeaturesStatusController($scope, $routeParams, $location, Status) {
+    function FeaturesStatusController($scope, $routeParams, $location, Status, Shared, UserInfo) {
         // get all available status options
         Status.query(function (response) {
             $scope.statusOptions = response;
         });
         Status.get({ featureId: $routeParams.id }, function (response) {
             $scope.feature = response;
-        })
+        });
+        $scope.changeStatus = function () {
+            Shared.loading = true;
+            Status.update({ featureId: $routeParams.id, id:$scope.feature.Status },
+                //succes
+                function () {
+                    Shared.loading = false;
+                    //TODO; fix nested service call
+                    //update userinfo (for admin)
+                    UserInfo.get({ id: Shared.userId() }, function (response) {
+                        Shared.setAvailableVotePoints(response.AvailableVotePoints);
+                        Shared.setTempAvailableVotePoints(response.AvailableVotePoints);
+                        Shared.setUserId(response.UserId);
+                        Shared.setUserName(response.Name);
+                        Shared.setIsAdmin(response.IsAdmin);
+                        $scope.userInfo = Shared;
+                    });
+                    $location.path('/features');
+                },
+                //error
+                function (error) {
+                    Shared.loading = false;
+                    _showValidationErrors($scope, error)
+                }
+            );
+            
+        }
+
     }
 
     /* Utility Functions */

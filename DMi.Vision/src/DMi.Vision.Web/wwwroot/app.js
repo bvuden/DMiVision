@@ -71,9 +71,7 @@
             a.pagination = e, d.loading = !1;
         }
         d.loading = !0, window.location.href.indexOf("#") > 0 && window.location.replace("/"), 
-        d.setTempAvailableVotePoints(d.availableVotePoints()), c.query({
-            pageSize: 3
-        }, function(a, b) {
+        d.setTempAvailableVotePoints(d.availableVotePoints()), c.query(function(a, b) {
             e(a, b);
         }), a.navigateToPage = function(b) {
             d.loading = !0, c.query({
@@ -150,14 +148,28 @@
             });
         };
     }
-    function f(a, b, c, d) {
+    function f(a, b, c, d, e, f) {
         d.query(function(b) {
             a.statusOptions = b;
         }), d.get({
             featureId: b.id
         }, function(b) {
             a.feature = b;
-        });
+        }), a.changeStatus = function() {
+            e.loading = !0, d.update({
+                featureId: b.id,
+                id: a.feature.Status
+            }, function() {
+                e.loading = !1, f.get({
+                    id: e.userId()
+                }, function(b) {
+                    e.setAvailableVotePoints(b.AvailableVotePoints), e.setTempAvailableVotePoints(b.AvailableVotePoints), 
+                    e.setUserId(b.UserId), e.setUserName(b.Name), e.setIsAdmin(b.IsAdmin), a.userInfo = e;
+                }), c.path("/features");
+            }, function(b) {
+                e.loading = !1, g(a, b);
+            });
+        };
     }
     function g(a, b) {
         if (a.validationErrors = [], b.data && angular.isObject(b.data)) for (var c in b.data) a.validationErrors.push(b.data[c][0]); else a.validationErrors.push("Could not add feature.");
@@ -165,7 +177,7 @@
     angular.module("appVision").controller("FeaturesListController", a).controller("FeaturesDetailController", b).controller("FeaturesAddController", c).controller("FeaturesEditController", d).controller("FeaturesDeleteController", e).controller("FeaturesStatusController", f), 
     a.$inject = [ "$scope", "$sessionStorage", "Feature", "Shared" ], b.$inject = [ "$scope", "$sessionStorage", "$routeParams", "$location", "Feature", "Vote", "Shared" ], 
     c.$inject = [ "$scope", "$sessionStorage", "$location", "Feature", "Shared" ], d.$inject = [ "$scope", "$routeParams", "$location", "Feature", "Shared" ], 
-    e.$inject = [ "$scope", "$routeParams", "$location", "Feature" ], f.$inject = [ "$scope", "$routeParams", "$location", "Status" ];
+    e.$inject = [ "$scope", "$routeParams", "$location", "Feature" ], f.$inject = [ "$scope", "$routeParams", "$location", "Status", "Shared", "UserInfo" ];
 }(), function() {
     "use strict";
     function a(a, b, c, d, e, f) {
@@ -244,13 +256,17 @@
 }(), function() {
     "use strict";
     angular.module("statusService", [ "ngResource" ]).factory("Status", [ "$resource", function(a) {
-        var b = a("http://localhost:port/api/features/:featureId/status", {
+        var b = a("http://localhost:port/api/features/:featureId/status/:id", {
             port: ":1482",
+            id: "@id",
             featureId: "@featureId"
         }, {
             query: {
                 isArray: !0,
                 url: "http://localhost:port/api/status"
+            },
+            update: {
+                method: "PUT"
             }
         });
         return b;

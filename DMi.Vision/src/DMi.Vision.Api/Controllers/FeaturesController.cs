@@ -102,6 +102,7 @@ namespace DMi.Vision.Api.Controllers
             return new ObjectResult(model);
         }
 
+        [ResourceAuthorize("Read", "Features")]
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
