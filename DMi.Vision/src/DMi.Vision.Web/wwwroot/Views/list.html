@@ -1,10 +1,12 @@
 ﻿<div>
+    <h3><a href="/features/add" class="btn btn-primary ">Add your idea</a></h3>
     <div class="row">
-        <h2 class="col-md-7">Feature Requests</h2>
-        <h2 class="col-md-1"><a href="/features/add" class="btn btn-primary ">Add your idea</a></h2>
-
+        <h3 class="col-md-7">DMi's brightest minds have suggested... </h3>           
     </div>
 
+        
+
+    <br />
         <div class="form-group">
             <label for="Status">Filter by status</label>        
             <select name="Status" ng-model="statusFilter" ng-change="filterByStatus()" ng-options="item.id as item.name for item in global.statusOptions()">
@@ -15,11 +17,11 @@
     <div class="row" ng-repeat="feature in features">
 
             <div class="col-md-1 text-center">
-                <h3>{{feature.TotalGivenVotePoints}}</h3>            
+                <h4>{{feature.TotalGivenVotePoints}}</h4>            
                 <span class="light">votes</span>
              </div>
             <div class="col-md-6">
-                <h3><a href="/features/detail/{{feature.Id}}">{{feature.Title}}</a></h3>                
+                <h4><a href="/features/detail/{{feature.Id}}">{{feature.Title}}</a></h4>                
                 <p>{{feature.Description | limitTo:descriptionMaxSize }} {{feature.Description.length < descriptionMaxSize ? '' : '...'}}</p>
                 <p>{{feature.AuthorName}} | {{feature.Status}}</p>
             </div>
