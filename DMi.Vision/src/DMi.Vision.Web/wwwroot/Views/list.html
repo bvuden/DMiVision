@@ -35,6 +35,7 @@
             </div>
         </div>
     </div>
+    <div ng-show="!features.length">... not much. No feature request found.</div>
     <div ng-show="pagination.totalPages > 1" class="col-md-8 text-center">
         <ul class="pagination">
             <li ng-class="{'disabled':pagination.previousPageLink==''}">
