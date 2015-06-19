@@ -2,6 +2,7 @@
     "use strict";
     function a(a, b) {
         a.when("/", {
+            templateUrl: "/Views/loggedout.html",
             controller: "MainController"
         }).when("/features", {
             templateUrl: "/Views/list.html",

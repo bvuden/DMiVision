@@ -1,25 +1,22 @@
 ﻿
 <div class="row">
-    <div class="col-md-8">
+    <div id="detail" class="col-md-8">
+        
         <div class="bg-danger validationErrors" ng-show="validationErrors">
             <ul>
                 <li ng-repeat="error in validationErrors">{{error}}</li>
             </ul>
         </div>
 
-
         <h3>{{feature.Title}}</h3>
         <!--<label for="description">Description</label><br />-->
-        <span id="description">{{feature.Description}}</span><br />
-        <label for="author">Author</label><br />
-        <span id="author">{{feature.AuthorName}}</span><br />
-        <label for="status">Status</label><br />
-        <span id="status">{{feature.Status}}</span><br />
-        <label for="totalPoints">Total Points</label>
-        <span id="totalPoints">{{feature.TotalGivenVotePoints}}</span><br />
+        <p id="description">{{feature.Description}}</p>
+        <label for="author">Author:</label><span id="author">{{feature.AuthorName}}</span><br />
+        <label for="status">Status:</label><span id="status">{{feature.Status}}</span><br />
+        <label for="totalPoints">Total Points:</label><span id="totalPoints">{{feature.TotalGivenVotePoints}}</span><br />
 
         <form ng-if="!feature.IsLocked" name="formSaveVote" novalidate ng-submit="saveVote()">
-            <label for="myPoints">My Points</label>
+            <label for="myPoints">My Points:</label>
             <div class="input-group col-md-4">
                 <input type="number" id="myPoints" class="form-control" ng-model="feature.UserGivenVote.Points" max="{{maxPoints}}" min="1" ng-change="vote()">
                 <span class="input-group-btn">
@@ -29,8 +26,7 @@
             </div>
         </form>
         <div ng-if="feature.IsLocked">
-            <label for="myPoints">My Points</label>
-            <span id="myPoints">{{feature.UserGivenVote.Points}}</span>
+            <label for="myPoints">My Points:</label><span id="myPoints">{{feature.UserGivenVote.Points}}</span>
         </div>
     </div>
 </div>

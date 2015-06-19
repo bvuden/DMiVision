@@ -8,10 +8,11 @@
 
     <br />
         <div class="form-group">
-            <label for="Status">Filter by status</label>        
+            <span> Show </span>        
             <select name="Status" ng-model="statusFilter" ng-change="filterByStatus()" ng-options="item.id as item.name for item in global.statusOptions()">
-                <option value="">Show all</option>
+                <option value="">All</option>
             </select>
+            <span> feature requests</span>
         </div>
 
     <div class="row" ng-repeat="feature in features">
@@ -51,5 +52,6 @@
                 <span ng-hide="pagination.nextPageLink">&raquo;</span>
             </li>
         </ul>
-    </div>   
+    </div>
+    <br />   
 </div>

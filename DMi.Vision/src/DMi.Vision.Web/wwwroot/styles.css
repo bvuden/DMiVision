@@ -25,3 +25,7 @@ input.ng-valid.ng-touched {
     display: block;
 
 }
+
+#detail label {
+    padding-right:0.5em;
+}

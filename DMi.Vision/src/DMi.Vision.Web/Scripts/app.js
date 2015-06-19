@@ -4,9 +4,7 @@
     config.$inject = ['$routeProvider', '$locationProvider'];
 
     angular.module('appVision', [
-        //'oauth',
         'afOAuth2',
-
         // Angular modules 
         'ngRoute',
         'ngStorage',
@@ -15,8 +13,6 @@
         'votesService',
         'userInfoService',
         'statusService'
-        // 3rd Party Modules        
-
     ])
 
         .directive('spinner', ['$timeout', function ($timeout) {
@@ -77,7 +73,7 @@
     function config($routeProvider, $locationProvider) {
         $routeProvider
         .when('/', {
-            //templateUrl: '/Views/list.html',
+            templateUrl: '/Views/loggedout.html',
             controller: 'MainController',
             // requireToken: true
 
