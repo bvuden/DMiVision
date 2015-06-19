@@ -26,17 +26,18 @@
         //reset temp points
         Shared.setTempAvailableVotePoints(Shared.availableVotePoints());
 
-        Feature.query(function (response, responseHeaders) {
+        Feature.query({ status: Shared.selectedStatus() }, function (response, responseHeaders) {
             query(response, responseHeaders);
         });
 
-        // get filter from url param if available            
-        $scope.statusFilter = $routeParams.status
-
+        //set selected filter
+        $scope.statusFilter = Shared.selectedStatus();
+              
         //filter results
         $scope.filterByStatus = function () {
             Shared.loading = true;
-            Feature.query({ pageSize: $scope.pagination.pageSize, status:$scope.statusFilter }, function (response, responseHeaders) {
+            Feature.query({ pageSize: $scope.pagination.pageSize, status: $scope.statusFilter }, function (response, responseHeaders) {
+                Shared.setSelectedStatus($scope.statusFilter);
                 query(response, responseHeaders);
             });
         };
@@ -74,9 +75,6 @@
         //get feature data
         Feature.get({ id: $routeParams.id }, function (response) {
             $scope.feature = response;
-            console.log($scope.feature);
-            //$scope.userInfo = response.UserInfo;            
-            //$scope.maxPoints = response.UserInfo.AvailableVotePoints + response.UserGivenVote.Points;
             $scope.maxPoints = Shared.availableVotePoints() + response.UserGivenVote.Points;
             $scope.isAuthor = Shared.userId() === response.AuthorId;
 

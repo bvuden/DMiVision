@@ -13,12 +13,19 @@
         var isAdmin;
         var loading = false;
         var statusOptions;
+        var selectedStatus;
         return {
             statusOptions: function () {
                 return statusOptions;
             },
             setStatusOptions: function (newValue) {
                 statusOptions = newValue;
+            },
+            selectedStatus: function () {
+                return selectedStatus;
+            },
+            setSelectedStatus: function (newValue) {
+                selectedStatus = newValue;
             },
             loading: function () {
                 return loading;

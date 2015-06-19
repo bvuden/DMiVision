@@ -71,14 +71,16 @@
             a.pagination = d, f.loading = !1;
         }
         f.loading = !0, window.location.href.indexOf("#") > 0 && window.location.replace("/"), 
-        f.setTempAvailableVotePoints(f.availableVotePoints()), d.query(function(a, b) {
+        f.setTempAvailableVotePoints(f.availableVotePoints()), d.query({
+            status: f.selectedStatus()
+        }, function(a, b) {
             g(a, b);
-        }), a.statusFilter = c.status, a.filterByStatus = function() {
+        }), a.statusFilter = f.selectedStatus(), a.filterByStatus = function() {
             f.loading = !0, d.query({
                 pageSize: a.pagination.pageSize,
                 status: a.statusFilter
-            }, function(a, b) {
-                g(a, b);
+            }, function(b, c) {
+                f.setSelectedStatus(a.statusFilter), g(b, c);
             });
         }, a.navigateToPage = function(b) {
             f.loading = !0, d.query({
@@ -94,8 +96,8 @@
         h.loading = !0, e.get({
             id: c.id
         }, function(b) {
-            a.feature = b, console.log(a.feature), a.maxPoints = h.availableVotePoints() + b.UserGivenVote.Points, 
-            a.isAuthor = h.userId() === b.AuthorId, h.loading = !1;
+            a.feature = b, a.maxPoints = h.availableVotePoints() + b.UserGivenVote.Points, a.isAuthor = h.userId() === b.AuthorId, 
+            h.loading = !1;
         }), a.vote = function() {
             h.setTempAvailableVotePoints(a.maxPoints - a.feature.UserGivenVote.Points);
         }, a.saveVote = function() {
@@ -203,7 +205,7 @@
     angular.module("appVision").controller("MainController", a), a.$inject = [ "$scope", "$location", "$sessionStorage", "UserInfo", "Status", "Shared", "AccessToken" ];
 }(), function() {
     function a() {
-        var a, b, c, d, e, f, g = !1;
+        var a, b, c, d, e, f, g, h = !1;
         return {
             statusOptions: function() {
                 return f;
@@ -211,11 +213,17 @@
             setStatusOptions: function(a) {
                 f = a;
             },
-            loading: function() {
+            selectedStatus: function() {
                 return g;
             },
-            setLoading: function(a) {
+            setSelectedStatus: function(a) {
                 g = a;
+            },
+            loading: function() {
+                return h;
+            },
+            setLoading: function(a) {
+                h = a;
             },
             isAdmin: function() {
                 return e;
