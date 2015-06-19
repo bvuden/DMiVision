@@ -4,6 +4,15 @@
         <h2 class="col-md-1"><a href="/features/add" class="btn btn-primary ">Add your idea</a></h2>
 
     </div>
+
+        <div class="form-group">
+            <label for="Status">Filter</label>
+            {{statusFilter}}            
+            <select name="Status" ng-model="statusFilter" ng-change="filterByStatus()" ng-options="item.id as item.name for item in userInfo.statusOptions()">
+                <option value="">Show all</option>
+            </select>
+        </div>
+
     <div class="row" ng-repeat="feature in features">
 
             <div class="col-md-1 text-center">

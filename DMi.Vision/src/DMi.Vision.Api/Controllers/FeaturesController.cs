@@ -27,10 +27,10 @@ namespace DMi.Vision.Api.Controllers
         [Route(null, Name = "Features")]
         [ResourceAuthorize("Read", "Features")]
         [HttpGet]
-        public IActionResult Get(string sort = "-TotalGivenVotePoints", int page = 1, int pageSize = maxPageSize)
+        public IActionResult Get(string sort = "-TotalGivenVotePoints", int page = 1, int pageSize = maxPageSize, int status=-1) 
         {
             //Thread.Sleep(1000);
-            var features = _dbContext.Features.Include(f => f.Votes);
+            var features = _dbContext.Features.Include(f => f.Votes).Where(f=>(status==-1 || f.Status==(FeatureStatus)status));
 
             // ensure the page size isn't larger than the maximum.
             if (pageSize > maxPageSize)

@@ -64,21 +64,29 @@
     } ]).config(a);
 }(), function() {
     "use strict";
-    function a(a, b, c, d) {
-        function e(b, c) {
-            for (var e = JSON.parse(c()["x-pagination"]), f = [], g = 1; g <= e.totalPages; g++) f.push(g);
-            e.pageNumbers = f, a.features = b.Features, a.userInfo = d, a.descriptionMaxSize = 500, 
-            a.pagination = e, d.loading = !1;
+    function a(a, b, c, d, e, f) {
+        function g(b, c) {
+            for (var d = JSON.parse(c()["x-pagination"]), e = [], g = 1; g <= d.totalPages; g++) e.push(g);
+            d.pageNumbers = e, a.features = b.Features, a.userInfo = f, a.descriptionMaxSize = 500, 
+            a.pagination = d, f.loading = !1;
         }
-        d.loading = !0, window.location.href.indexOf("#") > 0 && window.location.replace("/"), 
-        d.setTempAvailableVotePoints(d.availableVotePoints()), c.query(function(a, b) {
-            e(a, b);
-        }), a.navigateToPage = function(b) {
-            d.loading = !0, c.query({
-                page: b,
-                pageSize: a.pagination.pageSize
+        f.loading = !0, window.location.href.indexOf("#") > 0 && window.location.replace("/"), 
+        f.setTempAvailableVotePoints(f.availableVotePoints()), d.query(function(a, b) {
+            g(a, b);
+        }), a.statusFilter = c.status, a.filterByStatus = function() {
+            f.loading = !0, d.query({
+                pageSize: a.pagination.pageSize,
+                status: a.statusFilter
             }, function(a, b) {
-                e(a, b);
+                g(a, b);
+            });
+        }, a.navigateToPage = function(b) {
+            f.loading = !0, d.query({
+                page: b,
+                pageSize: a.pagination.pageSize,
+                status: a.statusFilter
+            }, function(a, b) {
+                g(a, b);
             });
         };
     }
@@ -149,9 +157,7 @@
         };
     }
     function f(a, b, c, d, e, f) {
-        d.query(function(b) {
-            a.statusOptions = b;
-        }), d.get({
+        d.get({
             featureId: b.id
         }, function(b) {
             a.feature = b;
@@ -175,32 +181,41 @@
         if (a.validationErrors = [], b.data && angular.isObject(b.data)) for (var c in b.data) a.validationErrors.push(b.data[c][0]); else a.validationErrors.push("Could not add feature.");
     }
     angular.module("appVision").controller("FeaturesListController", a).controller("FeaturesDetailController", b).controller("FeaturesAddController", c).controller("FeaturesEditController", d).controller("FeaturesDeleteController", e).controller("FeaturesStatusController", f), 
-    a.$inject = [ "$scope", "$sessionStorage", "Feature", "Shared" ], b.$inject = [ "$scope", "$sessionStorage", "$routeParams", "$location", "Feature", "Vote", "Shared" ], 
+    a.$inject = [ "$scope", "$sessionStorage", "$routeParams", "Feature", "Status", "Shared" ], 
+    b.$inject = [ "$scope", "$sessionStorage", "$routeParams", "$location", "Feature", "Vote", "Shared" ], 
     c.$inject = [ "$scope", "$sessionStorage", "$location", "Feature", "Shared" ], d.$inject = [ "$scope", "$routeParams", "$location", "Feature", "Shared" ], 
     e.$inject = [ "$scope", "$routeParams", "$location", "Feature" ], f.$inject = [ "$scope", "$routeParams", "$location", "Status", "Shared", "UserInfo" ];
 }(), function() {
     "use strict";
-    function a(a, b, c, d, e, f) {
-        if (f.set(), void 0 != c.token) {
-            var g = jwt_decode(c.token.access_token).sub;
+    function a(a, b, c, d, e, f, g) {
+        if (g.set(), void 0 != c.token) {
+            var h = jwt_decode(c.token.access_token).sub;
             d.get({
-                id: g
-            }, function(b) {
-                e.setAvailableVotePoints(b.AvailableVotePoints), e.setTempAvailableVotePoints(b.AvailableVotePoints), 
-                e.setUserId(b.UserId), e.setUserName(b.Name), e.setIsAdmin(b.IsAdmin), a.userInfo = e;
-            }), b.path("/features");
+                id: h
+            }, function(a) {
+                f.setAvailableVotePoints(a.AvailableVotePoints), f.setTempAvailableVotePoints(a.AvailableVotePoints), 
+                f.setUserId(a.UserId), f.setUserName(a.Name), f.setIsAdmin(a.IsAdmin);
+            }), e.query(function(a) {
+                f.setStatusOptions(a);
+            }), a.userInfo = f, b.path("/features");
         }
     }
-    angular.module("appVision").controller("MainController", a), a.$inject = [ "$scope", "$location", "$sessionStorage", "UserInfo", "Shared", "AccessToken" ];
+    angular.module("appVision").controller("MainController", a), a.$inject = [ "$scope", "$location", "$sessionStorage", "UserInfo", "Status", "Shared", "AccessToken" ];
 }(), function() {
     function a() {
-        var a, b, c, d, e, f = !1;
+        var a, b, c, d, e, f, g = !1;
         return {
-            loading: function() {
+            statusOptions: function() {
                 return f;
             },
-            setLoading: function(a) {
+            setStatusOptions: function(a) {
                 f = a;
+            },
+            loading: function() {
+                return g;
+            },
+            setLoading: function(a) {
+                g = a;
             },
             isAdmin: function() {
                 return e;
@@ -242,7 +257,8 @@
             port: ":1482",
             id: "@id",
             page: 1,
-            pageSize: 10
+            pageSize: 10,
+            status: null
         }, {
             query: {
                 isArray: !1

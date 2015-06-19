@@ -8,7 +8,8 @@
               port: ":1482",
               id: '@id',
               page: 1,
-              pageSize: 10
+              pageSize: 10,
+              status: null,
           }, {
               query: { isArray: false },
               update: { method: 'PUT' }

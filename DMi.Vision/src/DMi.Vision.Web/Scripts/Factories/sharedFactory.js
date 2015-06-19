@@ -11,8 +11,15 @@
         var userId;
         var userName;
         var isAdmin;
-        var loading=false;
+        var loading = false;
+        var statusOptions;
         return {
+            statusOptions: function () {
+                return statusOptions;
+            },
+            setStatusOptions: function (newValue) {
+                statusOptions = newValue;
+            },
             loading: function () {
                 return loading;
             },

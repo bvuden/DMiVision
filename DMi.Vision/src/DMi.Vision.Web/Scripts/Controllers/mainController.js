@@ -5,13 +5,13 @@
         .module('appVision')
         .controller('MainController', MainController);
 
-    MainController.$inject = ['$scope', '$location', '$sessionStorage', 'UserInfo', 'Shared', 'AccessToken'];
+    MainController.$inject = ['$scope', '$location', '$sessionStorage', 'UserInfo', 'Status', 'Shared', 'AccessToken'];
 
-    function MainController($scope, $location, $sessionStorage, UserInfo, Shared, AccessToken) {
+    function MainController($scope, $location, $sessionStorage, UserInfo, Status, Shared, AccessToken) {
 
         //controller gets hit before the oauth directive can set the token in the sessionstorage
         //do this upfront
-         AccessToken.set();
+        AccessToken.set();
 
 
         if ($sessionStorage.token != undefined) {
@@ -22,9 +22,13 @@
                 Shared.setTempAvailableVotePoints(response.AvailableVotePoints);
                 Shared.setUserId(response.UserId);
                 Shared.setUserName(response.Name);
-                Shared.setIsAdmin(response.IsAdmin);
-                $scope.userInfo = Shared;
+                Shared.setIsAdmin(response.IsAdmin);                
             });
+            Status.query(function (response) {
+                Shared.setStatusOptions(response);                               
+            });
+            //TODO; rename userInfo
+            $scope.userInfo = Shared;
             $location.path('/features');
         }
 

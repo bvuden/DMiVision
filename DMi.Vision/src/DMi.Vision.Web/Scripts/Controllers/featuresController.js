@@ -12,9 +12,9 @@
 
 
     /* List Controller*/
-    FeaturesListController.$inject = ['$scope', '$sessionStorage', 'Feature', 'Shared'];
+    FeaturesListController.$inject = ['$scope', '$sessionStorage', '$routeParams', 'Feature', 'Status', 'Shared'];
 
-    function FeaturesListController($scope, $sessionStorage, Feature, Shared) {
+    function FeaturesListController($scope, $sessionStorage, $routeParams, Feature, Status, Shared) {
 
         Shared.loading = true;
         //console.log($sessionStorage.token);
@@ -27,13 +27,24 @@
         Shared.setTempAvailableVotePoints(Shared.availableVotePoints());
 
         Feature.query(function (response, responseHeaders) {
-            query(response, responseHeaders);           
+            query(response, responseHeaders);
         });
+
+        // get filter from url param if available            
+        $scope.statusFilter = $routeParams.status
+
+        //filter results
+        $scope.filterByStatus = function () {
+            Shared.loading = true;
+            Feature.query({ pageSize: $scope.pagination.pageSize, status:$scope.statusFilter }, function (response, responseHeaders) {
+                query(response, responseHeaders);
+            });
+        };
 
         //navigate between page results
         $scope.navigateToPage = function (pageNumber) {
             Shared.loading = true;
-            Feature.query({ page: pageNumber, pageSize: $scope.pagination.pageSize }, function (response, responseHeaders) {
+            Feature.query({ page: pageNumber, pageSize: $scope.pagination.pageSize, status: $scope.statusFilter }, function (response, responseHeaders) {
                 query(response, responseHeaders);
             });
         };
@@ -189,19 +200,15 @@
     }
 
     /* Status controller */
-    FeaturesStatusController.$inject = ['$scope', '$routeParams', '$location', 'Status','Shared','UserInfo']
+    FeaturesStatusController.$inject = ['$scope', '$routeParams', '$location', 'Status', 'Shared', 'UserInfo']
 
     function FeaturesStatusController($scope, $routeParams, $location, Status, Shared, UserInfo) {
-        // get all available status options
-        Status.query(function (response) {
-            $scope.statusOptions = response;
-        });
         Status.get({ featureId: $routeParams.id }, function (response) {
             $scope.feature = response;
         });
         $scope.changeStatus = function () {
             Shared.loading = true;
-            Status.update({ featureId: $routeParams.id, id:$scope.feature.Status },
+            Status.update({ featureId: $routeParams.id, id: $scope.feature.Status },
                 //succes
                 function () {
                     Shared.loading = false;
@@ -223,7 +230,7 @@
                     _showValidationErrors($scope, error)
                 }
             );
-            
+
         }
 
     }
