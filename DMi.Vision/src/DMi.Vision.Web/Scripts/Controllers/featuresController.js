@@ -60,7 +60,7 @@
             //console.log(pagination);
             pagination.pageNumbers = pageNumbers;
             $scope.features = response.Features;
-            $scope.userInfo = Shared;
+            $scope.global = Shared;
             $scope.descriptionMaxSize = 500;
             $scope.pagination = pagination;
             Shared.loading = false;
@@ -157,7 +157,6 @@
         Shared.loading = true;
         Feature.get({ id: $routeParams.id }, function (response) {
             $scope.feature = response;
-            //$scope.userInfo = response.UserInfo;
             $scope.maxPoints = Shared.availableVotePoints() + response.UserGivenVote.Points;
 
             Shared.loading = false;
@@ -218,7 +217,7 @@
                         Shared.setUserId(response.UserId);
                         Shared.setUserName(response.Name);
                         Shared.setIsAdmin(response.IsAdmin);
-                        $scope.userInfo = Shared;
+                        $scope.global = Shared;
                     });
                     $location.path('/features');
                 },

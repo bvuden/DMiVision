@@ -28,7 +28,7 @@
                 Shared.setStatusOptions(response);                               
             });
             //TODO; rename userInfo
-            $scope.userInfo = Shared;
+            $scope.global = Shared;
             $location.path('/features');
         }
 

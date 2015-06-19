@@ -67,7 +67,7 @@
     function a(a, b, c, d, e, f) {
         function g(b, c) {
             for (var d = JSON.parse(c()["x-pagination"]), e = [], g = 1; g <= d.totalPages; g++) e.push(g);
-            d.pageNumbers = e, a.features = b.Features, a.userInfo = f, a.descriptionMaxSize = 500, 
+            d.pageNumbers = e, a.features = b.Features, a.global = f, a.descriptionMaxSize = 500, 
             a.pagination = d, f.loading = !1;
         }
         f.loading = !0, window.location.href.indexOf("#") > 0 && window.location.replace("/"), 
@@ -172,7 +172,7 @@
                     id: e.userId()
                 }, function(b) {
                     e.setAvailableVotePoints(b.AvailableVotePoints), e.setTempAvailableVotePoints(b.AvailableVotePoints), 
-                    e.setUserId(b.UserId), e.setUserName(b.Name), e.setIsAdmin(b.IsAdmin), a.userInfo = e;
+                    e.setUserId(b.UserId), e.setUserName(b.Name), e.setIsAdmin(b.IsAdmin), a.global = e;
                 }), c.path("/features");
             }, function(b) {
                 e.loading = !1, g(a, b);
@@ -199,7 +199,7 @@
                 f.setUserId(a.UserId), f.setUserName(a.Name), f.setIsAdmin(a.IsAdmin);
             }), e.query(function(a) {
                 f.setStatusOptions(a);
-            }), a.userInfo = f, b.path("/features");
+            }), a.global = f, b.path("/features");
         }
     }
     angular.module("appVision").controller("MainController", a), a.$inject = [ "$scope", "$location", "$sessionStorage", "UserInfo", "Status", "Shared", "AccessToken" ];

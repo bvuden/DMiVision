@@ -6,9 +6,8 @@
     </div>
 
         <div class="form-group">
-            <label for="Status">Filter</label>
-            {{statusFilter}}            
-            <select name="Status" ng-model="statusFilter" ng-change="filterByStatus()" ng-options="item.id as item.name for item in userInfo.statusOptions()">
+            <label for="Status">Filter by status</label>        
+            <select name="Status" ng-model="statusFilter" ng-change="filterByStatus()" ng-options="item.id as item.name for item in global.statusOptions()">
                 <option value="">Show all</option>
             </select>
         </div>
@@ -27,9 +26,9 @@
         <div class="col-md-1">
             <div>
                 <h3>
-                    <a ng-if="feature.AuthorId == userInfo.userId() && !feature.IsLocked" title="edit" href="/features/edit/{{feature.Id}}" class="btn btn-default btn-xs">edit</a>
-                    <a ng-if="userInfo.isAdmin()" title="change status" href="/features/{{feature.Id}}/status" class="btn btn-default btn-xs">change status</a>
-                    <a ng-if="userInfo.isAdmin()" title="delete" href="/features/delete/{{feature.Id}}" class="btn btn-danger btn-xs">delete</a>
+                    <a ng-if="feature.AuthorId == global.userId() && !feature.IsLocked" title="edit" href="/features/edit/{{feature.Id}}" class="btn btn-default btn-xs">edit</a>
+                    <a ng-if="global.isAdmin()" title="change status" href="/features/{{feature.Id}}/status" class="btn btn-default btn-xs">change status</a>
+                    <a ng-if="global.isAdmin()" title="delete" href="/features/delete/{{feature.Id}}" class="btn btn-danger btn-xs">delete</a>
                 </h3>
             </div>
         </div>

@@ -52,10 +52,10 @@
                         li><a ng-href="#/">Contact</a></li>
                     </ul>-->
                     <ul class="nav navbar-nav navbar-right">
-                        <li ng-show="userInfo.userName()">
-                            <a href="#">Welcome {{userInfo.userName()}}<span ng-show="userInfo.availableVotePoints()">, you have </span>
-                            <span ng-show="userInfo.availableVotePoints()==userInfo.tempAvailableVotePoints()">{{userInfo.availableVotePoints()}}</span>
-                            <span ng-show="userInfo.availableVotePoints()!=userInfo.tempAvailableVotePoints()">{{userInfo.tempAvailableVotePoints()}}</span>
+                        <li ng-show="global.userName()">
+                            <a href="#">Welcome {{global.userName()}}<span ng-show="userInfo.availableVotePoints()">, you have </span>
+                            <span ng-show="userInfo.availableVotePoints()==userInfo.tempAvailableVotePoints()">{{global.availableVotePoints()}}</span>
+                            <span ng-show="userInfo.availableVotePoints()!=userInfo.tempAvailableVotePoints()">{{global.tempAvailableVotePoints()}}</span>
                              <span>votepoints left </span>
                             </a>
                         </li>
@@ -74,8 +74,7 @@
             </div>
         </div>
     </header>
-    <!--<div id="overlay" ng-show="userInfo.loading">show me</div>-->
-    <spinner show="userInfo.loading" delay="300"></spinner>
+    <spinner show="global.loading" delay="300"></spinner>
     <div ng-cloak class="container" >
         <ng-view ></ng-view>       
     </div>

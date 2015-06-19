@@ -6,7 +6,7 @@
             
             <div class="form-group">
                 <label for="Status">Change status</label>
-                <select name="Status" ng-model="feature.Status" ng-options="item.id as item.name for item in userInfo.statusOptions()">
+                <select name="Status" ng-model="feature.Status" ng-options="item.id as item.name for item in global.statusOptions()">
                 </select>
             </div>
             <a href="/features" class="btn btn-default">Cancel</a>
