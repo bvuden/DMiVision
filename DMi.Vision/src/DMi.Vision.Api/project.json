@@ -17,7 +17,9 @@
         "Microsoft.Framework.Logging.Console": "1.0.0-beta4",
         "RestSharp": "105.1.0",
         "Newtonsoft.Json": "6.0.8",
-        "System.Linq.Dynamic": "1.0.4"
+        "System.Linq.Dynamic": "1.0.4",
+        "Microsoft.AspNet.Diagnostics": "1.0.0-beta4",
+        "Microsoft.AspNet.Diagnostics.Entity": "7.0.0-beta4"
     },
 
     "commands": {

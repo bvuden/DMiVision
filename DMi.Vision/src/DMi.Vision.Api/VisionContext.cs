@@ -5,37 +5,25 @@ using System.Threading.Tasks;
 using DMi.Vision.Models;
 using Microsoft.Data.Entity;
 
+
 namespace DMi.Vision.Api
 {
     public class VisionContext : DbContext
     {
-        public VisionContext() {
+        public VisionContext() { }
 
-        }
 
         public DbSet<Feature> Features { get; set; }
         public DbSet<Vote> Votes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            //base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Feature>(b =>
-            {
-                b.Key(e => e.Id);
-                b.Property(e => e.Id).ForSqlServer().UseIdentity();
-            });
+            //required for Azure SQL v11
+            //https://github.com/aspnet/EntityFramework/issues/1960
+            modelBuilder.ForSqlServer().UseIdentity();
 
-            //modelBuilder.Entity<Feature>()
-            //    .Collection(f => f.Votes)
-            //    .InverseReference(v => v.Feature)
-            //    .ForeignKey(v=>v.FeatureId);
-
-            modelBuilder.Entity<Vote>(b =>
-            {
-                b.Key(e => e.Id);
-                b.Property(e => e.Id).ForSqlServer().UseIdentity();
-            });
         }
     }
 }

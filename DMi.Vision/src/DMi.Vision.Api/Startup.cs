@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Builder;
+using Microsoft.AspNet.Diagnostics;
+using Microsoft.AspNet.Diagnostics.Entity;
 using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Routing;
 using Microsoft.Data.Entity;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
-using Microsoft.Owin.Security.OpenIdConnect;
 using Owin;
 using Thinktecture.IdentityServer.AccessTokenValidation;
 
@@ -33,25 +32,26 @@ namespace DMi.Vision.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
+
+            services.ConfigureCors(
+            options =>
+                options.AddPolicy("allowAll", builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    )
+                );
+
             services.ConfigureCors(
                 options =>
-                    options.AddPolicy("allowAll", builder => builder
-                        .AllowAnyOrigin()
+                    options.AddPolicy("allowSpecificOrigin", builder => builder
+                        .WithOrigins(Configuration["Data:CORS:AllowedOrigins"])
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         )
-                    );
-
-            // add config settings
-            Configuration = new Configuration()
-                .AddJsonFile("Config.json")
-                //.AddJsonFile("ConfigSettings.json")
-                .AddEnvironmentVariables();
-
+                );
+            
             services.AddMvc();
-            // Uncomment the following line to add Web API services which makes it easier to port Web API 2 controllers.
-            // You will also need to add the Microsoft.AspNet.Mvc.WebApiCompatShim package to the 'dependencies' section of project.json.
-            // services.AddWebApiConventions();
 
             // Register Entity Framework
             services.AddEntityFramework()
@@ -76,12 +76,19 @@ namespace DMi.Vision.Api
             );
 
             //add cors to the request pipeline
-            app.UseCors("allowAll");
+            if (env.IsEnvironment("Development"))
+            {
+                app.UseCors("allowAll");
+                app.UseErrorPage(ErrorPageOptions.ShowAll);
+                app.UseDatabaseErrorPage(DatabaseErrorPageOptions.ShowAll);
+            }
+            else
+            {
+                app.UseCors("allowSpecificOrigin");
+            }
 
             // Add MVC to the request pipeline.
             app.UseMvc();
-            // Add the following route for porting Web API 2 controllers.
-            // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
         }
     }
 }
