@@ -1,12 +1,11 @@
 ﻿(function () {
     'use strict';
-    angular.module('votesService', ['ngResource'])
-        .factory('Vote', ['$resource',
-    function ($resource) {
+    angular.module('votesService', ['ngResource', 'appVision.config'])
+        .factory('Vote', ['$resource', 'appConfig',
+    function ($resource, appConfig) {
         var resource =
-          $resource('http://:domain:port/api/features/:featureId/votes/:id', {
-              domain: "dmivisionapi.azurewebsites.net",//"localhost",
-              port: "", //":1482",
+          $resource('http://:domain/api/features/:featureId/votes/:id', {
+              domain: appConfig.backend,
               id: '@id',
               featureId: '@featureId'
           }, {

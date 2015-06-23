@@ -1,12 +1,11 @@
 ﻿(function () {
     'use strict';
-    angular.module('userInfoService', ['ngResource'])
-        .factory('UserInfo', ['$resource',
-    function ($resource) {
+    angular.module('userInfoService', ['ngResource','appVision.config'])
+        .factory('UserInfo', ['$resource', 'appConfig',
+    function ($resource, appConfig) {
         var resource =
-          $resource('http://:domain:port/api/users/:id', {
-              domain: "dmivisionapi.azurewebsites.net",//"localhost",
-              port: "",//":1482",
+          $resource('http://:domain/api/users/:id', {
+              domain: appConfig.backend,
               id: '@id'
           });
 

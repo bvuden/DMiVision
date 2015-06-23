@@ -24,7 +24,7 @@
                     delay: '@'
                 },
                 link: function (scope, elem, attrs) {
-                    var showTimer;
+                    var showTimer;   
 
                     //This is where all the magic happens!
                     // Whenever the scope variable updates we simply

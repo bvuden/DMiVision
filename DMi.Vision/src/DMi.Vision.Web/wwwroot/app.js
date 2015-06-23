@@ -261,10 +261,10 @@
     angular.module("appVision").factory("Shared", a);
 }(), function() {
     "use strict";
-    angular.module("featuresService", [ "ngResource" ]).factory("Feature", [ "$resource", function(a) {
-        var b = a("http://:domain:port/api/features/:id", {
-            domain: "dmivisionapi.azurewebsites.net",
-            port: "",
+    angular.module("featuresService", [ "ngResource", "appVision.config" ]).factory("Feature", [ "$resource", "appConfig", function(a, b) {
+        console.log(b.backend);
+        var c = a("http://:domain/api/features/:id", {
+            domain: b.backend,
             id: "@id",
             page: 1,
             pageSize: 10,
@@ -277,46 +277,45 @@
                 method: "PUT"
             }
         });
-        return b;
+        return c;
     } ]);
 }(), function() {
     "use strict";
-    angular.module("statusService", [ "ngResource" ]).factory("Status", [ "$resource", function(a) {
-        var b = a("http://:domain:port/api/features/:featureId/status/:id", {
-            domain: "dmivisionapi.azurewebsites.net",
-            port: "",
+    angular.module("statusService", [ "ngResource", "appVision.config" ]).factory("Status", [ "$resource", "appConfig", function(a, b) {
+        var c = a("http://:domain/api/features/:featureId/status/:id", {
+            domain: b.backend,
             id: "@id",
             featureId: "@featureId"
         }, {
             query: {
                 isArray: !0,
-                url: "http://:domain:port/api/status"
+                url: "http://:domain/api/status"
             },
             update: {
                 method: "PUT"
             }
         });
-        return b;
+        return c;
     } ]);
 }(), function() {
     "use strict";
-    angular.module("userInfoService", [ "ngResource" ]).factory("UserInfo", [ "$resource", function(a) {
-        var b = a("http://:domain:port/api/users/:id", {
-            domain: "dmivisionapi.azurewebsites.net",
-            port: "",
+    angular.module("userInfoService", [ "ngResource", "appVision.config" ]).factory("UserInfo", [ "$resource", "appConfig", function(a, b) {
+        var c = a("http://:domain/api/users/:id", {
+            domain: b.backend,
             id: "@id"
         });
-        return b;
+        return c;
     } ]);
 }(), function() {
     "use strict";
-    angular.module("votesService", [ "ngResource" ]).factory("Vote", [ "$resource", function(a) {
-        var b = a("http://:domain:port/api/features/:featureId/votes/:id", {
-            domain: "dmivisionapi.azurewebsites.net",
-            port: "",
+    angular.module("votesService", [ "ngResource", "appVision.config" ]).factory("Vote", [ "$resource", "appConfig", function(a, b) {
+        var c = a("http://:domain/api/features/:featureId/votes/:id", {
+            domain: b.backend,
             id: "@id",
             featureId: "@featureId"
         }, {});
-        return b;
+        return c;
     } ]);
-}();
+}(), angular.module("appVision.config", []).constant("appConfig", {
+    backend: "localhost:1482"
+});

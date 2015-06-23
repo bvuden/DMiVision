@@ -1,12 +1,12 @@
 ﻿(function () {
     'use strict';
-    angular.module('featuresService', ['ngResource'])
-        .factory('Feature', ['$resource',
-    function ($resource) {
+    angular.module('featuresService', ['ngResource', 'appVision.config'])
+        .factory('Feature',['$resource','appConfig',
+    function ($resource, appConfig) {
+        console.log(appConfig.backend);
         var resource =
-          $resource('http://:domain:port/api/features/:id', {
-              domain:"dmivisionapi.azurewebsites.net", //"localhost"
-              port: "",//":1482",
+          $resource('http://:domain/api/features/:id', {
+              domain: appConfig.backend, 
               id: '@id',
               page: 1,
               pageSize: 10,

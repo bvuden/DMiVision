@@ -1,16 +1,15 @@
 ﻿(function () {
     'use strict';
-    angular.module('statusService', ['ngResource'])
-        .factory('Status', ['$resource',
-    function ($resource) {
+    angular.module('statusService', ['ngResource', 'appVision.config'])
+        .factory('Status', ['$resource', 'appConfig',
+    function ($resource, appConfig) {
         var resource =
-          $resource('http://:domain:port/api/features/:featureId/status/:id', {
-              domain: "dmivisionapi.azurewebsites.net",//"localhost",
-              port: "",//":1482",
+          $resource('http://:domain/api/features/:featureId/status/:id', {
+              domain: appConfig.backend,
               id: '@id',
               featureId: '@featureId'
           }, {
-              query: { isArray: true, url: 'http://:domain:port/api/status' },
+              query: { isArray: true, url: 'http://:domain/api/status' },
               update: { method: 'PUT' }
           });
 
