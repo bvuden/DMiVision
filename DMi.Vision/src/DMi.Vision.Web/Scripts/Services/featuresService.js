@@ -3,10 +3,9 @@
     angular.module('featuresService', ['ngResource', 'appVision.config'])
         .factory('Feature',['$resource','appConfig',
     function ($resource, appConfig) {
-        console.log(appConfig.backend);
         var resource =
           $resource('http://:domain/api/features/:id', {
-              domain: appConfig.backend, 
+              domain: appConfig.backendDomain, 
               id: '@id',
               page: 1,
               pageSize: 10,

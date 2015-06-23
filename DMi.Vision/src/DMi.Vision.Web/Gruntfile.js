@@ -10,8 +10,6 @@ Click here to learn more. http://go.microsoft.com/fwlink/?LinkID=513275&clcid=0x
 */
 module.exports = function (grunt) {
 
-    console.log(config);
-
     //load grunt plugins from npm
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -50,7 +48,13 @@ module.exports = function (grunt) {
                 options: {
                     data: config
                 },
-            files: { 'wwwroot/config.js': ['Scripts/config.js.tpl'] }
+            files: { 'wwwroot/config.js': ['Templates/config.js.tpl'] }
+            },
+            oauth2: {
+                options: {
+                    data:config
+                },
+                files: {'wwwroot/Partials/_oauth2.html':['Templates/_oauth2.html.tpl']}
             }
         }
     });

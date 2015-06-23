@@ -1,3 +1,6 @@
 ﻿{
-    "backend": "localhost:1482"
+    "backendDomain": "localhost:1482",
+    "authorizationUrl": "https://localhost:44300/connect/authorize",
+    "signOutUrl": "https://localhost:44300/logout",
+    "redirectUrl": "http://localhost:1881/"    
 }

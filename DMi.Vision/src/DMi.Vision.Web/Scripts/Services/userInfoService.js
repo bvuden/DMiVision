@@ -5,7 +5,7 @@
     function ($resource, appConfig) {
         var resource =
           $resource('http://:domain/api/users/:id', {
-              domain: appConfig.backend,
+              domain: appConfig.backendDomain,
               id: '@id'
           });
 

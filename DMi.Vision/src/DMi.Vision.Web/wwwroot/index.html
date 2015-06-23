@@ -65,25 +65,7 @@
                             </a>
                         </li>
                         <li>
-                            <oauth2 authorization-url="https://dmiteststs.azurewebsites.net/connect/authorize"
-                                    client-id="DMiVision"
-                                    redirect-url="http://localhost:1881/"
-                                    scope="openid profile dmivisionapi roles"
-                                    sign-out-url="https://dmiteststs.azurewebsites.net/logout"                                    
-                                    response-type="id_token token" 
-                                    sign-in-text="Login"                                   
-                                    sign-out-text="Logout"
-                                    >
-                            </oauth2>
-                            <!--<oauth2 authorization-url="https://dmiteststs.azurewebsites.net/connect/authorize"
-                                    client-id="DMiVision"
-                                    redirect-url="http://dmivision.azurewebsites.net/"
-                                    scope="openid profile dmivisionapi roles"
-                                    sign-out-url="https://dmiteststs.azurewebsites.net/logout"
-                                    response-type="id_token token"
-                                    sign-in-text="Login"
-                                    sign-out-text="Logout">
-                            </oauth2>-->
+                            <ng-include src="'/partials/_oauth2.html'"></ng-include>
                         </li>
                     </ul>
                 </div>

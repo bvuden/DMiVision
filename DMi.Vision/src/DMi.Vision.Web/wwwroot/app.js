@@ -262,9 +262,8 @@
 }(), function() {
     "use strict";
     angular.module("featuresService", [ "ngResource", "appVision.config" ]).factory("Feature", [ "$resource", "appConfig", function(a, b) {
-        console.log(b.backend);
         var c = a("http://:domain/api/features/:id", {
-            domain: b.backend,
+            domain: b.backendDomain,
             id: "@id",
             page: 1,
             pageSize: 10,
@@ -283,7 +282,7 @@
     "use strict";
     angular.module("statusService", [ "ngResource", "appVision.config" ]).factory("Status", [ "$resource", "appConfig", function(a, b) {
         var c = a("http://:domain/api/features/:featureId/status/:id", {
-            domain: b.backend,
+            domain: b.backendDomain,
             id: "@id",
             featureId: "@featureId"
         }, {
@@ -301,7 +300,7 @@
     "use strict";
     angular.module("userInfoService", [ "ngResource", "appVision.config" ]).factory("UserInfo", [ "$resource", "appConfig", function(a, b) {
         var c = a("http://:domain/api/users/:id", {
-            domain: b.backend,
+            domain: b.backendDomain,
             id: "@id"
         });
         return c;
@@ -310,12 +309,10 @@
     "use strict";
     angular.module("votesService", [ "ngResource", "appVision.config" ]).factory("Vote", [ "$resource", "appConfig", function(a, b) {
         var c = a("http://:domain/api/features/:featureId/votes/:id", {
-            domain: b.backend,
+            domain: b.backendDomain,
             id: "@id",
             featureId: "@featureId"
         }, {});
         return c;
     } ]);
-}(), angular.module("appVision.config", []).constant("appConfig", {
-    backend: "localhost:1482"
-});
+}();
