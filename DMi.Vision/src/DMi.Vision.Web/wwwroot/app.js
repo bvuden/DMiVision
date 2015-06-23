@@ -262,8 +262,9 @@
 }(), function() {
     "use strict";
     angular.module("featuresService", [ "ngResource" ]).factory("Feature", [ "$resource", function(a) {
-        var b = a("http://localhost:port/api/features/:id", {
-            port: ":1482",
+        var b = a("http://:domain:port/api/features/:id", {
+            domain: "dmivisionapi.azurewebsites.net",
+            port: "",
             id: "@id",
             page: 1,
             pageSize: 10,
@@ -281,14 +282,15 @@
 }(), function() {
     "use strict";
     angular.module("statusService", [ "ngResource" ]).factory("Status", [ "$resource", function(a) {
-        var b = a("http://localhost:port/api/features/:featureId/status/:id", {
-            port: ":1482",
+        var b = a("http://:domain:port/api/features/:featureId/status/:id", {
+            domain: "dmivisionapi.azurewebsites.net",
+            port: "",
             id: "@id",
             featureId: "@featureId"
         }, {
             query: {
                 isArray: !0,
-                url: "http://localhost:port/api/status"
+                url: "http://:domain:port/api/status"
             },
             update: {
                 method: "PUT"
@@ -299,8 +301,9 @@
 }(), function() {
     "use strict";
     angular.module("userInfoService", [ "ngResource" ]).factory("UserInfo", [ "$resource", function(a) {
-        var b = a("http://localhost:port/api/users/:id", {
-            port: ":1482",
+        var b = a("http://:domain:port/api/users/:id", {
+            domain: "dmivisionapi.azurewebsites.net",
+            port: "",
             id: "@id"
         });
         return b;
@@ -308,8 +311,9 @@
 }(), function() {
     "use strict";
     angular.module("votesService", [ "ngResource" ]).factory("Vote", [ "$resource", function(a) {
-        var b = a("http://localhost:port/api/features/:featureId/votes/:id", {
-            port: ":1482",
+        var b = a("http://:domain:port/api/features/:featureId/votes/:id", {
+            domain: "dmivisionapi.azurewebsites.net",
+            port: "",
             id: "@id",
             featureId: "@featureId"
         }, {});

@@ -4,8 +4,9 @@
         .factory('Feature', ['$resource',
     function ($resource) {
         var resource =
-          $resource('http://localhost:port/api/features/:id', {
-              port: ":1482",
+          $resource('http://:domain:port/api/features/:id', {
+              domain:"dmivisionapi.azurewebsites.net", //"localhost"
+              port: "",//":1482",
               id: '@id',
               page: 1,
               pageSize: 10,

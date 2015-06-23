@@ -4,12 +4,13 @@
         .factory('Status', ['$resource',
     function ($resource) {
         var resource =
-          $resource('http://localhost:port/api/features/:featureId/status/:id', {
-              port: ":1482",
+          $resource('http://:domain:port/api/features/:featureId/status/:id', {
+              domain: "dmivisionapi.azurewebsites.net",//"localhost",
+              port: "",//":1482",
               id: '@id',
               featureId: '@featureId'
           }, {
-              query: { isArray: true, url: 'http://localhost:port/api/status' },
+              query: { isArray: true, url: 'http://:domain:port/api/status' },
               update: { method: 'PUT' }
           });
 
