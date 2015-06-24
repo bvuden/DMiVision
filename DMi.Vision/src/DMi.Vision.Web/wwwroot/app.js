@@ -99,6 +99,8 @@
         }, function(b) {
             a.feature = b, a.maxPoints = h.availableVotePoints() + b.UserGivenVote.Points, a.isAuthor = h.userId() === b.AuthorId, 
             h.loading = !1;
+        }, function(b) {
+            g(a, b), h.loading = !1;
         }), a.vote = function() {
             h.setTempAvailableVotePoints(a.maxPoints - a.feature.UserGivenVote.Points);
         }, a.saveVote = function() {
@@ -181,7 +183,7 @@
         };
     }
     function g(a, b) {
-        if (a.validationErrors = [], b.data && angular.isObject(b.data)) for (var c in b.data) a.validationErrors.push(b.data[c][0]); else a.validationErrors.push("Could not add feature.");
+        if (a.validationErrors = [], b.data && angular.isObject(b.data)) for (var c in b.data) a.validationErrors.push(b.data[c][0]); else a.validationErrors.push("An error has occurred.");
     }
     angular.module("appVision").controller("FeaturesListController", a).controller("FeaturesDetailController", b).controller("FeaturesAddController", c).controller("FeaturesEditController", d).controller("FeaturesDeleteController", e).controller("FeaturesStatusController", f), 
     a.$inject = [ "$scope", "$sessionStorage", "$routeParams", "Feature", "Status", "Shared" ], 

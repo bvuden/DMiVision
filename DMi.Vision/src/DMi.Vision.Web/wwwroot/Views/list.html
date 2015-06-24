@@ -1,39 +1,38 @@
 ﻿<div>
     <h3><a href="/features/add" class="btn btn-primary ">Add your idea</a></h3>
     <div class="row">
-        <h3 class="col-md-7">DMi's brightest minds have suggested... </h3>           
+        <h3 class="col-md-7">DMi's brightest minds have suggested... </h3>
     </div>
 
-        
+
 
     <br />
-        <div class="form-group">
-            <span> Show </span>        
-            <select name="Status" ng-model="statusFilter" ng-change="filterByStatus()" ng-options="item.id as item.name for item in global.statusOptions()">
-                <option value="">All</option>
-            </select>
-            <span> feature requests</span>
-        </div>
+    <div class="form-group">
+        <span> Show </span>
+        <select name="Status" ng-model="statusFilter" ng-change="filterByStatus()" ng-options="item.id as item.name for item in global.statusOptions()">
+            <option value="">All</option>
+        </select>
+        <span> feature requests</span>
+    </div>
 
     <div class="row" ng-repeat="feature in features">
 
-            <div class="col-md-1 text-center">
-                <h4>{{feature.TotalGivenVotePoints}}</h4>            
-                <span class="light">votes</span>
-             </div>
-            <div class="col-md-6">
-                <h4><a href="/features/detail/{{feature.Id}}">{{feature.Title}}</a></h4>                
-                <p>{{feature.Description | limitTo:descriptionMaxSize }} {{feature.Description.length < descriptionMaxSize ? '' : '...'}}</p>
-                <p>{{feature.AuthorName}} | {{feature.Status}}</p>
-            </div>
-        <div class="col-md-1">
-            <div>
-                <h3>
-                    <a ng-if="feature.AuthorId == global.userId() && !feature.IsLocked" title="edit" href="/features/edit/{{feature.Id}}" class="btn btn-default btn-xs">edit</a>
-                    <a ng-if="global.isAdmin()" title="change status" href="/features/{{feature.Id}}/status" class="btn btn-default btn-xs">change status</a>
-                    <a ng-if="global.isAdmin()" title="delete" href="/features/delete/{{feature.Id}}" class="btn btn-danger btn-xs">delete</a>
-                </h3>
-            </div>
+        <div class="col-md-1 text-center">
+            <h4>{{feature.TotalGivenVotePoints}}</h4>
+            <span class="light">votes</span>
+        </div>
+        <div class="col-md-6">
+            <h4><a href="/features/detail/{{feature.Id}}">{{feature.Title}}</a></h4>
+            <p>{{feature.Description | limitTo:descriptionMaxSize }} {{feature.Description.length < descriptionMaxSize ? '' : '...'}}</p>
+            <p>{{feature.AuthorName}}</p>
+        </div>
+        <div class="col-md-2" style="margin-top: 10px;">
+            <p>{{feature.Status}} </p>
+                <a ng-if="feature.AuthorId == global.userId() && !feature.IsLocked" title="edit" href="/features/edit/{{feature.Id}}" class="btn btn-default btn-xs">edit</a>
+                <a ng-if="global.isAdmin()" title="change status" href="/features/{{feature.Id}}/status" class="btn btn-default btn-xs">change status</a>
+                <a ng-if="global.isAdmin()" title="delete" href="/features/delete/{{feature.Id}}" class="btn btn-danger btn-xs">delete</a>
+            
+
         </div>
     </div>
     <div ng-show="!features.length">... not much. No feature request found.</div>
@@ -53,5 +52,5 @@
             </li>
         </ul>
     </div>
-    <br />   
+    <br />
 </div>
