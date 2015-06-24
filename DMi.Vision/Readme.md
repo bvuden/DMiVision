@@ -1,3 +1,7 @@
+DMiVision
+
+Voting system for feature requests
+
 - DMi.Vision.Web
 
 Uses grunt-template to load environment specific urls (production or development) into js and html files. The values are stored in the json files in the Config folder. 
