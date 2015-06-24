@@ -1,8 +1,12 @@
-﻿
+﻿/// <binding BeforeBuild='build' />
+
 var env = process.env.ENV || 'development';
 var config =
   require('./Config/' + env + '.json');
-//console.log(config);
+
+//set in vs pmc:
+//$env:ENV='production'
+
 /// <binding ProjectOpened='watch' />
 /*
 This file in the main entry point for defining grunt tasks and using grunt plugins.
@@ -60,5 +64,6 @@ module.exports = function (grunt) {
     });
 
     //define tasks
-    grunt.registerTask('default', ['template','uglify', 'watch']);
+    grunt.registerTask('default', ['template', 'uglify', 'watch']);
+    grunt.registerTask('build', ['template', 'uglify']);
 };

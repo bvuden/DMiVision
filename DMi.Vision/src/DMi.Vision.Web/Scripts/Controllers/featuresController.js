@@ -73,13 +73,18 @@
     function FeaturesDetailController($scope, $sessionStorage, $routeParams, $location, Feature, Vote, Shared) {
         Shared.loading = true;
         //get feature data
-        Feature.get({ id: $routeParams.id }, function (response) {
+        Feature.get({ id: $routeParams.id },
+            function (response) {
             $scope.feature = response;
             $scope.maxPoints = Shared.availableVotePoints() + response.UserGivenVote.Points;
             $scope.isAuthor = Shared.userId() === response.AuthorId;
-
             Shared.loading = false;
-        });
+            },
+            function (error) {
+                _showValidationErrors($scope, error)
+                Shared.loading = false;
+            }
+        );
         //update available vote points
         $scope.vote = function () {
             Shared.setTempAvailableVotePoints($scope.maxPoints - $scope.feature.UserGivenVote.Points)
@@ -240,7 +245,7 @@
                 $scope.validationErrors.push(error.data[key][0]);
             }
         } else {
-            $scope.validationErrors.push('Could not add feature.');
+            $scope.validationErrors.push('An error has occurred.');
         };
     }
 })();
