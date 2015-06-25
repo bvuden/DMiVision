@@ -2,8 +2,8 @@
     "webroot": "wwwroot",
     "version": "1.0.0-*",
 
-    "dependencies": {
-        "Microsoft.AspNet.Mvc": "6.0.0-beta4",
+    "dependencies": {       
+        "Microsoft.AspNet.Mvc.Core": "6.0.0-beta4",        
         "Microsoft.AspNet.Server.IIS": "1.0.0-beta4",
         "Microsoft.AspNet.Server.WebListener": "1.0.0-beta4",
         "Microsoft.Framework.ConfigurationModel.Json": "1.0.0-beta4",
