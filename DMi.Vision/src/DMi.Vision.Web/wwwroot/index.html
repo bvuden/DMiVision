@@ -18,6 +18,7 @@
     <script src="lib/angular-route/angular-route.js"></script>
     <script src="lib/angular-resource/angular-resource.js"></script>
     <script src="lib/ngstorage/ngstorage.js"></script>
+    <script src="lib/angular-md5/angular-md5.js"></script>
     <script src="lib/jwt-decode/jwt-decode.js"></script>
     <script src="lib/angularjs-oauth2/angularjsoauth2.js"></script>
     
@@ -74,6 +75,23 @@
     <spinner show="global.loading" delay="300"></spinner>
     <div ng-cloak class="container" >
         <ng-view ></ng-view>       
-    </div>
+    </div>    
+    <script>
+        window.onmessage = function (e) {
+            if (e.origin === window.location.protocol + "//" + window.location.host && e.data === "changed") {
+                //mgr.removeToken();
+                console.log("status changed");
+                //config.scope = "openid";
+                //config.response_type = "id_token";
+                //mgr.renewTokenSilentAsync().then(function () {
+                //    console.log("renewTokenSilentAsync success");
+                //}, function () {
+                //    console.log("renewTokenSilentAsync failed");
+                //});
+            }
+        }
+    </script>
+    <iframe id="rp"></iframe>
+    <!--<iframe id="rp" style="display:none"></iframe>-->
 </body>
 </html>

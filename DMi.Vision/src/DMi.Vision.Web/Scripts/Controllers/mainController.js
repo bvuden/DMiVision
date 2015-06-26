@@ -13,7 +13,7 @@
         //do this upfront
         AccessToken.set();
 
-
+        console.log($sessionStorage.token);
         if ($sessionStorage.token != undefined) {
             //get user info
             var userId = jwt_decode($sessionStorage.token.access_token).sub;
@@ -27,7 +27,7 @@
             Status.query(function (response) {
                 Shared.setStatusOptions(response);                               
             });
-            //TODO; rename userInfo
+
             $scope.global = Shared;
             $location.path('/features');
         }
