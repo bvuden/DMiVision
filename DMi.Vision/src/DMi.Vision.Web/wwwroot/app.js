@@ -193,7 +193,7 @@
 }(), function() {
     "use strict";
     function a(a, b, c, d, e, f, g) {
-        if (g.set(), console.log(c.token), void 0 != c.token) {
+        if (g.set(), void 0 != c.token) {
             var h = jwt_decode(c.token.access_token).sub;
             d.get({
                 id: h

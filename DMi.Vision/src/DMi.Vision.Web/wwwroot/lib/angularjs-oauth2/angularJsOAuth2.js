@@ -36,7 +36,7 @@ angular.module('oauth2.accessToken', ['ngStorage']).factory('AccessToken', ['$ro
     function expired() {
         var token = $sessionStorage.token;
         var exp = token && token.expires_at && new Date(token.expires_at) < new Date();
-        console.log(exp);
+        //console.log(exp);
         if (exp) {
             $rootScope.$broadcast('oauth2:authExpired', token);
             $sessionStorage.token = null;           
@@ -71,10 +71,7 @@ angular.module('oauth2.accessToken', ['ngStorage']).factory('AccessToken', ['$ro
         return this.token;
     };
     service.set = function () {
-        // Get the session stored state        
-        var previousState = $sessionStorage.verifyState;
-       
-
+        
         // Try and get the token from the hash params on the URL
         var hashValues = window.location.hash;
         if (hashValues.length > 0) {
@@ -99,21 +96,11 @@ angular.module('oauth2.accessToken', ['ngStorage']).factory('AccessToken', ['$ro
 
 
         if (service.token !== null) {
-            if (previousState == service.token.state) {                
-                $rootScope.$broadcast('oauth2:authSuccess');
-                if ($sessionStorage.oauthRedirectRoute) {
-                    var path = $sessionStorage.oauthRedirectRoute;
-                    //scrub the session stored state
-                    $sessionStorage.verifyState = null;
-                    $sessionStorage.oauthRedirectRoute = null;
-                    $location.path(path);
-                }
-            }
-            else {
-                service.destroy();
-                //scrub the session stored state
-                $sessionStorage.verifyState = null;
-                $rootScope.$broadcast('oauth2:authError', 'Suspicious callback');
+            $rootScope.$broadcast('oauth2:authSuccess');
+            if ($sessionStorage.oauthRedirectRoute) {
+                var path = $sessionStorage.oauthRedirectRoute;
+                $sessionStorage.oauthRedirectRoute = null;
+                $location.path(path);
             }
         }
 
@@ -185,9 +172,6 @@ angular.module('oauth2.interceptor', []).factory('OAuth2Interceptor', ['$rootSco
 angular.module('oauth2.endpoint', []).factory('Endpoint', ['AccessToken', '$sessionStorage', function (accessToken, $sessionStorage) {
     var service = {
         authorize: function () {
-            console.log("service.state "+service.state);
-            $sessionStorage.verifyState = service.state;
-            console.log("$sessionStorage.verifyState " + $sessionStorage.verifyState);
             window.location.replace(service.url);
         },
         appendSignoutToken: false
@@ -328,7 +312,6 @@ angular.module('oauth2.directive', ['angular-md5']).directive('oauth2', ['$rootS
         }
 
         scope.signOut = function () {
-            //var token = accessToken.get().access_token;
             var token = accessToken.get().id_token;
             accessToken.destroy();
             endpoint.signOut(token);

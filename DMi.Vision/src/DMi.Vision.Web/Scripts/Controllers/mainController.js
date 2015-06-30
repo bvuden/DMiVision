@@ -12,8 +12,7 @@
         //controller gets hit before the oauth directive can set the token in the sessionstorage
         //do this upfront
         AccessToken.set();
-
-        console.log($sessionStorage.token);
+        
         if ($sessionStorage.token != undefined) {
             //get user info
             var userId = jwt_decode($sessionStorage.token.access_token).sub;
@@ -31,9 +30,6 @@
             $scope.global = Shared;
             $location.path('/features');
         }
-
-
-
     }
 
 
